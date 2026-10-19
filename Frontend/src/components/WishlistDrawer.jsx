@@ -1,97 +1,251 @@
 import React, { useState } from 'react';
 import { PROPERTIES } from '../data/mockData';
-import { X, Trash2, ArrowRight, Heart, ShoppingBag, MapPin } from 'lucide-react';
+import { X, Trash2, ArrowRight, Heart, ShoppingBag, MapPin, Sparkles } from 'lucide-react';
 
-export default function WishlistDrawer({ wishlist, cart, onClose, onRemoveWishlist, onRemoveCart }) {
-  const [tab, setTab] = useState('saved');
+export default function WishlistDrawer({ wishlist, cart, onClose, onRemoveWishlist, onRemoveCart, onProceedToCheckout }) {
+  const [tab, setTab] = useState(cart.length > 0 ? 'quotes' : 'saved');
   const savedProperties = PROPERTIES.filter(p => wishlist.includes(p.id));
   const totalItems = savedProperties.length + cart.length;
 
   return (
-    <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="modal-card" style={{ maxWidth: '520px', padding: 0, overflow: 'hidden' }}>
-
-        {/* ── Dark header band ── */}
-        <div style={{ background: '#0B192C', padding: '32px 36px 0', position: 'relative' }}>
-          <button onClick={onClose} style={{
-            position: 'absolute', top: '16px', right: '16px',
-            width: '32px', height: '32px',
-            background: 'rgba(255,255,255,0.1)',
-            border: '1px solid rgba(255,255,255,0.15)',
-            borderRadius: '2px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: 'rgba(255,255,255,0.6)', cursor: 'pointer',
-          }}>
-            <X size={15} />
+    <div
+      className="modal-overlay"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(11, 31, 68, 0.65)',
+        backdropFilter: 'blur(6px)',
+        zIndex: 1000,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+        animation: 'fadeIn 0.2s ease',
+      }}
+      onClick={e => e.target === e.currentTarget && onClose()}
+    >
+      <div
+        className="modal-card"
+        style={{
+          maxWidth: '540px',
+          width: '100%',
+          padding: 0,
+          overflow: 'hidden',
+          borderRadius: '24px',
+          background: '#FFFFFF',
+          boxShadow: '0 25px 60px -15px rgba(11, 31, 68, 0.3)',
+          border: '1px solid #E2E8F0',
+          fontFamily: 'Inter, sans-serif',
+          display: 'flex',
+          flexDirection: 'column',
+          maxHeight: '90vh',
+        }}
+      >
+        {/* ── Executive Header Band ── */}
+        <div style={{
+          background: 'linear-gradient(135deg, #0866F5 0%, #0645B8 100%)',
+          padding: '28px 32px 0',
+          position: 'relative',
+          color: '#FFFFFF',
+        }}>
+          <button
+            onClick={onClose}
+            style={{
+              position: 'absolute',
+              top: '18px',
+              right: '18px',
+              width: '34px',
+              height: '34px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.18)',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#FFFFFF',
+              cursor: 'pointer',
+              transition: 'background 0.15s ease',
+            }}
+            title="Close Drawer"
+          >
+            <X size={16} />
           </button>
 
-          <p style={{ fontSize: '0.62rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontFamily: 'Manrope, sans-serif', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ display: 'inline-block', width: '18px', height: '1.5px', background: 'rgba(255,255,255,0.3)' }} />
-            My Roof Ridge
+          <p style={{
+            fontSize: '11px',
+            fontWeight: 800,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: '#93C5FD',
+            marginBottom: '6px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+          }}>
+            <Sparkles size={13} color="#60A5FA" />
+            My Roof Ridge Portfolio
           </p>
-          <h2 style={{ fontFamily: 'Manrope, sans-serif', fontSize: '1.5rem', fontWeight: 800, color: 'white', letterSpacing: '-0.02em', lineHeight: 1.2, marginBottom: '20px' }}>
+          <h2 style={{
+            fontSize: '22px',
+            fontWeight: 800,
+            color: '#FFFFFF',
+            letterSpacing: '-0.02em',
+            lineHeight: 1.25,
+            marginBottom: '20px',
+          }}>
             Saved Properties &amp; Inquiries
           </h2>
 
-          {/* Tabs inside header */}
-          <div style={{ display: 'flex', gap: '2px' }}>
+          {/* Pill Tabs inside Header */}
+          <div style={{ display: 'flex', gap: '8px' }}>
             {[
               { key: 'saved', label: 'Saved Homes', count: savedProperties.length, icon: Heart },
               { key: 'quotes', label: 'Material Quotes', count: cart.length, icon: ShoppingBag },
             ].map(({ key, label, count, icon: Icon }) => (
-              <button key={key} onClick={() => setTab(key)} style={{
-                flex: 1, padding: '11px 16px', border: 'none', cursor: 'pointer',
-                background: tab === key ? 'white' : 'rgba(255,255,255,0.06)',
-                color: tab === key ? '#0B192C' : 'rgba(255,255,255,0.55)',
-                fontSize: '0.78rem', fontWeight: tab === key ? 700 : 400,
-                fontFamily: 'Manrope, sans-serif',
-                borderRadius: '2px 2px 0 0',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px',
-                transition: 'all 0.15s',
-              }}>
-                <Icon size={14} />
-                {label}
+              <button
+                key={key}
+                onClick={() => setTab(key)}
+                style={{
+                  flex: 1,
+                  padding: '12px 16px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  background: tab === key ? '#FFFFFF' : 'rgba(255, 255, 255, 0.08)',
+                  color: tab === key ? '#0866F5' : 'rgba(255, 255, 255, 0.7)',
+                  fontSize: '13px',
+                  fontWeight: tab === key ? 800 : 600,
+                  borderRadius: '12px 12px 0 0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <Icon size={15} color={tab === key ? '#0866F5' : 'rgba(255, 255, 255, 0.7)'} />
+                <span>{label}</span>
                 <span style={{
-                  padding: '1px 6px', borderRadius: '2px', fontSize: '0.65rem', fontWeight: 800,
-                  background: tab === key ? '#0B192C' : 'rgba(255,255,255,0.15)',
-                  color: 'white',
-                }}>{count}</span>
+                  padding: '2px 8px',
+                  borderRadius: '12px',
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  background: tab === key ? '#EEF5FF' : 'rgba(255, 255, 255, 0.15)',
+                  color: tab === key ? '#0866F5' : '#FFFFFF',
+                }}>
+                  {count}
+                </span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* ── Content ── */}
-        <div style={{ padding: '0', background: '#F8F7F4', maxHeight: '55vh', overflowY: 'auto' }}>
+        {/* ── Content Body ── */}
+        <div style={{ padding: '20px', background: '#F8FAFC', maxHeight: '55vh', overflowY: 'auto', flex: 1 }}>
 
           {tab === 'saved' && (
             <>
               {savedProperties.length === 0 ? (
-                <div style={{ padding: '48px 36px', textAlign: 'center' }}>
-                  <Heart size={36} style={{ color: '#D8D3CB', marginBottom: '12px' }} />
-                  <p style={{ fontSize: '0.88rem', fontWeight: 600, color: '#9CA3AF', fontFamily: 'Manrope, sans-serif' }}>No saved properties yet</p>
-                  <p style={{ fontSize: '0.78rem', color: '#9CA3AF', fontFamily: 'Manrope, sans-serif', marginTop: '4px' }}>Tap the heart icon on any listing to save it here.</p>
+                <div style={{ padding: '54px 32px', textAlign: 'center' }}>
+                  <div style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '50%',
+                    background: '#EEF5FF',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 14px',
+                    color: '#0866F5',
+                  }}>
+                    <Heart size={28} />
+                  </div>
+                  <p style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A' }}>No saved properties yet</p>
+                  <p style={{ fontSize: '13px', color: '#64748B', marginTop: '4px' }}>
+                    Tap the heart icon on any verified property listing to save it here for instant site visits.
+                  </p>
                 </div>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: '#E4E1DA' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {savedProperties.map(item => (
-                    <div key={item.id} style={{ background: 'white', display: 'flex', gap: '0', alignItems: 'stretch' }}>
-                      <div style={{ width: '100px', flexShrink: 0, overflow: 'hidden' }}>
+                    <div
+                      key={item.id}
+                      style={{
+                        background: '#FFFFFF',
+                        borderRadius: '16px',
+                        border: '1px solid #E2E8F0',
+                        boxShadow: '0 2px 8px rgba(11, 31, 68, 0.04)',
+                        display: 'flex',
+                        overflow: 'hidden',
+                        alignItems: 'stretch',
+                      }}
+                    >
+                      <div style={{ width: '110px', flexShrink: 0, overflow: 'hidden' }}>
                         <img src={item.image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
                       <div style={{ flex: 1, padding: '14px 16px', minWidth: 0 }}>
-                        <span style={{ fontSize: '0.6rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#0B192C', background: '#F8F7F4', border: '1px solid #E4E1DA', padding: '2px 7px', borderRadius: '2px', fontFamily: 'Manrope, sans-serif', display: 'inline-block', marginBottom: '6px' }}>RERA Verified</span>
-                        <h4 style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0B192C', fontFamily: 'Manrope, sans-serif', lineHeight: 1.25, marginBottom: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.title}</h4>
-                        <p style={{ fontSize: '0.72rem', color: '#9CA3AF', fontFamily: 'Manrope, sans-serif', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '6px' }}>
-                          <MapPin size={10} />{item.location}
+                        <span style={{
+                          fontSize: '10px',
+                          fontWeight: 800,
+                          letterSpacing: '0.06em',
+                          textTransform: 'uppercase',
+                          color: '#0866F5',
+                          background: '#EEF5FF',
+                          border: '1px solid rgba(8, 102, 245, 0.2)',
+                          padding: '2px 8px',
+                          borderRadius: '12px',
+                          display: 'inline-block',
+                          marginBottom: '6px',
+                        }}>
+                          RERA Verified
+                        </span>
+                        <h4 style={{
+                          fontSize: '14px',
+                          fontWeight: 700,
+                          color: '#0F172A',
+                          lineHeight: 1.3,
+                          marginBottom: '4px',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}>
+                          {item.title}
+                        </h4>
+                        <p style={{
+                          fontSize: '12px',
+                          color: '#64748B',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          marginBottom: '6px',
+                        }}>
+                          <MapPin size={11} color="#0866F5" /> {item.location}
                         </p>
-                        <p style={{ fontSize: '1rem', fontWeight: 800, color: '#0B192C', letterSpacing: '-0.02em', fontFamily: 'Manrope, sans-serif' }}>{item.price}</p>
+                        <p style={{
+                          fontSize: '16px',
+                          fontWeight: 800,
+                          color: '#0866F5',
+                          letterSpacing: '-0.02em',
+                        }}>
+                          {item.price}
+                        </p>
                       </div>
-                      <button onClick={() => onRemoveWishlist(item.id)}
-                        style={{ padding: '0 16px', background: 'none', border: 'none', borderLeft: '1px solid #F0EDE7', color: '#C0B8AD', cursor: 'pointer', transition: 'color 0.15s', flexShrink: 0 }}
+                      <button
+                        onClick={() => onRemoveWishlist(item.id)}
+                        style={{
+                          padding: '0 18px',
+                          background: 'none',
+                          border: 'none',
+                          borderLeft: '1px solid #F1F5F9',
+                          color: '#94A3B8',
+                          cursor: 'pointer',
+                          transition: 'color 0.15s ease',
+                          flexShrink: 0,
+                        }}
                         onMouseEnter={e => e.currentTarget.style.color = '#EF4444'}
-                        onMouseLeave={e => e.currentTarget.style.color = '#C0B8AD'}>
-                        <Trash2 size={15} />
+                        onMouseLeave={e => e.currentTarget.style.color = '#94A3B8'}
+                        title="Remove from saved"
+                      >
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   ))}
@@ -103,28 +257,97 @@ export default function WishlistDrawer({ wishlist, cart, onClose, onRemoveWishli
           {tab === 'quotes' && (
             <>
               {cart.length === 0 ? (
-                <div style={{ padding: '48px 36px', textAlign: 'center' }}>
-                  <ShoppingBag size={36} style={{ color: '#D8D3CB', marginBottom: '12px' }} />
-                  <p style={{ fontSize: '0.88rem', fontWeight: 600, color: '#9CA3AF', fontFamily: 'Manrope, sans-serif' }}>No material quotes yet</p>
-                  <p style={{ fontSize: '0.78rem', color: '#9CA3AF', fontFamily: 'Manrope, sans-serif', marginTop: '4px' }}>Click "Request Quote" on any building material to add it here.</p>
+                <div style={{ padding: '54px 32px', textAlign: 'center' }}>
+                  <div style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '50%',
+                    background: '#EEF5FF',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 14px',
+                    color: '#0866F5',
+                  }}>
+                    <ShoppingBag size={28} />
+                  </div>
+                  <p style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A' }}>No material quotes yet</p>
+                  <p style={{ fontSize: '13px', color: '#64748B', marginTop: '4px' }}>
+                    Click "Request Quote" or "Add to Cart" on any building material to lock in factory-direct wholesale pricing.
+                  </p>
                 </div>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: '#E4E1DA' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {cart.map((item, idx) => (
-                    <div key={idx} style={{ background: 'white', display: 'flex', gap: '0', alignItems: 'stretch' }}>
-                      <div style={{ width: '100px', flexShrink: 0, overflow: 'hidden' }}>
+                    <div
+                      key={idx}
+                      style={{
+                        background: '#FFFFFF',
+                        borderRadius: '16px',
+                        border: '1px solid #E2E8F0',
+                        boxShadow: '0 2px 8px rgba(11, 31, 68, 0.04)',
+                        display: 'flex',
+                        overflow: 'hidden',
+                        alignItems: 'stretch',
+                      }}
+                    >
+                      <div style={{ width: '110px', flexShrink: 0, overflow: 'hidden' }}>
                         <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
                       <div style={{ flex: 1, padding: '14px 16px', minWidth: 0 }}>
-                        <span style={{ fontSize: '0.6rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#0B192C', background: '#F8F7F4', border: '1px solid #E4E1DA', padding: '2px 7px', borderRadius: '2px', fontFamily: 'Manrope, sans-serif', display: 'inline-block', marginBottom: '6px' }}>Wholesale Quote</span>
-                        <h4 style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0B192C', fontFamily: 'Manrope, sans-serif', lineHeight: 1.25, marginBottom: '6px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.name}</h4>
-                        <p style={{ fontSize: '1rem', fontWeight: 800, color: '#0B192C', letterSpacing: '-0.02em', fontFamily: 'Manrope, sans-serif' }}>{item.price}</p>
+                        <span style={{
+                          fontSize: '10px',
+                          fontWeight: 800,
+                          letterSpacing: '0.06em',
+                          textTransform: 'uppercase',
+                          color: '#0866F5',
+                          background: '#EEF5FF',
+                          border: '1px solid rgba(8, 102, 245, 0.2)',
+                          padding: '2px 8px',
+                          borderRadius: '12px',
+                          display: 'inline-block',
+                          marginBottom: '6px',
+                        }}>
+                          Wholesale Quote
+                        </span>
+                        <h4 style={{
+                          fontSize: '14px',
+                          fontWeight: 700,
+                          color: '#0F172A',
+                          lineHeight: 1.3,
+                          marginBottom: '4px',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}>
+                          {item.name}
+                        </h4>
+                        <p style={{
+                          fontSize: '16px',
+                          fontWeight: 800,
+                          color: '#0866F5',
+                          letterSpacing: '-0.02em',
+                        }}>
+                          {item.price}
+                        </p>
                       </div>
-                      <button onClick={() => onRemoveCart(idx)}
-                        style={{ padding: '0 16px', background: 'none', border: 'none', borderLeft: '1px solid #F0EDE7', color: '#C0B8AD', cursor: 'pointer', transition: 'color 0.15s', flexShrink: 0 }}
+                      <button
+                        onClick={() => onRemoveCart(idx)}
+                        style={{
+                          padding: '0 18px',
+                          background: 'none',
+                          border: 'none',
+                          borderLeft: '1px solid #F1F5F9',
+                          color: '#94A3B8',
+                          cursor: 'pointer',
+                          transition: 'color 0.15s ease',
+                          flexShrink: 0,
+                        }}
                         onMouseEnter={e => e.currentTarget.style.color = '#EF4444'}
-                        onMouseLeave={e => e.currentTarget.style.color = '#C0B8AD'}>
-                        <Trash2 size={15} />
+                        onMouseLeave={e => e.currentTarget.style.color = '#94A3B8'}
+                        title="Remove quote"
+                      >
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   ))}
@@ -136,16 +359,75 @@ export default function WishlistDrawer({ wishlist, cart, onClose, onRemoveWishli
 
         {/* ── Footer CTA ── */}
         {totalItems > 0 && (
-          <div style={{ padding: '20px 36px', borderTop: '1px solid #E4E1DA', background: 'white', display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <div style={{
+            padding: '20px 28px',
+            borderTop: '1px solid #E2E8F0',
+            background: '#FFFFFF',
+            display: 'flex',
+            gap: '14px',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: '0.78rem', fontWeight: 700, color: '#0B192C', fontFamily: 'Manrope, sans-serif' }}>{totalItems} item{totalItems !== 1 ? 's' : ''} selected</p>
-              <p style={{ fontSize: '0.7rem', color: '#9CA3AF', fontFamily: 'Manrope, sans-serif' }}>Our concierge will respond within 2 hours</p>
+              <p style={{ fontSize: '13px', fontWeight: 800, color: '#0F172A' }}>
+                {totalItems} item{totalItems !== 1 ? 's' : ''} in shortlist
+              </p>
+              <p style={{ fontSize: '11px', color: '#64748B', marginTop: '2px' }}>
+                {tab === 'quotes' ? 'Instant GST Wholesale Checkout' : 'Dedicated VIP Relationship Manager will coordinate'}
+              </p>
             </div>
-            <button
-              onClick={() => { alert('Your batch inquiry has been dispatched to Roof Ridge Concierge!'); onClose(); }}
-              style={{ flexShrink: 0, background: '#0B192C', color: 'white', border: 'none', borderRadius: '2px', padding: '12px 20px', fontSize: '0.78rem', fontWeight: 800, letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '7px', cursor: 'pointer', fontFamily: 'Manrope, sans-serif' }}>
-              Submit Batch Inquiry <ArrowRight size={13} />
-            </button>
+            {tab === 'quotes' && onProceedToCheckout ? (
+              <button
+                onClick={onProceedToCheckout}
+                style={{
+                  flexShrink: 0,
+                  background: '#0866F5',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: '30px',
+                  padding: '12px 24px',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(8, 102, 245, 0.3)',
+                  transition: 'background 0.15s ease',
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = '#0653CA'}
+                onMouseLeave={e => e.currentTarget.style.background = '#0866F5'}
+              >
+                Proceed to Checkout <ArrowRight size={14} />
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  alert('Your saved items and inquiries have been dispatched to Roof Ridge Concierge!');
+                  onClose();
+                }}
+                style={{
+                  flexShrink: 0,
+                  background: '#0866F5',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: '30px',
+                  padding: '12px 24px',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(8, 102, 245, 0.3)',
+                  transition: 'background 0.15s ease',
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = '#0653CA'}
+                onMouseLeave={e => e.currentTarget.style.background = '#0866F5'}
+              >
+                Submit Inquiry <ArrowRight size={14} />
+              </button>
+            )}
           </div>
         )}
       </div>

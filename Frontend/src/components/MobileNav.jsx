@@ -54,7 +54,13 @@ const MENU_SECTIONS = [
 /* ─── Mobile Bottom Navigation Bar ──────────────────────────── */
 export function MobileBottomNav({ activePage, onNavigate, onOpenHamburger, wishlistCount, inquiryCount }) {
   return (
-    <nav className="mobile-bottom-nav">
+    <nav className="mobile-bottom-nav" style={{
+      fontFamily: 'Inter, sans-serif',
+      background: 'rgba(255, 255, 255, 0.96)',
+      backdropFilter: 'blur(16px)',
+      borderTop: '1px solid #E2E8F0',
+      boxShadow: '0 -4px 20px rgba(11, 31, 68, 0.08)',
+    }}>
       {BOTTOM_NAV.map(({ id, label, icon: Icon }) => {
         const isMenu = id === '_menu';
         const isActive = !isMenu && (activePage === id || (id === 'home' && activePage === 'home'));
@@ -66,14 +72,42 @@ export function MobileBottomNav({ activePage, onNavigate, onOpenHamburger, wishl
             onClick={() => isMenu ? onOpenHamburger() : onNavigate(id)}
             className={`mob-nav-item${isActive ? ' mob-nav-active' : ''}`}
             aria-label={label}
+            style={{
+              color: isActive ? '#0866F5' : '#64748B',
+              transition: 'all 0.15s ease',
+            }}
           >
             <div style={{ position: 'relative', display: 'inline-flex' }}>
-              <Icon size={22} />
+              <Icon size={20} strokeWidth={isActive ? 2.5 : 2} color={isActive ? '#0866F5' : '#64748B'} />
               {isMenu && totalBadge > 0 && (
-                <span style={{ position: 'absolute', top: '-4px', right: '-6px', width: '14px', height: '14px', borderRadius: '50%', background: '#EF4444', color: 'white', fontSize: '0.55rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{totalBadge}</span>
+                <span style={{
+                  position: 'absolute',
+                  top: '-4px',
+                  right: '-7px',
+                  width: '16px',
+                  height: '16px',
+                  borderRadius: '50%',
+                  background: '#EF4444',
+                  color: 'white',
+                  fontSize: '0.6rem',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 6px rgba(239, 68, 68, 0.4)',
+                }}>
+                  {totalBadge}
+                </span>
               )}
             </div>
-            <span>{label}</span>
+            <span style={{
+              fontSize: '11px',
+              fontWeight: isActive ? 700 : 500,
+              marginTop: '3px',
+              letterSpacing: '-0.01em',
+            }}>
+              {label}
+            </span>
           </button>
         );
       })}
@@ -107,66 +141,209 @@ export function HamburgerDrawer({
       {/* Backdrop */}
       <div
         onClick={onClose}
-        style={{ position: 'fixed', inset: 0, background: 'rgba(7,15,27,0.65)', zIndex: 900, backdropFilter: 'blur(4px)' }}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(7, 15, 27, 0.65)',
+          zIndex: 900,
+          backdropFilter: 'blur(6px)',
+          animation: 'fadeIn 0.2s ease',
+        }}
       />
 
       {/* Drawer panel */}
       <div style={{
-        position: 'fixed', top: 0, right: 0, bottom: 0,
-        width: 'min(340px, 90vw)',
-        background: '#0B192C',
+        position: 'fixed',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        width: 'min(360px, 92vw)',
+        background: 'linear-gradient(180deg, #0866F5 0%, #0645B8 100%)',
         zIndex: 901,
-        display: 'flex', flexDirection: 'column',
+        display: 'flex',
+        flexDirection: 'column',
         overflowY: 'auto',
-        animation: 'drawerSlideIn 0.28s cubic-bezier(0.16,1,0.3,1)',
+        fontFamily: 'Inter, sans-serif',
+        boxShadow: '-8px 0 32px rgba(8, 102, 245, 0.4)',
+        animation: 'drawerSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
       }}>
 
         {/* Drawer header */}
-        <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+        <div style={{
+          padding: '24px 22px 18px',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexShrink: 0,
+        }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <img src="/RRlogo.png" alt="Roof Ridge" style={{ height: '28px', filter: 'brightness(0) invert(1)' }} />
+            <img src="/RRlogo_white.png" alt="Roof Ridge" style={{ height: '30px', objectFit: 'contain' }} />
           </div>
-          <button onClick={onClose}
-            style={{ width: '34px', height: '34px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '2px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.7)', cursor: 'pointer' }}>
-            <X size={16} />
+          <button
+            onClick={onClose}
+            style={{
+              width: '36px',
+              height: '36px',
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'rgba(255, 255, 255, 0.8)',
+              cursor: 'pointer',
+              transition: 'background 0.15s ease',
+            }}
+            title="Close Menu"
+          >
+            <X size={18} />
           </button>
         </div>
 
-        {/* City + phone */}
-        <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <button onClick={() => { onOpenCity(); onClose(); }}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '2px', padding: '7px 12px', color: 'rgba(255,255,255,0.7)', fontSize: '0.78rem', fontFamily: 'Manrope, sans-serif', cursor: 'pointer' }}>
-            <MapPin size={13} />
-            <span style={{ fontWeight: 700, color: 'white' }}>{selectedCity?.name || 'Select City'}</span>
+        {/* City selector + concierge phone */}
+        <div style={{
+          padding: '14px 22px',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          background: 'rgba(255, 255, 255, 0.03)',
+        }}>
+          <button
+            onClick={() => { onOpenCity(); onClose(); }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '7px',
+              background: 'rgba(8, 102, 245, 0.15)',
+              border: '1px solid rgba(8, 102, 245, 0.3)',
+              borderRadius: '20px',
+              padding: '6px 14px',
+              color: '#93C5FD',
+              fontSize: '12px',
+              cursor: 'pointer',
+              fontWeight: 600,
+            }}
+          >
+            <MapPin size={13} color="#60A5FA" />
+            <span style={{ fontWeight: 700, color: '#FFFFFF' }}>{selectedCity?.name || 'Select City'}</span>
           </button>
-          <a href="tel:18001239999"
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'rgba(255,255,255,0.55)', fontSize: '0.75rem', fontFamily: 'Manrope, sans-serif' }}>
-            <Phone size={13} /> 1800-123-9999
+
+          <a
+            href="tel:18001239999"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              color: 'rgba(255, 255, 255, 0.65)',
+              fontSize: '12px',
+              fontWeight: 600,
+            }}
+          >
+            <Phone size={13} color="#94A3B8" /> 1800-123-9999
           </a>
         </div>
 
         {/* Quick user actions */}
-        <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: '8px' }}>
-          <button onClick={() => { onOpenAuth(); onClose(); }}
-            style={{ flex: 1, padding: '10px', background: 'white', color: '#0B192C', border: 'none', borderRadius: '2px', fontSize: '0.78rem', fontWeight: 800, fontFamily: 'Manrope, sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+        <div style={{
+          padding: '16px 22px',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          display: 'flex',
+          gap: '10px',
+        }}>
+          <button
+            onClick={() => { onOpenAuth(); onClose(); }}
+            style={{
+              flex: 1,
+              padding: '11px',
+              background: '#0866F5',
+              color: '#FFFFFF',
+              border: 'none',
+              borderRadius: '12px',
+              fontSize: '12px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              boxShadow: '0 4px 14px rgba(8, 102, 245, 0.3)',
+            }}
+          >
             <User size={14} /> Sign In
           </button>
-          <button onClick={() => { onOpenWishlist(); onClose(); }}
-            style={{ position: 'relative', padding: '10px 16px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '2px', color: 'rgba(255,255,255,0.8)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+
+          <button
+            onClick={() => { onOpenWishlist(); onClose(); }}
+            style={{
+              position: 'relative',
+              padding: '11px 16px',
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.14)',
+              borderRadius: '12px',
+              color: 'rgba(255, 255, 255, 0.85)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+            }}
+            title="Wishlist & Inquiries"
+          >
             <Heart size={16} />
-            {wishlistCount > 0 && <span style={{ fontSize: '0.6rem', fontWeight: 800, background: '#EF4444', color: 'white', borderRadius: '50%', width: '14px', height: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{wishlistCount}</span>}
+            {wishlistCount > 0 && (
+              <span style={{
+                fontSize: '10px',
+                fontWeight: 800,
+                background: '#EF4444',
+                color: 'white',
+                borderRadius: '50%',
+                width: '16px',
+                height: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                {wishlistCount}
+              </span>
+            )}
           </button>
-          <button onClick={() => { onOpenPostProperty(); onClose(); }}
-            style={{ flex: 1, padding: '10px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '2px', fontSize: '0.74rem', fontWeight: 700, color: 'rgba(255,255,255,0.8)', fontFamily: 'Manrope, sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-            <PlusCircle size={14} /> Post Property
+
+          <button
+            onClick={() => { onOpenPostProperty(); onClose(); }}
+            style={{
+              flex: 1.2,
+              padding: '11px',
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              borderRadius: '12px',
+              fontSize: '12px',
+              fontWeight: 700,
+              color: '#FFFFFF',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+            }}
+          >
+            <PlusCircle size={14} color="#60A5FA" /> Post Property
           </button>
         </div>
 
-        {/* Menu sections */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0 20px' }}>
+        {/* Grouped Navigation Sections */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '10px 12px 24px' }}>
           {MENU_SECTIONS.map((section, si) => (
-            <div key={si}>
-              <p style={{ padding: '14px 20px 6px', fontSize: '0.6rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', fontFamily: 'Manrope, sans-serif' }}>
+            <div key={si} style={{ marginBottom: '14px' }}>
+              <p style={{
+                padding: '10px 14px 6px',
+                fontSize: '10.5px',
+                fontWeight: 800,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: 'rgba(255, 255, 255, 0.35)',
+              }}>
                 {section.heading}
               </p>
               {section.items.map(item => {
@@ -176,26 +353,57 @@ export function HamburgerDrawer({
                     key={item.id}
                     onClick={() => handleNav(item.id)}
                     style={{
-                      width: '100%', padding: '12px 20px',
-                      display: 'flex', alignItems: 'center', gap: '12px',
-                      background: isActive ? 'rgba(255,255,255,0.08)' : 'transparent',
+                      width: '100%',
+                      padding: '10px 14px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      background: isActive ? 'rgba(8, 102, 245, 0.18)' : 'transparent',
                       border: 'none',
-                      borderLeft: isActive ? '2px solid white' : '2px solid transparent',
+                      borderRadius: '12px',
+                      borderLeft: isActive ? '3px solid #0866F5' : '3px solid transparent',
                       cursor: 'pointer',
-                      transition: 'all 0.15s',
+                      transition: 'all 0.15s ease',
                       textAlign: 'left',
+                      marginBottom: '2px',
                     }}
-                    onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+                    onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'; }}
                     onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
                   >
-                    <div style={{ width: '34px', height: '34px', background: isActive ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '2px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: isActive ? 'white' : 'rgba(255,255,255,0.5)' }}>
+                    <div style={{
+                      width: '34px',
+                      height: '34px',
+                      background: isActive ? '#0866F5' : 'rgba(255, 255, 255, 0.07)',
+                      borderRadius: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      color: '#FFFFFF',
+                    }}>
                       <item.icon size={16} />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: '0.86rem', fontWeight: isActive ? 700 : 500, color: isActive ? 'white' : 'rgba(255,255,255,0.75)', fontFamily: 'Manrope, sans-serif', lineHeight: 1.2 }}>{item.label}</p>
-                      <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', fontFamily: 'Manrope, sans-serif', marginTop: '2px' }}>{item.sub}</p>
+                      <p style={{
+                        fontSize: '13px',
+                        fontWeight: isActive ? 700 : 600,
+                        color: isActive ? '#FFFFFF' : 'rgba(255, 255, 255, 0.85)',
+                        lineHeight: 1.25,
+                      }}>
+                        {item.label}
+                      </p>
+                      <p style={{
+                        fontSize: '11px',
+                        color: 'rgba(255, 255, 255, 0.4)',
+                        marginTop: '2px',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}>
+                        {item.sub}
+                      </p>
                     </div>
-                    <ChevronRight size={14} style={{ color: 'rgba(255,255,255,0.2)', flexShrink: 0 }} />
+                    <ChevronRight size={14} style={{ color: isActive ? '#60A5FA' : 'rgba(255, 255, 255, 0.25)', flexShrink: 0 }} />
                   </button>
                 );
               })}
@@ -204,9 +412,28 @@ export function HamburgerDrawer({
         </div>
 
         {/* Footer links */}
-        <div style={{ padding: '14px 20px', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-          {['Privacy Policy', 'Terms of Use', 'Contact Us'].map(l => (
-            <button key={l} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem', fontFamily: 'Manrope, sans-serif', cursor: 'pointer' }}>{l}</button>
+        <div style={{
+          padding: '16px 22px',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+          display: 'flex',
+          gap: '16px',
+          flexWrap: 'wrap',
+          background: 'rgba(255, 255, 255, 0.02)',
+        }}>
+          {['Privacy Policy', 'Terms of Use', 'Support Desk'].map(l => (
+            <button
+              key={l}
+              type="button"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'rgba(255, 255, 255, 0.45)',
+                fontSize: '11px',
+                cursor: 'pointer',
+              }}
+            >
+              {l}
+            </button>
           ))}
         </div>
       </div>

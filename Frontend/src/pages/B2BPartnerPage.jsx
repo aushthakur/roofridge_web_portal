@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRight, CheckCircle, Building2, Users, DollarSign, TrendingUp, Package, Briefcase, BarChart3, Award } from 'lucide-react';
+import { useResponsive, useCols } from '../hooks/useResponsive';
 
 const STATS = [
   { value: '45,800+', label: 'Active Buyer Enquiries', sub: '↑ 24% month-on-month' },
@@ -31,33 +32,114 @@ const PRICING = [
 export default function B2BPartnerPage({ onOpenAuth }) {
   const [activeType, setActiveType] = useState(0);
 
+  const { isMobile } = useResponsive();
+  const heroCols = useCols({ desktop: '1.2fr 1fr', tablet: '1fr', mobile: '1fr' });
+  const statsCols = useCols({ desktop: '1fr 1fr', tablet: '1fr 1fr', mobile: '1fr' });
+  const activePanelCols = useCols({ desktop: '1fr 1fr', tablet: '1fr', mobile: '1fr' });
+  const processCols = useCols({ desktop: 'repeat(4, 1fr)', tablet: 'repeat(2, 1fr)', mobile: '1fr' });
+  const pricingCols = useCols({ desktop: 'repeat(3, 1fr)', tablet: 'repeat(2, 1fr)', mobile: '1fr' });
+
   return (
-    <div className="animate-fade" style={{ background: '#FFFFFF' }}>
+    <div className="animate-fade" style={{ background: '#FFFFFF', fontFamily: 'var(--font-body)' }}>
 
       {/* ── HERO ── */}
-      <div style={{ position: 'relative', background: '#0B192C', overflow: 'hidden', padding: '80px 0 64px' }}>
-        <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=70" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.15 }} />
-        <div className="rr-container" style={{ position: 'relative', zIndex: 2 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '64px', alignItems: 'center' }}>
+      <div style={{ position: 'relative', background: 'linear-gradient(135deg, #0866F5 0%, #0645B8 100%)', overflow: 'hidden', padding: isMobile ? '20px 0 16px' : '28px 0 24px' }}>
+        <img
+          src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=70"
+          alt="B2B Office"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.14 }}
+        />
+        <div className="rr-container" style={{ position: 'relative', zIndex: 2, padding: isMobile ? '0 16px' : undefined }}>
+          <div style={{ display: 'grid', gridTemplateColumns: heroCols, gap: isMobile ? '20px' : '36px', alignItems: 'center' }}>
             <div>
-              <p style={eyebrow}><span style={{ display: 'inline-block', width: '24px', height: '2px', background: 'rgba(255,255,255,0.3)' }} /> Roof Ridge Business Alliance</p>
-              <h1 style={heroH1}>Partner Portal for Builders,<br />Contractors &amp; Suppliers</h1>
-              <p style={heroSub}>Access 25 lakh+ verified buyer leads, stream material procurement at factory prices and manage project RFPs — all from one professional dashboard.</p>
-              <div style={{ display: 'flex', gap: '12px', marginTop: '32px' }}>
-                <button onClick={onOpenAuth} style={heroCTA}>REGISTER AS PARTNER <ArrowRight size={14} /></button>
-                <button style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'transparent', color: 'rgba(255,255,255,0.8)', padding: '13px 22px', fontSize: '0.78rem', fontWeight: 700, borderRadius: '2px', cursor: 'pointer', border: '1.5px solid rgba(255,255,255,0.25)', fontFamily: 'Manrope, sans-serif' }}>
+              <p style={eyebrow}>
+                <span style={{ display: 'inline-block', width: '16px', height: '2px', background: '#38BDF8' }} />
+                Roof Ridge Business Alliance
+              </p>
+              <h1 style={heroH1}>
+                Partner Portal for Builders, Contractors &amp; Suppliers
+              </h1>
+              <p style={heroSub}>
+                Access 25 lakh+ verified buyer leads, stream material procurement at factory prices and manage project RFPs — all from one professional dashboard.
+              </p>
+              <div style={{ display: 'flex', gap: '10px', marginTop: '16px', flexWrap: 'wrap' }}>
+                <button
+                  onClick={onOpenAuth}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    background: 'linear-gradient(135deg, #0866F5 0%, #0653CA 100%)',
+                    color: '#FFFFFF',
+                    padding: '10px 20px',
+                    fontSize: '0.8rem',
+                    fontWeight: 800,
+                    borderRadius: '24px',
+                    cursor: 'pointer',
+                    border: 'none',
+                    boxShadow: '0 4px 14px rgba(8, 102, 245, 0.35)',
+                    transition: 'transform 0.15s, box-shadow 0.15s',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 6px 18px rgba(8, 102, 245, 0.45)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 14px rgba(8, 102, 245, 0.35)';
+                  }}
+                >
+                  Register as Partner <ArrowRight size={14} />
+                </button>
+                <button
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    background: 'rgba(255,255,255,0.08)',
+                    color: '#FFFFFF',
+                    padding: '10px 18px',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    borderRadius: '24px',
+                    cursor: 'pointer',
+                    border: '1.5px solid rgba(255,255,255,0.2)',
+                    transition: 'background 0.2s',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
+                >
                   Download Partner Kit
                 </button>
               </div>
             </div>
 
             {/* Stats panel */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: statsCols,
+                gap: '10px',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1.5px solid rgba(255,255,255,0.1)',
+                borderRadius: '16px',
+                padding: '12px',
+                backdropFilter: 'blur(12px)',
+              }}
+            >
               {STATS.map((s, i) => (
-                <div key={i} style={{ background: 'rgba(11,25,44,0.7)', padding: '24px 22px', backdropFilter: 'blur(8px)' }}>
-                  <p style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', letterSpacing: '-0.04em', fontFamily: 'Manrope, sans-serif', lineHeight: 1, marginBottom: '6px' }}>{s.value}</p>
-                  <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'rgba(255,255,255,0.7)', fontFamily: 'Manrope, sans-serif', marginBottom: '2px' }}>{s.label}</p>
-                  <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.35)', fontFamily: 'Manrope, sans-serif' }}>{s.sub}</p>
+                <div
+                  key={i}
+                  style={{
+                    background: 'rgba(11, 31, 68, 0.65)',
+                    padding: '14px 14px',
+                    borderRadius: '10px',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                  }}
+                >
+                  <p style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em', lineHeight: 1, marginBottom: '4px' }}>{s.value}</p>
+                  <p style={{ fontSize: '0.78rem', fontWeight: 600, color: 'rgba(255,255,255,0.85)', marginBottom: '2px' }}>{s.label}</p>
+                  <p style={{ fontSize: '0.68rem', color: '#38BDF8' }}>{s.sub}</p>
                 </div>
               ))}
             </div>
@@ -66,39 +148,95 @@ export default function B2BPartnerPage({ onOpenAuth }) {
       </div>
 
       {/* ── PARTNER TYPE TABS ── */}
-      <section className="rr-section">
-        <div className="rr-container">
+      <section className="rr-section" style={{ padding: isMobile ? '36px 0' : '56px 0' }}>
+        <div className="rr-container" style={{ padding: isMobile ? '0 16px' : undefined }}>
           <div style={{ marginBottom: '32px' }}>
             <p className="section-label">Partner Categories</p>
             <h2 className="section-h2">Who Can Partner with Roof Ridge?</h2>
           </div>
 
           {/* Tab nav */}
-          <div style={{ display: 'flex', gap: '2px', marginBottom: '2px', background: '#E4E1DA', borderRadius: '2px 2px 0 0', overflow: 'hidden', border: '1px solid #E4E1DA', borderBottom: 'none' }}>
-            {PARTNER_TYPES.map((pt, i) => (
-              <button key={i} onClick={() => setActiveType(i)}
-                style={{ flex: 1, padding: '14px 16px', border: 'none', cursor: 'pointer', fontSize: '0.82rem', fontWeight: activeType === i ? 700 : 400, fontFamily: 'Manrope, sans-serif', background: activeType === i ? '#0B192C' : 'white', color: activeType === i ? 'white' : '#6B6B6B', transition: 'all 0.15s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                <pt.icon size={15} />{pt.title}
-              </button>
-            ))}
+          <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', marginBottom: '16px', paddingBottom: '4px' }}>
+            {PARTNER_TYPES.map((pt, i) => {
+              const isActive = activeType === i;
+              return (
+                <button
+                  key={i}
+                  onClick={() => setActiveType(i)}
+                  style={{
+                    padding: '12px 20px',
+                    borderRadius: '30px',
+                    border: isActive ? '1.5px solid #0866F5' : '1.5px solid #E2E8F0',
+                    cursor: 'pointer',
+                    fontSize: '0.84rem',
+                    fontWeight: isActive ? 700 : 500,
+                    background: isActive ? '#0866F5' : '#FFFFFF',
+                    color: isActive ? '#FFFFFF' : '#475569',
+                    transition: 'all 0.15s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    whiteSpace: 'nowrap',
+                    boxShadow: isActive ? '0 4px 12px rgba(8, 102, 245, 0.25)' : 'none',
+                  }}
+                >
+                  <pt.icon size={16} /> {pt.title}
+                </button>
+              );
+            })}
           </div>
 
           {/* Active partner panel */}
-          <div style={{ background: '#0B192C', padding: '40px 44px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', border: '1px solid #E4E1DA', borderTop: 'none' }}>
+          <div
+            style={{
+              background: 'linear-gradient(135deg, #0866F5 0%, #0645B8 100%)',
+              borderRadius: '24px',
+              padding: isMobile ? '28px 20px' : '44px 48px',
+              display: 'grid',
+              gridTemplateColumns: activePanelCols,
+              gap: isMobile ? '32px' : '48px',
+              border: '1.5px solid rgba(255,255,255,0.2)',
+              boxShadow: '0 12px 36px rgba(8, 102, 245, 0.25)',
+            }}
+          >
             <div>
-              <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white', letterSpacing: '-0.02em', marginBottom: '14px', fontFamily: 'Manrope, sans-serif' }}>{PARTNER_TYPES[activeType].title}</h3>
-              <p style={{ fontSize: '0.92rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.7, fontFamily: 'Manrope, sans-serif', marginBottom: '28px' }}>{PARTNER_TYPES[activeType].desc}</p>
-              <button onClick={onOpenAuth} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'white', color: '#0B192C', border: 'none', borderRadius: '2px', padding: '13px 24px', fontSize: '0.78rem', fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'Manrope, sans-serif' }}>
-                Apply as {PARTNER_TYPES[activeType].title.split(' ')[0]} Partner <ArrowRight size={13} />
+              <h3 style={{ fontSize: isMobile ? '1.3rem' : '1.6rem', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em', marginBottom: '14px' }}>
+                {PARTNER_TYPES[activeType].title}
+              </h3>
+              <p style={{ fontSize: '0.94rem', color: 'rgba(255,255,255,0.75)', lineHeight: 1.7, marginBottom: '28px' }}>
+                {PARTNER_TYPES[activeType].desc}
+              </p>
+              <button
+                onClick={onOpenAuth}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: 'linear-gradient(135deg, #0866F5 0%, #0653CA 100%)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: '30px',
+                  padding: '14px 26px',
+                  fontSize: '0.84rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  boxShadow: '0 6px 20px rgba(8, 102, 245, 0.4)',
+                }}
+              >
+                Apply as {PARTNER_TYPES[activeType].title.split(' ')[0]} Partner <ArrowRight size={14} />
               </button>
             </div>
             <div>
-              <p style={{ fontSize: '0.62rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontFamily: 'Manrope, sans-serif', marginBottom: '16px' }}>What You Get</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <p style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#38BDF8', marginBottom: '18px' }}>
+                What You Get
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 {PARTNER_TYPES[activeType].benefits.map(b => (
-                  <div key={b} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <CheckCircle size={15} style={{ color: 'rgba(255,255,255,0.5)', flexShrink: 0 }} />
-                    <span style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.8)', fontFamily: 'Manrope, sans-serif' }}>{b}</span>
+                  <div key={b} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(56, 189, 248, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <CheckCircle size={15} style={{ color: '#38BDF8' }} />
+                    </div>
+                    <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.88)' }}>{b}</span>
                   </div>
                 ))}
               </div>
@@ -108,18 +246,31 @@ export default function B2BPartnerPage({ onOpenAuth }) {
       </section>
 
       {/* ── ONBOARDING PROCESS ── */}
-      <section style={{ background: '#F8F7F4', borderTop: '1px solid #E4E1DA', padding: '72px 0' }}>
-        <div className="rr-container">
-          <div style={{ marginBottom: '32px' }}>
-            <p className="section-label">Onboarding Process</p>
-            <h2 className="section-h2">Go Live in 72 Hours</h2>
+      <section style={{ background: '#F8FAFC', borderTop: '1px solid #E2E8F0', padding: isMobile ? '48px 0' : '72px 0' }}>
+        <div className="rr-container" style={{ padding: isMobile ? '0 16px' : undefined }}>
+          <div style={{ marginBottom: '36px', textAlign: isMobile ? 'left' : 'center' }}>
+            <p style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#0866F5', marginBottom: '8px' }}>
+              ONBOARDING PROCESS
+            </p>
+            <h2 style={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em' }}>
+              Go Live in 72 Hours
+            </h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', background: '#E4E1DA', border: '1px solid #E4E1DA', borderRadius: '2px', overflow: 'hidden' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: processCols, gap: '20px' }}>
             {PROCESS.map((p, i) => (
-              <div key={i} style={{ background: 'white', padding: '28px 24px' }}>
-                <p style={{ fontSize: '2rem', fontWeight: 800, color: '#E4E1DA', letterSpacing: '-0.04em', fontFamily: 'Manrope, sans-serif', marginBottom: '12px' }}>{p.step}</p>
-                <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0B192C', marginBottom: '8px', fontFamily: 'Manrope, sans-serif' }}>{p.title}</h3>
-                <p style={{ fontSize: '0.8rem', color: '#6B6B6B', lineHeight: 1.65, fontFamily: 'Manrope, sans-serif' }}>{p.desc}</p>
+              <div
+                key={i}
+                style={{
+                  background: '#FFFFFF',
+                  padding: '30px 24px',
+                  borderRadius: '18px',
+                  border: '1.5px solid #E2E8F0',
+                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+                }}
+              >
+                <p style={{ fontSize: '2rem', fontWeight: 800, color: '#0866F5', opacity: 0.35, letterSpacing: '-0.04em', marginBottom: '12px', lineHeight: 1 }}>{p.step}</p>
+                <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>{p.title}</h3>
+                <p style={{ fontSize: '0.84rem', color: '#64748B', lineHeight: 1.65 }}>{p.desc}</p>
               </div>
             ))}
           </div>
@@ -127,30 +278,81 @@ export default function B2BPartnerPage({ onOpenAuth }) {
       </section>
 
       {/* ── PRICING TIERS ── */}
-      <section className="rr-section">
-        <div className="rr-container">
-          <div style={{ marginBottom: '32px' }}>
-            <p className="section-label">Partner Pricing</p>
-            <h2 className="section-h2">Simple, Transparent Partner Plans</h2>
+      <section className="rr-section" style={{ padding: isMobile ? '36px 0' : '64px 0' }}>
+        <div className="rr-container" style={{ padding: isMobile ? '0 16px' : undefined }}>
+          <div style={{ marginBottom: '36px', textAlign: isMobile ? 'left' : 'center' }}>
+            <p style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#0866F5', marginBottom: '8px' }}>
+              PARTNER PRICING
+            </p>
+            <h2 style={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em' }}>
+              Simple, Transparent Partner Plans
+            </h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1px', background: '#E4E1DA', border: '1px solid #E4E1DA', borderRadius: '2px', overflow: 'hidden' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: pricingCols, gap: '24px' }}>
             {PRICING.map(p => (
-              <div key={p.tier} style={{ background: p.recommended ? '#0B192C' : 'white', padding: '36px 30px', display: 'flex', flexDirection: 'column' }}>
-                {p.recommended && <span style={{ display: 'inline-block', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', color: 'white', fontSize: '0.6rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '3px 8px', borderRadius: '2px', fontFamily: 'Manrope, sans-serif', marginBottom: '16px', alignSelf: 'flex-start' }}>Recommended</span>}
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: p.recommended ? 'white' : '#0B192C', fontFamily: 'Manrope, sans-serif', marginBottom: '8px' }}>{p.tier}</h3>
-                <p style={{ fontSize: '2rem', fontWeight: 800, color: p.recommended ? 'white' : '#0B192C', letterSpacing: '-0.03em', fontFamily: 'Manrope, sans-serif', lineHeight: 1, marginBottom: '4px' }}>{p.price}</p>
-                <p style={{ fontSize: '0.72rem', color: p.recommended ? 'rgba(255,255,255,0.5)' : '#9CA3AF', fontFamily: 'Manrope, sans-serif', marginBottom: '24px' }}>{p.sub}</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '9px', flex: 1, marginBottom: '24px' }}>
+              <div
+                key={p.tier}
+                style={{
+                  background: p.recommended ? 'linear-gradient(135deg, #0866F5 0%, #0645B8 100%)' : '#FFFFFF',
+                  borderRadius: '20px',
+                  border: p.recommended ? '2px solid #0866F5' : '1.5px solid #E2E8F0',
+                  boxShadow: p.recommended ? '0 12px 32px rgba(8, 102, 245, 0.25)' : '0 4px 16px rgba(0, 0, 0, 0.05)',
+                  padding: '36px 30px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'all 0.2s',
+                }}
+              >
+                {p.recommended && (
+                  <span
+                    style={{
+                      alignSelf: 'flex-start',
+                      background: 'rgba(255,255,255,0.2)',
+                      color: '#FFFFFF',
+                      fontSize: '0.68rem',
+                      fontWeight: 800,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      padding: '4px 12px',
+                      borderRadius: '20px',
+                      marginBottom: '16px',
+                    }}
+                  >
+                    Recommended
+                  </span>
+                )}
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: p.recommended ? '#FFFFFF' : '#0F172A', marginBottom: '8px' }}>{p.tier}</h3>
+                <p style={{ fontSize: '2.2rem', fontWeight: 800, color: p.recommended ? '#FFFFFF' : '#0F172A', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: '4px' }}>{p.price}</p>
+                <p style={{ fontSize: '0.78rem', color: p.recommended ? 'rgba(255,255,255,0.7)' : '#94A3B8', marginBottom: '24px' }}>{p.sub}</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1, marginBottom: '28px' }}>
                   {p.features.map(f => (
                     <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                      <CheckCircle size={13} style={{ color: p.recommended ? 'rgba(255,255,255,0.6)' : '#0B192C', flexShrink: 0, marginTop: '2px' }} />
-                      <span style={{ fontSize: '0.8rem', color: p.recommended ? 'rgba(255,255,255,0.75)' : '#6B6B6B', fontFamily: 'Manrope, sans-serif' }}>{f}</span>
+                      <CheckCircle size={15} style={{ color: p.recommended ? '#93C5FD' : '#0866F5', flexShrink: 0, marginTop: '2px' }} />
+                      <span style={{ fontSize: '0.84rem', color: p.recommended ? 'rgba(255,255,255,0.9)' : '#475569' }}>{f}</span>
                     </div>
                   ))}
                 </div>
-                <button onClick={onOpenAuth}
-                  style={{ width: '100%', background: p.recommended ? 'white' : '#0B192C', color: p.recommended ? '#0B192C' : 'white', border: 'none', borderRadius: '2px', padding: '13px', fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer', fontFamily: 'Manrope, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-                  Get Started <ArrowRight size={13} />
+                <button
+                  onClick={onOpenAuth}
+                  style={{
+                    width: '100%',
+                    background: p.recommended ? '#FFFFFF' : 'linear-gradient(135deg, #0866F5 0%, #0645B8 100%)',
+                    color: p.recommended ? '#0866F5' : '#FFFFFF',
+                    border: 'none',
+                    borderRadius: '30px',
+                    padding: '14px',
+                    fontSize: '0.84rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    boxShadow: p.recommended ? '0 6px 20px rgba(8, 102, 245, 0.4)' : 'none',
+                    transition: 'all 0.2s',
+                  }}
+                >
+                  Get Started <ArrowRight size={14} />
                 </button>
               </div>
             ))}
@@ -162,7 +364,29 @@ export default function B2BPartnerPage({ onOpenAuth }) {
   );
 }
 
-const eyebrow = { fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', fontFamily: 'Manrope, sans-serif' };
-const heroH1 = { fontFamily: 'Manrope, sans-serif', fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', fontWeight: 800, color: 'white', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: '14px', maxWidth: '640px' };
-const heroSub = { fontSize: '0.95rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.65, maxWidth: '480px', fontFamily: 'Manrope, sans-serif' };
-const heroCTA = { display: 'inline-flex', alignItems: 'center', gap: '10px', background: 'white', color: '#0B192C', padding: '14px 26px', fontSize: '0.78rem', fontWeight: 800, letterSpacing: '0.07em', textTransform: 'uppercase', borderRadius: '2px', cursor: 'pointer', border: '2px solid white', fontFamily: 'Manrope, sans-serif' };
+const eyebrow = {
+  fontSize: '0.68rem',
+  fontWeight: 800,
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase',
+  color: '#38BDF8',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+  marginBottom: '6px',
+};
+const heroH1 = {
+  fontSize: 'clamp(1.35rem, 2.2vw, 1.75rem)',
+  fontWeight: 800,
+  color: '#FFFFFF',
+  letterSpacing: '-0.02em',
+  lineHeight: 1.2,
+  marginBottom: '6px',
+  maxWidth: '680px',
+};
+const heroSub = {
+  fontSize: '0.84rem',
+  color: 'rgba(255,255,255,0.85)',
+  lineHeight: 1.5,
+  maxWidth: '560px',
+};

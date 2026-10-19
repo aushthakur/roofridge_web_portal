@@ -35,32 +35,32 @@ const NAV_ITEMS = [
   },
   {
     id: 'construction',
-    label: 'Turnkey Construction',
+    label: 'House Construction',
     cols: [
-      { heading: 'Civil Construction', links: ['Turnkey House Builders', 'Soil Testing & Foundation', 'Brickwork & Plastering', 'Structural Engineering'] },
-      { heading: 'Shuttering & Concrete', links: ['Lenter Shuttering Crew', 'Column Concrete Pouring', 'TMT Rebar Steel Binding'] },
-      { heading: 'Architectural Maps', links: ['Municipal Sanction Maps', '3D Elevation Renders', 'Vastu Compliant Plans', 'Structural Calculations'] },
+      { heading: 'House Building', links: ['Complete House Builders', 'Soil Testing & Foundation', 'Brickwork & Plastering', 'Structural Engineering'] },
+      { heading: 'Roofing & Concrete', links: ['Slab Shuttering Crew', 'Concrete Pouring', 'Steel Rebar Binding'] },
+      { heading: 'House Plans & Maps', links: ['Municipal Sanction Maps', '3D Front Elevations', 'Vastu Compliant Plans', 'Structural Designs'] },
     ],
     promo: {
       image: 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?auto=format&fit=crop&w=600&q=80',
-      label: 'Turnkey Build',
-      title: 'Calculate Your Build Budget Instantly',
+      label: 'Build Your Home',
+      title: 'Calculate Your Building Budget Instantly',
       cta: 'Estimate Cost',
     }
   },
   {
     id: 'interiors',
-    label: 'Modular Interiors',
+    label: 'Home Interiors',
     cols: [
       { heading: 'Modular Kitchens', links: ['L-Shape Kitchens', 'Island Kitchen Layouts', 'Parallel Kitchens', 'U-Shape Kitchens'] },
       { heading: 'Wardrobes & Storage', links: ['Acrylic Wardrobes', 'PU Gloss Finish', 'Walk-in Closets', 'TV Media Units'] },
-      { heading: 'Turnkey Themes', links: ['Scandinavian Modern', 'Japandi Zen Minimalist', 'Italian Luxe Marble', 'False Ceiling & Lighting'] },
+      { heading: 'Interior Themes', links: ['Modern Minimalist', 'Warm Contemporary', 'Italian Luxe Style', 'False Ceiling & Lighting'] },
     ],
     promo: {
       image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80',
-      label: 'Modular Interiors',
-      title: 'German Modular Kitchens — 45-day delivery',
-      cta: 'Explore Kitchen Renders',
+      label: 'Home Interiors',
+      title: 'Modern Modular Kitchens — 45-day handover',
+      cta: 'View Kitchen Designs',
     }
   },
   {
@@ -68,59 +68,59 @@ const NAV_ITEMS = [
     label: 'Building Materials',
     cols: [
       { heading: 'Cement & Concrete', links: ['UltraTech Super Cement', 'ACC Concrete (50kg)', 'JK Super Cement', 'Ready Mix Concrete'] },
-      { heading: 'Structural Steel', links: ['TATA Tiscon 500D', 'JSW Neo Steel', 'Jindal Panther TMT'] },
+      { heading: 'Steel Rods (Sariya)', links: ['TATA Tiscon 500D', 'JSW Neo Steel', 'Jindal Panther TMT'] },
       { heading: 'Tiles & Marble', links: ['Kajaria Vitrified Tiles', 'Imported Italian Marble', 'Granite Countertops', 'Wooden Flooring'] },
       { heading: 'Electricals', links: ['Schneider Smart Kits', 'Havells Wires & Cables', 'Legrand Modular Switches'] },
     ],
     promo: {
       image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=600&q=80',
-      label: 'B2B Wholesale',
-      title: 'Factory-Direct Wholesale Price Index',
-      cta: 'View Wholesale Rates',
+      label: 'Wholesale Rates',
+      title: 'Direct Factory Wholesale Price List',
+      cta: 'View Material Prices',
     }
   },
   {
     id: 'professionals',
-    label: 'Skilled Workforce',
+    label: 'Hire Workers',
     cols: [
-      { heading: 'Civil & Construction', links: ['Master Civil Mistri', 'Lenter Shuttering Workers', 'Labour Contractors', 'Masonry Workers'] },
-      { heading: 'Maintenance', links: ['Senior Master Plumbers', 'Licensed Electricians', 'Custom Carpenters'] },
-      { heading: 'Finishing Experts', links: ['Italian Marble Polishers', 'Vitrified Tile Layers', 'POP False Ceiling Crew'] },
+      { heading: 'Construction Workers', links: ['Master Civil Mason (Mistri)', 'Shuttering Workers', 'Labour Contractors', 'Brickwork Workers'] },
+      { heading: 'Repair Technicians', links: ['Expert Plumbers', 'Licensed Electricians', 'Custom Carpenters'] },
+      { heading: 'Finishing Experts', links: ['Marble Polishers', 'Tile Layers', 'False Ceiling & POP Crew'] },
     ],
     promo: {
       image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80',
-      label: 'GPS On-Demand',
-      title: 'Hire Verified Civil & Maintenance Crew',
-      cta: 'Book Technicians',
+      label: 'Verified Pros',
+      title: 'Hire Verified Masons, Plumbers & Electricians',
+      cta: 'Book Workers',
     }
   },
   {
     id: 'maintenance',
-    label: 'Home Care & AMC',
+    label: 'Repairs & Care',
     cols: [
-      { heading: 'AMC Plans', links: ['Essential Protect AMC', 'Villa Care AMC', 'Commercial Building AMC'] },
-      { heading: 'Specialist Services', links: ['Full Home Deep Cleaning', 'Herbal Pest Control', 'Solar Maintenance', 'Water Tank Sanitization'] },
+      { heading: 'Annual Care Plans', links: ['Essential Home Care Plan', 'Villa Care Plan', 'Commercial Care Plan'] },
+      { heading: 'Cleaning & Care', links: ['Full Home Deep Cleaning', 'Herbal Pest Control', 'Solar Panel Cleaning', 'Water Tank Cleaning'] },
       { heading: 'Emergency Services', links: ['30-Min Emergency Van', 'Emergency Plumbing', 'Emergency Electrical', '24/7 Lockout Support'] },
     ],
     promo: {
       image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80',
-      label: 'Emergency Ready',
-      title: '30-Minute Emergency Home Van',
-      cta: 'Dispatch Emergency',
+      label: 'Emergency Help',
+      title: '30-Minute Emergency Repair Van',
+      cta: 'Call Emergency Help',
     }
   },
   {
     id: 'loans',
-    label: 'Loans & Legal',
+    label: 'Loans & Paperwork',
     cols: [
-      { heading: 'Home Loans', links: ['SBI Pre-Approved (8.1%)', 'HDFC Home Loans', 'ICICI Balance Transfer', 'EMI Calculator'] },
-      { heading: 'Legal & Docs', links: ['Sale Deed Drafting', '30-Year Title Search', 'Encumbrance Certificate', 'Property Tax & Mutation'] },
+      { heading: 'Home Loans', links: ['SBI Home Loan (8.1%)', 'HDFC Home Loans', 'ICICI Balance Transfer', 'EMI Calculator'] },
+      { heading: 'Legal & Papers', links: ['Sale Deed Drafting', '30-Year Title Search', 'Encumbrance Certificate', 'Property Tax & Mutation'] },
     ],
     promo: {
       image: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=600&q=80',
-      label: 'RERA Legal Desk',
-      title: 'Legal Verification & Pre-Approved Loan Rates',
-      cta: 'Check Legal Title',
+      label: 'Legal Desk',
+      title: 'Legal Paperwork Check & Home Loan Assistance',
+      cta: 'Check Property Papers',
     }
   },
 ];

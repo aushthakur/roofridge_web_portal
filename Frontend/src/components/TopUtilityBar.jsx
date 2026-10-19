@@ -8,17 +8,17 @@ export default function TopUtilityBar({ onOpenCity, selectedCity, onNavigate }) 
         <ul className="top-utility-links">
           <li>
             <button onClick={() => onNavigate('b2b')} className="hover:text-[#0B192C]">
-              ROOF RIDGE FOR BUSINESS
+              FOR BUILDERS &amp; BUSINESSES
             </button>
           </li>
           <li>
             <button onClick={() => onNavigate('b2b')} className="hover:text-[#0B192C]">
-              BECOME A VERIFIED PARTNER
+              BECOME A PARTNER
             </button>
           </li>
           <li>
             <button onClick={() => onNavigate('experience')} className="hover:text-[#0B192C]">
-              EXPERIENCE HUBS
+              VISIT OUR SHOWROOMS
             </button>
           </li>
           <li>
@@ -28,7 +28,7 @@ export default function TopUtilityBar({ onOpenCity, selectedCity, onNavigate }) 
           </li>
           <li>
             <button onClick={() => onNavigate('loans')} className="highlight-link flex items-center gap-1">
-              <Award size={13} className="text-[#0B192C]" /> RERA COMPLIANCE HUB
+              <Award size={13} className="text-[#0B192C]" /> VERIFIED PAPERS &amp; LEGAL DESK
             </button>
           </li>
           <li className="hidden lg:inline-block">

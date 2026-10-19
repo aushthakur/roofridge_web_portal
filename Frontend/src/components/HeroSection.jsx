@@ -1,108 +1,209 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import React from 'react';
+import { ArrowRight } from 'lucide-react';
+import { useResponsive } from '../hooks/useResponsive';
 
-const MAIN_SLIDES = [
-  {
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1800&q=85',
-    eyebrow: 'Design & Build Excellence',
-    title: 'Find Your Dream Home Today',
-    desc: '50,000+ verified listings with 0% brokerage, 100-point physical verification.',
-    cta: 'EXPLORE PROPERTIES',
-    ctaPage: 'buy',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=85',
-    eyebrow: 'RERA Verified Properties',
-    title: 'Turnkey Modular Interiors',
-    desc: 'Build a home that feels designed around you with premium materials.',
-    cta: 'BOOK CONSULTATION',
-    ctaPage: 'interiors',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1800&q=85',
-    eyebrow: 'Factory Wholesale Materials',
-    title: 'Direct Factory Pricing',
-    desc: 'UltraTech Cement, TATA Tiscon TMT Steel & Kajaria Tiles at factory rates.',
-    cta: 'VIEW WHOLESALE',
-    ctaPage: 'materials',
-  },
-];
-
-function useCarousel(length, intervalMs) {
-  const [idx, setIdx] = useState(0);
-  const [fading, setFading] = useState(false);
-  const goTo = useCallback((next) => {
-    setFading(true);
-    setTimeout(() => { setIdx((next + length) % length); setFading(false); }, 280);
-  }, [length]);
-  useEffect(() => {
-    const t = setInterval(() => goTo(idx + 1), intervalMs);
-    return () => clearInterval(t);
-  }, [idx, goTo, intervalMs]);
-  return { idx, fading, goTo };
-}
-
-function useIsMobile() {
-  const [mobile, setMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
-  useEffect(() => {
-    const handler = () => setMobile(window.innerWidth <= 768);
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
-  }, []);
-  return mobile;
-}
-
-export default function HeroSection({ onExploreCategory, children }) {
-  const isMobile = useIsMobile();
-  const main = useCarousel(MAIN_SLIDES.length, 6000);
-  const ms = MAIN_SLIDES[main.idx];
+export default function HeroSection({ children, onExploreCategory }) {
+  const { isMobile } = useResponsive();
 
   return (
-    <section style={{ width: '100%', height: isMobile ? '600px' : '680px', position: 'relative', overflow: 'hidden' }}>
-      
-      {/* Background Images */}
-      {MAIN_SLIDES.map((s, i) => (
-        <img key={i} src={s.image} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 35%', opacity: i === main.idx ? 1 : 0, transform: i === main.idx ? 'scale(1.0)' : 'scale(1.05)', transition: 'opacity 0.7s ease, transform 8s ease-out', zIndex: 1 }} />
-      ))}
-      
-      {/* Cinematic Gradient Overlay */}
-      <div style={{ position: 'absolute', inset: 0, zIndex: 2, background: 'linear-gradient(180deg, rgba(7,15,27,0.3) 0%, rgba(7,15,27,0.75) 100%)' }} />
+    <section style={{
+      width: '100%',
+      position: 'relative',
+      backgroundImage: 'url(/images/hero/scenic_hero.jpg)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center right',
+      backgroundRepeat: 'no-repeat',
+      minHeight: isMobile ? '560px' : '520px',
+      paddingBottom: isMobile ? '80px' : '86px',
+      overflow: 'visible',
+    }}>
+      {/* Container for Hero Content */}
+      <div className="rr-container" style={{
+        position: 'relative',
+        paddingTop: isMobile ? '36px' : '48px',
+        height: '100%',
+        minHeight: isMobile ? '460px' : '440px',
+      }}>
+        {/* Upper Hero Row: Left Content + Floating Project Card on Right */}
+        <div style={{
+          display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          position: 'relative',
+          gap: '24px',
+        }}>
+          {/* ── Left Content: Eyebrow + Headline + Description ── */}
+          <div style={{ maxWidth: '500px', zIndex: 10 }}>
+            {/* Small uppercase eyebrow */}
+            <p style={{
+              fontSize: '11px',
+              fontWeight: 600,
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              color: '#475569',
+              marginBottom: '12px',
+              fontFamily: 'Inter, sans-serif',
+            }}>
+              MORE THAN SPACES
+            </p>
 
-      {/* Centered Content */}
-      <div style={{ position: 'absolute', top: '45%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 3, width: '100%', maxWidth: '1000px', padding: '0 20px', textAlign: 'center', opacity: main.fading ? 0 : 1, transition: 'opacity 0.28s ease' }}>
-        
-        <h1 style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(2.2rem, 4.5vw, 4rem)', fontWeight: 800, color: 'white', letterSpacing: '-0.02em', marginBottom: '16px', lineHeight: 1.15, textShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
-          {ms.title}
-        </h1>
-        <p style={{ fontSize: 'clamp(0.95rem, 1.5vw, 1.15rem)', color: 'rgba(255,255,255,0.95)', marginBottom: '40px', fontFamily: 'var(--font-body)', maxWidth: '640px', margin: '0 auto 40px', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
-          {ms.desc}
-        </p>
+            {/* Main Headline */}
+            <h1 style={{
+              fontFamily: 'Inter, sans-serif',
+              fontSize: 'clamp(2.4rem, 4.4vw, 3.4rem)',
+              fontWeight: 700,
+              color: '#0F172A',
+              lineHeight: 1.08,
+              letterSpacing: '-0.03em',
+              marginBottom: '16px',
+            }}>
+              A Brighter<br />Tomorrow
+            </h1>
 
-        {/* Search Widget Slot */}
-        <div style={{ textAlign: 'left' }}>
-          {children}
+            {/* Description */}
+            <p style={{
+              fontSize: '15px',
+              color: '#334155',
+              lineHeight: 1.5,
+              maxWidth: '430px',
+              fontFamily: 'Inter, sans-serif',
+              fontWeight: 400,
+            }}>
+              Find your perfect home, investment or commercial space with RoofRidge.
+            </p>
+          </div>
+
+          {/* ── Handwritten Decorative Text Element in Open Sky/Valley ── */}
+          {!isMobile && (
+            <div style={{
+              position: 'absolute',
+              top: '40px',
+              left: '49%',
+              zIndex: 8,
+              pointerEvents: 'none',
+            }}>
+              <div style={{
+                fontFamily: "'Caveat', cursive",
+                fontSize: '28px',
+                lineHeight: '1.08',
+                color: '#243348',
+                fontWeight: 600,
+                letterSpacing: '0.02em',
+              }}>
+                Spaces<br />
+                People<br />
+                Possibilities
+              </div>
+              <div style={{
+                width: '32px',
+                height: '2.5px',
+                background: '#0866F5',
+                marginTop: '6px',
+                borderRadius: '2px',
+              }} />
+            </div>
+          )}
+
+          {/* ── Floating "Explore New Projects" Card on Right ── */}
+          <div
+            onClick={() => onExploreCategory && onExploreCategory('buy')}
+            style={{
+              background: '#FFFFFF',
+              borderRadius: '18px',
+              padding: '14px 16px',
+              boxShadow: '0 12px 30px rgba(11, 31, 68, 0.12)',
+              border: '1px solid rgba(255, 255, 255, 0.9)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '14px',
+              width: isMobile ? '100%' : '255px',
+              cursor: 'pointer',
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              zIndex: 10,
+              marginTop: isMobile ? '16px' : '0',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 16px 36px rgba(11, 31, 68, 0.16)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 12px 30px rgba(11, 31, 68, 0.12)';
+            }}
+          >
+            {/* Card Text Content */}
+            <div style={{ flex: 1 }}>
+              <span style={{
+                fontSize: '8.5px',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: '#94A3B8',
+                display: 'block',
+                marginBottom: '6px',
+                fontFamily: 'Inter, sans-serif',
+              }}>
+                TURN PLANS INTO ADDRESSES
+              </span>
+              <h3 style={{
+                fontSize: '14px',
+                fontWeight: 700,
+                color: '#0F172A',
+                lineHeight: 1.25,
+                margin: '0 0 14px 0',
+                fontFamily: 'Inter, sans-serif',
+              }}>
+                Explore<br />New Projects<br />in Mumbai
+              </h3>
+              {/* Circular Royal Blue Button */}
+              <div style={{
+                width: '30px',
+                height: '30px',
+                borderRadius: '50%',
+                background: '#0866F5',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#FFFFFF',
+              }}>
+                <ArrowRight size={14} color="#FFFFFF" strokeWidth={2.2} />
+              </div>
+            </div>
+
+            {/* Card Skyscraper Photo */}
+            <div style={{
+              width: '80px',
+              height: '110px',
+              borderRadius: '10px',
+              overflow: 'hidden',
+              flexShrink: 0,
+            }}>
+              <img
+                src="/images/new_projects_card.jpg"
+                alt="New Projects in Mumbai"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block',
+                }}
+              />
+            </div>
+          </div>
         </div>
 
+        {/* ── Overlapping Floating Search Panel ── */}
+        <div style={{
+          position: 'absolute',
+          bottom: isMobile ? '-50px' : '-44px',
+          left: '40px',
+          right: isMobile ? '40px' : 'auto',
+          zIndex: 20,
+        }}>
+          {children}
+        </div>
       </div>
-
-      {/* Left/Right Controls */}
-      {!isMobile && (
-        <>
-          <button onClick={() => main.goTo(main.idx - 1)} style={arrowStyle('left')} aria-label="Previous"><ChevronLeft size={22} /></button>
-          <button onClick={() => main.goTo(main.idx + 1)} style={arrowStyle('right')} aria-label="Next"><ChevronRight size={22} /></button>
-        </>
-      )}
-
-      {/* Bottom Progress Bar */}
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '4px', background: 'rgba(255,255,255,0.1)', zIndex: 4 }}>
-        <div key={`main-${main.idx}`} style={{ height: '100%', background: 'var(--rr-primary)', animation: 'hero-progress 6s linear forwards', borderRadius: '0 4px 4px 0' }} />
-      </div>
-
-      <style>{`@keyframes hero-progress { from { width: 0% } to { width: 100% } }`}</style>
     </section>
   );
-}
-
-function arrowStyle(side) {
-  return { position: 'absolute', [side]: '24px', top: '50%', transform: 'translateY(-50%)', zIndex: 4, width: '48px', height: '48px', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', cursor: 'pointer', transition: 'all 0.2s', backdropFilter: 'blur(8px)' };
 }

@@ -1,175 +1,440 @@
 import React, { useState } from 'react';
 import { BUILDING_MATERIALS } from '../data/mockData';
-import { ArrowRight, Star, CheckCircle, Truck, Package, ShieldCheck, Zap } from 'lucide-react';
+import {
+  ArrowRight, Star, CheckCircle, Truck, Package, ShieldCheck,
+  Zap, Layers, Sparkles, Check, ChevronRight, Phone
+} from 'lucide-react';
 import { useResponsive } from '../hooks/useResponsive';
 
 const CATEGORIES = ['All', 'Cement', 'TMT Steel', 'Tiles', 'Electricals', 'Plumbing'];
+
 const DISCOUNT_TIERS = [
-  { min: 50, max: 199, discount: 5, label: 'Standard' },
-  { min: 200, max: 499, discount: 10, label: 'Bulk Saver' },
-  { min: 500, max: 999, discount: 15, label: 'Site Pack' },
-  { min: 1000, max: Infinity, discount: 20, label: 'Developer Rate' },
+  { min: 50, max: 199, discount: 5, label: 'Standard Wholesale' },
+  { min: 200, max: 499, discount: 10, label: 'Bulk Builder Saver' },
+  { min: 500, max: 999, discount: 15, label: 'Site Mega Pack' },
+  { min: 1000, max: Infinity, discount: 20, label: 'Developer Factory Rate' },
 ];
 
 const FEATURED_BRANDS = [
-  { name: 'UltraTech Cement', category: 'Cement', image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=600&q=80', price: '₹ 340 / bag', desc: "PPC & OPC 53 Grade, 50 kg bags. India's #1 cement brand. Direct from authorised distributor.", moq: 'Min 50 Bags' },
-  { name: 'TATA Tiscon 500D TMT', category: 'TMT Steel', image: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?auto=format&fit=crop&w=600&q=80', price: '₹ 58,500 / MT', desc: 'Superior earthquake-resistant TMT rebar in 8mm–32mm diameter. TATA quality guaranteed.', moq: 'Min 1 MT' },
-  { name: 'Kajaria Vitero Tiles', category: 'Tiles', image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=80', price: '₹ 68 / sq.ft', desc: 'Double charged vitrified tiles in 600x600mm & 800x800mm. 5-year manufacturer warranty.', moq: 'Min 200 sq.ft' },
+  {
+    name: 'UltraTech Cement (50kg)',
+    category: 'Cement & Concrete',
+    image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=600&q=80',
+    price: '₹ 385 / bag',
+    desc: 'PPC & OPC 53 Grade, 50 kg bags. India\'s #1 cement brand direct from manufacturer dispatch depots.',
+    moq: 'Min 50 Bags'
+  },
+  {
+    name: 'TATA Tiscon 500D TMT Rebars',
+    category: 'Structural Steel',
+    image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80',
+    price: '₹ 64,500 / ton',
+    desc: 'Superior earthquake-resistant TMT rebar in 8mm–32mm diameter. Guaranteed weight calibration & test certificate.',
+    moq: 'Min 2 Tons'
+  },
+  {
+    name: 'Kajaria Vitrified Tiles (800x1600mm)',
+    category: 'Tiles & Flooring',
+    image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80',
+    price: '₹ 85 / sq.ft',
+    desc: 'Double charged vitrified slab tiles with anti-stain nano coating. 10-year manufacturer replacement guarantee.',
+    moq: 'Min 500 sq.ft'
+  },
 ];
 
 export default function MaterialsPage({ onAddToCart }) {
   const [category, setCategory] = useState('All');
-  const [bags, setBags] = useState(200);
+  const [bags, setBags] = useState(250);
   const { isMobile, isTablet } = useResponsive();
 
   const tier = DISCOUNT_TIERS.find(t => bags >= t.min && bags <= t.max) || DISCOUNT_TIERS[0];
   const basePrice = 385;
   const discountedTotal = Math.round(bags * basePrice * (1 - tier.discount / 100));
-  const sliderPct = ((bags - 50) / (2000 - 50)) * 100;
 
-  const filtered = category === 'All' ? BUILDING_MATERIALS : BUILDING_MATERIALS.filter(m => m.category?.toLowerCase().includes(category.toLowerCase()));
+  const filtered = category === 'All'
+    ? BUILDING_MATERIALS
+    : BUILDING_MATERIALS.filter(m => m.category?.toLowerCase().includes(category.toLowerCase()));
 
   return (
-    <div className="animate-fade" style={{ background: '#FFFFFF' }}>
+    <div style={{ background: '#FFFFFF', minHeight: '90vh', fontFamily: 'Inter, sans-serif' }}>
 
-      {/* ── HERO ── */}
-      <div style={{ position: 'relative', background: '#0B192C', overflow: 'hidden', padding: '64px 0 52px' }}>
-        <img src="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=1800&q=70" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.18 }} />
+      {/* ── 1. COMPACT EXECUTIVE HERO BANNER ── */}
+      <section style={{
+        background: 'linear-gradient(180deg, #EEF5FF 0%, #FFFFFF 100%)',
+        borderBottom: '1px solid #E5EBF4',
+        padding: isMobile ? '16px 0 14px' : '20px 0 16px',
+        position: 'relative',
+        overflow: 'hidden',
+      }}>
         <div className="rr-container" style={{ position: 'relative', zIndex: 2 }}>
-          <p style={eyebrow}><span style={{ display: 'inline-block', width: '24px', height: '2px', background: 'rgba(255,255,255,0.3)' }} /> B2B Wholesale Building Materials</p>
-          <h1 style={heroH1}>Factory-Direct Building Materials<br />at Wholesale Prices</h1>
-          <p style={heroSub}>UltraTech Cement, TATA Tiscon TMT Steel, Kajaria Tiles & Schneider Electricals at direct factory rates — GST invoice, same-day dispatch across 35+ cities.</p>
-          <div style={{ display: 'flex', gap: '24px', marginTop: '28px', flexWrap: 'wrap' }}>
-            {['Factory-Direct Pricing', 'GST Compliant Invoices', 'Site Delivery — 35 Cities', 'ISI/BIS Certified Stocks'].map(t => (
-              <div key={t} style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
-                <CheckCircle size={14} style={{ color: 'rgba(255,255,255,0.55)' }} />
-                <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.65)', fontFamily: 'Manrope, sans-serif' }}>{t}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── BULK DISCOUNT CALCULATOR ── */}
-      <section style={{ background: '#F8F7F4', borderBottom: '1px solid #E4E1DA', padding: '64px 0' }}>
-        <div className="rr-container">
-          <div style={{ marginBottom: '28px' }}>
-            <p className="section-label">Bulk Discount Calculator</p>
-            <h2 className="section-h2">Calculate Your Site Order Discount</h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontSize: '11px',
+              fontWeight: 800,
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+              color: '#0866F5',
+            }}>
+              <Package size={13} color="#0866F5" />
+              B2B WHOLESALE BUILDING MATERIALS · DIRECT FACTORY RATES
+            </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : (isTablet ? '1fr 1fr' : '1.5fr 1fr 1fr 1fr'), gap: '2px', background: '#E4E1DA', border: '1px solid #E4E1DA', borderRadius: '2px', overflow: 'hidden' }}>
+          <h1 style={{
+            fontSize: isMobile ? '20px' : '24px',
+            fontWeight: 800,
+            color: '#0F172A',
+            lineHeight: 1.25,
+            letterSpacing: '-0.02em',
+            margin: '0 0 4px 0',
+            maxWidth: '820px',
+          }}>
+            Factory-Direct Building Materials at <span style={{ color: '#0866F5' }}>Wholesale Prices</span>
+          </h1>
 
-            {/* Slider */}
-            <div style={{ background: 'white', padding: '32px 28px' }}>
-              <p style={fLabel}>Order Quantity (Cement Bags)</p>
-              <p style={{ fontSize: '2rem', fontWeight: 800, color: '#0B192C', letterSpacing: '-0.04em', fontFamily: 'Manrope, sans-serif', lineHeight: 1, marginBottom: '2px' }}>{bags.toLocaleString()} <span style={{ fontSize: '0.9rem', fontWeight: 500, color: '#9CA3AF' }}>bags</span></p>
-              <p style={{ fontSize: '0.72rem', color: '#9CA3AF', fontFamily: 'Manrope, sans-serif', marginBottom: '16px' }}>{(bags * 50).toLocaleString()} kg total weight</p>
-              <input type="range" min={50} max={2000} step={50} value={bags} onChange={e => setBags(Number(e.target.value))}
-                style={{ width: '100%', appearance: 'none', height: '3px', borderRadius: '2px', outline: 'none', cursor: 'pointer', background: `linear-gradient(to right, #0B192C ${sliderPct}%, #DDD8D0 ${sliderPct}%)` }} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px' }}>
-                <span style={{ fontSize: '0.65rem', color: '#9CA3AF', fontFamily: 'Manrope, sans-serif' }}>50 bags</span>
-                <span style={{ fontSize: '0.65rem', color: '#9CA3AF', fontFamily: 'Manrope, sans-serif' }}>2,000 bags</span>
-              </div>
-            </div>
+          <p style={{
+            fontSize: '12.5px',
+            color: '#64748B',
+            lineHeight: 1.5,
+            maxWidth: '750px',
+            margin: '0 0 12px 0',
+          }}>
+            UltraTech Cement, TATA Tiscon TMT Steel, Kajaria Tiles & Schneider Electricals at direct distributor rates with GST invoice and same-day dispatch.
+          </p>
 
-            {/* Discount tiers */}
-            {DISCOUNT_TIERS.map(t => (
-              <div key={t.label} style={{ background: bags >= t.min && bags <= t.max ? '#0B192C' : 'white', padding: '28px 22px', transition: 'background 0.2s' }}>
-                <p style={{ fontSize: '0.62rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: bags >= t.min && bags <= t.max ? 'rgba(255,255,255,0.45)' : '#9CA3AF', fontFamily: 'Manrope, sans-serif', marginBottom: '8px' }}>{t.label}</p>
-                <p style={{ fontSize: '1.8rem', fontWeight: 800, color: bags >= t.min && bags <= t.max ? 'white' : '#0B192C', letterSpacing: '-0.04em', fontFamily: 'Manrope, sans-serif', lineHeight: 1, marginBottom: '4px' }}>{t.discount}% <span style={{ fontSize: '0.85rem', fontWeight: 500, opacity: 0.5 }}>off</span></p>
-                <p style={{ fontSize: '0.75rem', color: bags >= t.min && bags <= t.max ? 'rgba(255,255,255,0.55)' : '#6B6B6B', fontFamily: 'Manrope, sans-serif' }}>{t.min}–{t.max === Infinity ? '2000+' : t.max} bags</p>
-                {bags >= t.min && bags <= t.max && (
-                  <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                    <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', fontFamily: 'Manrope, sans-serif' }}>Your Total</p>
-                    <p style={{ fontSize: '1.1rem', fontWeight: 800, color: 'white', fontFamily: 'Manrope, sans-serif' }}>₹ {discountedTotal.toLocaleString()}</p>
-                  </div>
-                )}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: isMobile ? '12px' : '24px',
+            paddingTop: '10px',
+            borderTop: '1px solid rgba(226, 232, 240, 0.8)',
+            fontSize: '11.5px',
+            flexWrap: 'wrap',
+          }}>
+            {[
+              { label: 'Factory-Direct Pricing', desc: 'Zero markup' },
+              { label: 'GST Compliant Invoices', desc: '100% ITC' },
+              { label: 'Direct Site Delivery', desc: 'Crane unloading' },
+              { label: 'ISI / BIS Certified', desc: 'Test reports' },
+            ].map((t, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Check size={13} strokeWidth={2.8} style={{ color: '#0866F5', flexShrink: 0 }} />
+                <span style={{ fontWeight: 700, color: '#1E293B' }}>{t.label}</span>
+                <span style={{ color: '#94A3B8', fontSize: '11px' }}>({t.desc})</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── FEATURED BRANDS ── */}
-      <section className="rr-section">
+      {/* ── 2. BULK SAVINGS CALCULATOR ── */}
+      <section style={{ padding: '64px 0', background: '#FFFFFF' }}>
         <div className="rr-container">
-          <div className="section-header-row" style={{ marginBottom: '28px' }}>
+          <div style={{ marginBottom: '32px' }}>
+            <span style={{
+              fontSize: '12px',
+              fontWeight: 700,
+              color: '#0866F5',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              display: 'block',
+              marginBottom: '8px',
+            }}>
+              Volume Pricing Tiers
+            </span>
+            <h2 style={{
+              fontSize: isMobile ? '24px' : '34px',
+              fontWeight: 800,
+              color: '#0F172A',
+              letterSpacing: '-0.02em',
+            }}>
+              Calculate Your Site Bulk Discount
+            </h2>
+          </div>
+
+          <div style={{
+            background: '#FFFFFF',
+            border: '1px solid #E5EBF4',
+            borderRadius: '20px',
+            padding: isMobile ? '24px' : '36px',
+            boxShadow: '0 8px 30px rgba(11, 31, 68, 0.05)',
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : '1.2fr 1fr',
+            gap: '32px',
+            alignItems: 'center',
+          }}>
             <div>
-              <p className="section-label">Top Brand Partners</p>
-              <h2 className="section-h2">Factory-Authorised Wholesale Brands</h2>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '8px' }}>
+                <label style={{ fontSize: '14px', fontWeight: 700, color: '#0F172A' }}>Order Quantity (Cement Bags)</label>
+                <span style={{ fontSize: '24px', fontWeight: 800, color: '#0866F5' }}>
+                  {bags.toLocaleString()} <span style={{ fontSize: '14px', color: '#64748B', fontWeight: 500 }}>bags</span>
+                </span>
+              </div>
+              <p style={{ fontSize: '12px', color: '#64748B', marginBottom: '16px' }}>
+                {(bags * 50).toLocaleString()} kg total material weight
+              </p>
+              <input
+                type="range"
+                min={50}
+                max={2000}
+                step={25}
+                value={bags}
+                onChange={e => setBags(Number(e.target.value))}
+                style={{
+                  width: '100%',
+                  accentColor: '#0866F5',
+                  height: '6px',
+                  cursor: 'pointer',
+                  marginBottom: '24px',
+                }}
+              />
+
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '8px',
+              }}>
+                {DISCOUNT_TIERS.map(t => {
+                  const isActive = bags >= t.min && bags <= t.max;
+                  return (
+                    <div
+                      key={t.label}
+                      style={{
+                        padding: '12px 10px',
+                        borderRadius: '10px',
+                        border: isActive ? '1.5px solid #0866F5' : '1px solid #E5EBF4',
+                        background: isActive ? '#EEF5FF' : '#F8FAFD',
+                        textAlign: 'center',
+                      }}
+                    >
+                      <div style={{ fontSize: '18px', fontWeight: 800, color: isActive ? '#0866F5' : '#0F172A' }}>
+                        {t.discount}%
+                      </div>
+                      <div style={{ fontSize: '10px', color: '#64748B' }}>
+                        {t.label}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div style={{
+              background: 'linear-gradient(135deg, #0866F5 0%, #0645B8 100%)',
+              borderRadius: '16px',
+              padding: '32px',
+              color: '#FFFFFF',
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 8px 24px rgba(8, 102, 245, 0.25)',
+              justifyContent: 'space-between',
+            }}>
+              <div>
+                <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: '8px' }}>
+                  Estimated Order Total (Incl. GST)
+                </span>
+                <div style={{ fontSize: '34px', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '6px' }}>
+                  ₹ {discountedTotal.toLocaleString()}
+                </div>
+                <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', marginBottom: '18px' }}>
+                  You save ₹ {((bags * basePrice) - discountedTotal).toLocaleString()} with {tier.discount}% volume tier discount.
+                </p>
+              </div>
+
+              <button
+                onClick={() => onAddToCart && onAddToCart({ name: `UltraTech Cement (${bags} Bags)`, price: `₹ ${discountedTotal.toLocaleString()}` })}
+                style={{
+                  width: '100%',
+                  background: '#0866F5',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: '12px',
+                  padding: '14px',
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  boxShadow: '0 4px 16px rgba(8, 102, 245, 0.4)',
+                }}
+              >
+                <span>Request Dispatch Quote</span>
+                <ArrowRight size={16} />
+              </button>
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: '1px', background: '#E4E1DA', border: '1px solid #E4E1DA', borderRadius: '2px', overflow: 'hidden', marginBottom: '48px' }}>
-            {FEATURED_BRANDS.map(b => (
-              <div key={b.name} style={{ background: 'white', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'background 0.15s' }}
-                onMouseEnter={e => e.currentTarget.style.background = '#FAFAF8'}
-                onMouseLeave={e => e.currentTarget.style.background = 'white'}>
-                <div style={{ position: 'relative', aspectRatio: '16/9', overflow: 'hidden' }}>
-                  <img src={b.image} alt={b.name} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s' }}
-                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'}
-                    onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
-                  <span style={{ position: 'absolute', top: '10px', left: '10px', background: '#0B192C', color: 'white', fontSize: '0.6rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '4px 8px', borderRadius: '2px', fontFamily: 'Manrope, sans-serif' }}>Factory Direct</span>
-                </div>
-                <div style={{ padding: '24px 22px', flex: 1 }}>
-                  <p style={{ fontSize: '0.62rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9CA3AF', fontFamily: 'Manrope, sans-serif', marginBottom: '6px' }}>{b.category}</p>
-                  <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0B192C', fontFamily: 'Manrope, sans-serif', marginBottom: '8px' }}>{b.name}</h3>
-                  <p style={{ fontSize: '0.8rem', color: '#6B6B6B', lineHeight: 1.6, fontFamily: 'Manrope, sans-serif', marginBottom: '14px' }}>{b.desc}</p>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #F0EDE7', paddingTop: '14px' }}>
-                    <div>
-                      <p style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0B192C', letterSpacing: '-0.02em', fontFamily: 'Manrope, sans-serif' }}>{b.price}</p>
-                      <p style={{ fontSize: '0.68rem', color: '#9CA3AF', fontFamily: 'Manrope, sans-serif' }}>{b.moq}</p>
-                    </div>
-                    <button style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.74rem', fontWeight: 700, color: '#0B192C', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Manrope, sans-serif', borderBottom: '1.5px solid #0B192C', paddingBottom: '1px' }}>
-                      Request Quote <ArrowRight size={12} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+        </div>
+      </section>
+
+      {/* ── 3. FEATURED BRANDS & CATALOG ── */}
+      <section style={{
+        background: '#F8FAFD',
+        borderTop: '1px solid #E5EBF4',
+        padding: '64px 0 80px',
+      }}>
+        <div className="rr-container">
+          <div style={{ marginBottom: '32px' }}>
+            <span style={{
+              fontSize: '12px',
+              fontWeight: 700,
+              color: '#0866F5',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              display: 'block',
+              marginBottom: '8px',
+            }}>
+              Verified Manufacturers
+            </span>
+            <h2 style={{
+              fontSize: isMobile ? '24px' : '32px',
+              fontWeight: 800,
+              color: '#0F172A',
+              letterSpacing: '-0.02em',
+              marginBottom: '20px',
+            }}>
+              Wholesale Material Catalog
+            </h2>
+
+            {/* Category Filter Pills */}
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              {CATEGORIES.map(c => {
+                const isSelected = category === c;
+                return (
+                  <button
+                    key={c}
+                    onClick={() => setCategory(c)}
+                    style={{
+                      padding: '8px 18px',
+                      borderRadius: '20px',
+                      fontSize: '13px',
+                      fontWeight: isSelected ? 600 : 500,
+                      background: isSelected ? '#0866F5' : '#FFFFFF',
+                      color: isSelected ? '#FFFFFF' : '#0F172A',
+                      border: isSelected ? '1px solid #0866F5' : '1px solid #E5EBF4',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    {c}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Category filter */}
-          <div style={{ display: 'flex', gap: '4px', marginBottom: '20px', flexWrap: 'wrap' }}>
-            {CATEGORIES.map(c => (
-              <button key={c} onClick={() => setCategory(c)}
-                style={{ padding: '8px 16px', border: category === c ? 'none' : '1.5px solid #E4E1DA', borderRadius: '2px', fontSize: '0.78rem', fontWeight: category === c ? 700 : 400, cursor: 'pointer', background: category === c ? '#0B192C' : 'white', color: category === c ? 'white' : '#6B6B6B', fontFamily: 'Manrope, sans-serif', transition: 'all 0.15s' }}>
-                {c}
-              </button>
-            ))}
-          </div>
-
-          {/* Product grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : (isTablet ? 'repeat(3, 1fr)' : 'repeat(4, 1fr)'), gap: '1px', background: '#E4E1DA', border: '1px solid #E4E1DA', borderRadius: '2px', overflow: 'hidden' }}>
+          {/* Product Cards Grid */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'),
+            gap: '20px',
+          }}>
             {filtered.map(mat => (
-              <div key={mat.id} style={{ background: 'white', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'background 0.15s' }}
-                onMouseEnter={e => e.currentTarget.style.background = '#FAFAF8'}
-                onMouseLeave={e => e.currentTarget.style.background = 'white'}>
-                <div style={{ position: 'relative', aspectRatio: '16/9', overflow: 'hidden', background: '#F8F7F4' }}>
-                  <img src={mat.image} alt={mat.name} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s' }}
-                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'}
-                    onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
-                  <span style={{ position: 'absolute', top: '10px', left: '10px', background: '#0B192C', color: 'white', fontSize: '0.6rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '4px 8px', borderRadius: '2px', fontFamily: 'Manrope, sans-serif' }}>Wholesale</span>
-                  <span style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(255,255,255,0.92)', fontSize: '0.7rem', fontWeight: 700, color: '#0B192C', padding: '3px 8px', borderRadius: '2px', fontFamily: 'Manrope, sans-serif', display: 'flex', alignItems: 'center', gap: '3px' }}>
-                    <Star size={10} fill="#0B192C" color="#0B192C" />{mat.rating}
-                  </span>
-                </div>
-                <div style={{ padding: '18px 18px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                  <p style={{ fontSize: '0.62rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9CA3AF', fontFamily: 'Manrope, sans-serif', marginBottom: '5px' }}>{mat.category}</p>
-                  <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0B192C', fontFamily: 'Manrope, sans-serif', lineHeight: 1.3, marginBottom: '8px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{mat.name}</h3>
-                  <span style={{ display: 'inline-block', fontSize: '0.68rem', fontWeight: 600, color: '#6B6B6B', background: '#F8F7F4', border: '1px solid #E4E1DA', padding: '3px 8px', borderRadius: '2px', fontFamily: 'Manrope, sans-serif', marginBottom: '14px', alignSelf: 'flex-start' }}>{mat.moq}</span>
-                  <div style={{ borderTop: '1px solid #F0EDE7', paddingTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
-                    <div>
-                      <p style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0B192C', fontFamily: 'Manrope, sans-serif', lineHeight: 1 }}>{mat.price}</p>
-                      <p style={{ fontSize: '0.7rem', color: '#9CA3AF', textDecoration: 'line-through', fontFamily: 'Manrope, sans-serif' }}>{mat.originalPrice}</p>
+              <div
+                key={mat.id}
+                style={{
+                  background: '#FFFFFF',
+                  border: '1px solid #E5EBF4',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  boxShadow: '0 2px 10px rgba(11, 31, 68, 0.03)',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = '0 12px 24px rgba(11, 31, 68, 0.06)';
+                  e.currentTarget.style.borderColor = '#C7D9F5';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 10px rgba(11, 31, 68, 0.03)';
+                  e.currentTarget.style.borderColor = '#E5EBF4';
+                }}
+              >
+                <div>
+                  <div style={{ position: 'relative', height: '170px', overflow: 'hidden', background: '#EEF5FF' }}>
+                    <img
+                      src={mat.image}
+                      alt={mat.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                    <div style={{
+                      position: 'absolute',
+                      top: '10px',
+                      left: '10px',
+                      background: 'linear-gradient(135deg, #0866F5 0%, #0645B8 100%)',
+                      color: '#FFFFFF',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                    }}>
+                      Wholesale
                     </div>
-                    <button onClick={() => onAddToCart(mat)}
-                      style={{ display: 'flex', alignItems: 'center', gap: '5px', background: '#0B192C', color: 'white', border: 'none', borderRadius: '2px', padding: '8px 12px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'Manrope, sans-serif', transition: 'background 0.2s' }}
-                      onMouseEnter={e => e.currentTarget.style.background = '#162B48'}
-                      onMouseLeave={e => e.currentTarget.style.background = '#0B192C'}>
-                      Request Quote <ArrowRight size={12} />
-                    </button>
                   </div>
+
+                  <div style={{ padding: '18px 18px 12px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748B', display: 'block', marginBottom: '4px' }}>
+                      {mat.category}
+                    </span>
+                    <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A', lineHeight: 1.35, marginBottom: '8px' }}>
+                      {mat.name}
+                    </h3>
+                    <div style={{
+                      display: 'inline-block',
+                      background: '#F8FAFD',
+                      border: '1px solid #E5EBF4',
+                      padding: '3px 8px',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      color: '#475569',
+                      fontWeight: 600,
+                    }}>
+                      {mat.moq}
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{
+                  padding: '12px 18px 18px',
+                  borderTop: '1px solid #F1F5F9',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                  <div>
+                    <div style={{ fontSize: '17px', fontWeight: 800, color: '#0F172A' }}>
+                      {mat.price}
+                    </div>
+                    {mat.originalPrice && (
+                      <div style={{ fontSize: '11px', color: '#94A3B8', textDecoration: 'line-through' }}>
+                        {mat.originalPrice}
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => onAddToCart && onAddToCart(mat)}
+                    style={{
+                      background: '#0866F5',
+                      color: '#FFFFFF',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '8px 14px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Add to Cart
+                  </button>
                 </div>
               </div>
             ))}
@@ -177,12 +442,6 @@ export default function MaterialsPage({ onAddToCart }) {
         </div>
       </section>
 
-      <style>{`input[type='range']::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #0B192C; border: 2px solid white; box-shadow: 0 0 0 1.5px #0B192C; cursor: pointer; }`}</style>
     </div>
   );
 }
-
-const eyebrow = { fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', fontFamily: 'Manrope, sans-serif' };
-const heroH1 = { fontFamily: 'Manrope, sans-serif', fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', fontWeight: 800, color: 'white', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: '14px', maxWidth: '700px' };
-const heroSub = { fontSize: '0.92rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.65, maxWidth: '520px', fontFamily: 'Manrope, sans-serif' };
-const fLabel = { fontSize: '0.62rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#9CA3AF', fontFamily: 'Manrope, sans-serif', marginBottom: '10px' };

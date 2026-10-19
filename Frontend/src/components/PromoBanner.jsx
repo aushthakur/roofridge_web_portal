@@ -10,8 +10,8 @@ export default function PromoBanner({
   image, 
   onClick, 
   badgeText,
-  themeColor = '#F8F7F4', // Base color for the gradient fade
-  textColor = '#0B192C',
+  themeColor = '#EEF5FF', // Base color for the gradient fade
+  textColor = '#0F172A',
   highlightColor = '#E74C3C' // e.g. pink, red, or brand color
 }) {
   const { isMobile } = useResponsive();
@@ -23,7 +23,7 @@ export default function PromoBanner({
           position: 'relative',
           width: '100%',
           minHeight: isMobile ? '240px' : '280px',
-          borderRadius: '2px',
+          borderRadius: '20px',
           overflow: 'hidden',
           cursor: 'pointer',
           backgroundImage: `
@@ -32,7 +32,8 @@ export default function PromoBanner({
           `,
           backgroundSize: 'cover',
           backgroundPosition: 'center right',
-          border: '1px solid #E4E1DA',
+          border: '1.5px solid #E2E8F0',
+          boxShadow: '0 8px 30px rgba(11, 31, 68, 0.06)',
           display: 'flex',
           alignItems: 'center',
           transition: 'transform 0.2s ease, box-shadow 0.2s ease',
@@ -60,7 +61,7 @@ export default function PromoBanner({
               fontWeight: 800,
               fontSize: isMobile ? '0.65rem' : '0.85rem',
               lineHeight: 1.2,
-              fontFamily: 'Manrope, sans-serif',
+              fontFamily: 'Inter, sans-serif',
               padding: '10px'
             }}>
               {badgeText}
@@ -83,7 +84,7 @@ export default function PromoBanner({
               color: textColor,
               lineHeight: 1.1,
               marginBottom: '16px',
-              fontFamily: 'Manrope, sans-serif'
+              fontFamily: 'Inter, sans-serif'
             }}>
               {titleTop} <br/>
               <span style={{ 
@@ -107,7 +108,7 @@ export default function PromoBanner({
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              fontFamily: 'Manrope, sans-serif'
+              fontFamily: 'Inter, sans-serif'
             }}>
               {subtitle} <ArrowRight size={14} color={highlightColor} />
             </p>
@@ -120,7 +121,7 @@ export default function PromoBanner({
             right: '16px',
             fontSize: '0.55rem',
             color: 'rgba(0,0,0,0.5)',
-            fontFamily: 'Manrope, sans-serif',
+            fontFamily: 'Inter, sans-serif',
             fontWeight: 600
           }}>
             *T&C Apply

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import AnnouncementBar from './components/AnnouncementBar';
 import TopUtilityBar from './components/TopUtilityBar';
 import MainHeader from './components/MainHeader';
@@ -27,13 +28,23 @@ import PostPropertyModal from './components/PostPropertyModal';
 import CitySelectorModal from './components/CitySelectorModal';
 import AuthModal from './components/AuthModal';
 import WishlistDrawer from './components/WishlistDrawer';
+import ServiceBookingModal from './components/ServiceBookingModal';
+import MaterialCheckoutModal from './components/MaterialCheckoutModal';
 
 import { CITIES, PROPERTIES } from './data/mockData';
 import { MessageSquare } from 'lucide-react';
 
 export default function App() {
-  const [selectedCity, setSelectedCity] = useState(CITIES[0]); // Delhi NCR
-  const [activePage, setActivePage] = useState('home'); // 'home', 'buy', 'rent', 'interiors', 'construction', 'materials', 'professionals', 'maintenance', 'legal', 'myhub', 'experience', 'track', 'b2b'
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [selectedCity, setSelectedCity] = useState(CITIES.find(c => c.id === 'mumbai') || CITIES[1] || CITIES[0]); // Mumbai default
+  
+  // Compute activePage from current URL path
+  const currentPathSegment = location.pathname.replace(/^\//, '').split('/')[0];
+  const activePage = currentPathSegment ? currentPathSegment : 'home';
+
+  const [hubTab, setHubTab] = useState('listings');
   
   // Modals & Drawers state
   const [showCityModal, setShowCityModal] = useState(false);
@@ -42,6 +53,20 @@ export default function App() {
   const [showWishlistDrawer, setShowWishlistDrawer] = useState(false);
   const [showHamburger, setShowHamburger] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
+  const [searchFilters, setSearchFilters] = useState(null);
+
+  // Dynamic booking & checkout modals
+  const [serviceBooking, setServiceBooking] = useState({
+    isOpen: false,
+    serviceCategory: 'interiors',
+    serviceName: 'Turnkey Interior Consultation',
+    estimatedAmount: 0,
+  });
+  const [materialCheckout, setMaterialCheckout] = useState({
+    isOpen: false,
+    items: [],
+    totalAmount: 0,
+  });
 
   // Collections state
   const [wishlist, setWishlist] = useState(['prop-101']);
@@ -61,20 +86,6 @@ export default function App() {
     }
   }, [user, hasSeenInitialAuth]);
 
-  useEffect(() => {
-    if (user) {
-      const handlePopState = (e) => {
-        const confirmLeave = window.confirm("You are currently logged in. Are you sure you want to go back and leave the platform?");
-        if (!confirmLeave) {
-          window.history.pushState(null, '', window.location.pathname);
-        }
-      };
-      window.history.pushState(null, '', window.location.pathname);
-      window.addEventListener('popstate', handlePopState);
-      return () => window.removeEventListener('popstate', handlePopState);
-    }
-  }, [user]);
-
   const handleLogin = (userData) => {
     setUser(userData);
     localStorage.setItem('rr_user', JSON.stringify(userData));
@@ -83,10 +94,45 @@ export default function App() {
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem('rr_user');
+    localStorage.removeItem('rr_token');
   };
 
-  const handleNavigate = (pageKey) => {
-    setActivePage(pageKey);
+  const handleNavigate = (pageKey, extra = null) => {
+    if (typeof extra === 'string') {
+      setHubTab(extra);
+    } else if (extra && typeof extra === 'object') {
+      setSearchFilters(extra);
+    }
+
+    const routeMap = {
+      home: '/',
+      buy: '/buy',
+      rent: '/rent',
+      properties: '/properties',
+      projects: '/projects',
+      plot: '/plot',
+      commercial: '/commercial',
+      luxury: '/luxury',
+      pg: '/pg',
+      interiors: '/interiors',
+      construction: '/construction',
+      materials: '/materials',
+      professionals: '/professionals',
+      services: '/services',
+      maintenance: '/maintenance',
+      loans: '/loans',
+      legal: '/legal',
+      advice: '/advice',
+      'loans-legal': '/loans-legal',
+      myhub: '/myhub',
+      'my-hub': '/myhub',
+      experience: '/experience',
+      track: '/track',
+      b2b: '/b2b',
+    };
+
+    const target = routeMap[pageKey] || `/${pageKey}`;
+    navigate(target);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -101,20 +147,36 @@ export default function App() {
     setShowWishlistDrawer(true);
   };
 
+  const handleOpenServiceBooking = (category = 'interiors', name = 'Turnkey Interior Consultation', amount = 0) => {
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+    setServiceBooking({
+      isOpen: true,
+      serviceCategory: category,
+      serviceName: name,
+      estimatedAmount: amount,
+    });
+  };
+
+  const handleOpenMaterialCheckout = (customItems = null, customTotal = 0) => {
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+    const orderItems = customItems && customItems.length > 0 ? customItems : cart;
+    setMaterialCheckout({
+      isOpen: true,
+      items: orderItems,
+      totalAmount: customTotal,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-[#FAFAFA] text-[#1E293B] font-sans antialiased flex flex-col justify-between">
       <div>
-        {/* Top Announcement Bar */}
-        <AnnouncementBar onOpenDeal={() => setShowPostPropertyModal(true)} />
-
-        {/* Utility Bar */}
-        <TopUtilityBar 
-          selectedCity={selectedCity} 
-          onOpenCity={() => setShowCityModal(true)}
-          onNavigate={handleNavigate}
-        />
-
-        {/* Main Header */}
+        {/* Single Reference Header */}
         <MainHeader 
           selectedCity={selectedCity}
           onOpenCity={() => setShowCityModal(true)}
@@ -130,106 +192,200 @@ export default function App() {
           onOpenHamburger={() => setShowHamburger(true)}
           user={user}
           onLogout={handleLogout}
-        />
-
-        {/* Category Mega Navbar — desktop only */}
-        <CategoryNavbar 
-          activeCategory={activePage}
-          onSelectCategory={handleNavigate}
+          onNavigate={handleNavigate}
+          activePage={activePage}
         />
 
         {/* Dynamic Page Router Content */}
         <main className="min-h-[60vh]">
-          {activePage === 'home' && (
-            <HomePage 
-              selectedCity={selectedCity}
-              onNavigate={handleNavigate}
-              onSelectProperty={(prop) => setSelectedProperty(prop)}
-              wishlist={wishlist}
-              onToggleWishlist={handleToggleWishlist}
-              onAddToCart={handleAddToCart}
-              onOpenAuth={() => setShowAuthModal(true)}
-              onOpenPostProperty={() => setShowPostPropertyModal(true)}
+          <Routes>
+            <Route 
+              path="/" 
+              element={
+                <HomePage 
+                  selectedCity={selectedCity}
+                  onNavigate={handleNavigate}
+                  onSelectCity={(city) => setSelectedCity(city)}
+                  onSelectProperty={(prop) => setSelectedProperty(prop)}
+                  wishlist={wishlist}
+                  onToggleWishlist={handleToggleWishlist}
+                  onAddToCart={handleAddToCart}
+                  onOpenAuth={() => setShowAuthModal(true)}
+                  onOpenPostProperty={() => setShowPostPropertyModal(true)}
+                />
+              } 
             />
-          )}
 
-          {(activePage === 'buy' || activePage === 'rent' || activePage === 'luxury') && (
-            <PropertiesPage 
-              mode={activePage}
-              selectedCity={selectedCity}
-              onSelectProperty={(prop) => setSelectedProperty(prop)}
-              wishlist={wishlist}
-              onToggleWishlist={handleToggleWishlist}
+            {['buy', 'rent', 'properties', 'projects', 'plot', 'commercial', 'luxury', 'pg'].map(pMode => (
+              <Route 
+                key={pMode}
+                path={`/${pMode}`} 
+                element={
+                  <PropertiesPage 
+                    mode={pMode === 'properties' ? 'buy' : pMode}
+                    selectedCity={selectedCity}
+                    searchFilters={searchFilters}
+                    onSelectProperty={(prop) => setSelectedProperty(prop)}
+                    wishlist={wishlist}
+                    onToggleWishlist={handleToggleWishlist}
+                  />
+                } 
+              />
+            ))}
+
+            <Route 
+              path="/interiors" 
+              element={
+                <InteriorsPage 
+                  onBookConsultation={(styleName, budget) => {
+                    const amount = typeof budget === 'string' 
+                      ? (parseInt(budget.replace(/[^0-9]/g, '')) * (budget.includes('Lakh') ? 100000 : 1)) 
+                      : (budget || 850000);
+                    handleOpenServiceBooking('interiors', styleName || 'Full Home Turnkey Interior Design', amount);
+                  }}
+                />
+              } 
             />
-          )}
 
-          {activePage === 'interiors' && (
-            <InteriorsPage 
-              onBookConsultation={() => setShowPostPropertyModal(true)}
+            <Route 
+              path="/construction" 
+              element={
+                <ConstructionPage 
+                  onOpenAuth={() => setShowAuthModal(true)}
+                  onBookConstruction={(category, name, amount) => {
+                    handleOpenServiceBooking('construction', name || 'Residential Turnkey Construction', amount || 2500000);
+                  }}
+                />
+              } 
             />
-          )}
 
-          {activePage === 'construction' && (
-            <ConstructionPage 
-              onOpenAuth={() => setShowAuthModal(true)}
+            <Route 
+              path="/materials" 
+              element={
+                <MaterialsPage 
+                  onAddToCart={handleAddToCart}
+                />
+              } 
             />
-          )}
 
-          {activePage === 'materials' && (
-            <MaterialsPage 
-              onAddToCart={handleAddToCart}
+            <Route 
+              path="/professionals" 
+              element={
+                <ProfessionalsPage 
+                  selectedCity={selectedCity}
+                />
+              } 
             />
-          )}
 
-          {activePage === 'professionals' && (
-            <ProfessionalsPage 
-              selectedCity={selectedCity}
+            <Route 
+              path="/services" 
+              element={
+                <HomeServicesPage 
+                  selectedCity={selectedCity}
+                  onOpenAuth={() => setShowAuthModal(true)}
+                  onBookService={(cat, name, price) => {
+                    const amount = typeof price === 'string' ? parseInt(price.replace(/[^0-9]/g, '')) || 3499 : (price || 3499);
+                    handleOpenServiceBooking(cat || 'home_services', name, amount);
+                  }}
+                />
+              } 
             />
-          )}
 
-          {activePage === 'services' && (
-            <HomeServicesPage 
-              selectedCity={selectedCity}
+            <Route 
+              path="/maintenance" 
+              element={
+                <MaintenancePage 
+                  onOpenAuth={() => setShowAuthModal(true)}
+                  onBookMaintenance={(cat, name, price) => {
+                    const amount = typeof price === 'string' ? parseInt(price.replace(/[^0-9]/g, '')) || 1499 : (price || 1499);
+                    handleOpenServiceBooking(cat || 'maintenance', name, amount);
+                  }}
+                />
+              } 
             />
-          )}
 
-          {activePage === 'maintenance' && (
-            <MaintenancePage 
-              onOpenAuth={() => setShowAuthModal(true)}
+            {['loans', 'legal', 'advice', 'loans-legal'].map(lMode => (
+              <Route 
+                key={lMode}
+                path={`/${lMode}`} 
+                element={
+                  <LoansLegalPage 
+                    mode={lMode === 'loans-legal' ? 'loans' : lMode}
+                    onOpenAuth={() => setShowAuthModal(true)}
+                  />
+                } 
+              />
+            ))}
+
+            <Route 
+              path="/myhub" 
+              element={
+                <MyPropertyHubPage 
+                  onOpenAuth={() => setShowAuthModal(true)}
+                  onOpenPostProperty={() => setShowPostPropertyModal(true)}
+                  onNavigate={handleNavigate}
+                  initialTab={hubTab}
+                />
+              } 
             />
-          )}
 
-          {(activePage === 'loans' || activePage === 'legal') && (
-            <LoansLegalPage 
-              onOpenAuth={() => setShowAuthModal(true)}
+            <Route 
+              path="/my-hub" 
+              element={
+                <MyPropertyHubPage 
+                  onOpenAuth={() => setShowAuthModal(true)}
+                  onOpenPostProperty={() => setShowPostPropertyModal(true)}
+                  onNavigate={handleNavigate}
+                  initialTab={hubTab}
+                />
+              } 
             />
-          )}
 
-          {activePage === 'myhub' && (
-            <MyPropertyHubPage 
-              onOpenAuth={() => setShowAuthModal(true)}
+            <Route 
+              path="/experience" 
+              element={
+                <ExperienceHubsPage 
+                  selectedCity={selectedCity}
+                />
+              } 
             />
-          )}
 
-          {activePage === 'experience' && (
-            <ExperienceHubsPage 
-              selectedCity={selectedCity}
+            <Route 
+              path="/track" 
+              element={<TrackProjectPage />} 
             />
-          )}
 
-          {activePage === 'track' && (
-            <TrackProjectPage />
-          )}
-
-          {activePage === 'b2b' && (
-            <B2BPartnerPage 
-              onOpenAuth={() => setShowAuthModal(true)}
+            <Route 
+              path="/b2b" 
+              element={
+                <B2BPartnerPage 
+                  onOpenAuth={() => setShowAuthModal(true)}
+                />
+              } 
             />
-          )}
+
+            {/* Catch-all fallback */}
+            <Route 
+              path="*" 
+              element={
+                <HomePage 
+                  selectedCity={selectedCity}
+                  onNavigate={handleNavigate}
+                  onSelectCity={(city) => setSelectedCity(city)}
+                  onSelectProperty={(prop) => setSelectedProperty(prop)}
+                  wishlist={wishlist}
+                  onToggleWishlist={handleToggleWishlist}
+                  onAddToCart={handleAddToCart}
+                  onOpenAuth={() => setShowAuthModal(true)}
+                  onOpenPostProperty={() => setShowPostPropertyModal(true)}
+                />
+              } 
+            />
+          </Routes>
         </main>
       </div>
 
-      {/* Footer — hidden on mobile (replaced by bottom nav) */}
+      {/* Main Global Footer */}
       <div className="desktop-footer">
         <Footer onNavigate={handleNavigate} />
       </div>
@@ -264,7 +420,7 @@ export default function App() {
           href="https://wa.me/919999999999?text=Hi%20Roof%20Ridge%20Team%2C%20I%20want%20to%20inquire%20about%20properties%2C%20construction%20and%20interior%20services." 
           target="_blank" 
           rel="noopener noreferrer"
-          style={{ width: '48px', height: '48px', background: '#0B192C', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(0,0,0,0.25)', color: 'white', border: '1.5px solid rgba(255,255,255,0.3)' }}
+          style={{ width: '50px', height: '50px', background: 'linear-gradient(135deg, #0866F5 0%, #0645B8 100%)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(8, 102, 245, 0.35)', color: 'white', border: '1.5px solid rgba(255,255,255,0.4)' }}
           title="WhatsApp Concierge"
         >
           <MessageSquare size={22} color="white" />
@@ -308,6 +464,47 @@ export default function App() {
           onClose={() => setShowWishlistDrawer(false)}
           onRemoveWishlist={handleToggleWishlist}
           onRemoveCart={(idx) => setCart(cart.filter((_, i) => i !== idx))}
+          onProceedToCheckout={() => {
+            setShowWishlistDrawer(false);
+            handleOpenMaterialCheckout(cart);
+          }}
+        />
+      )}
+
+      {/* Service Appointment Booking Modal */}
+      {serviceBooking.isOpen && (
+        <ServiceBookingModal 
+          isOpen={serviceBooking.isOpen}
+          onClose={() => setServiceBooking(prev => ({ ...prev, isOpen: false }))}
+          serviceCategory={serviceBooking.serviceCategory}
+          serviceName={serviceBooking.serviceName}
+          estimatedAmount={serviceBooking.estimatedAmount}
+          user={user}
+          onBookingSuccess={() => {
+            // Refreshes hub data
+          }}
+          onNavigateToHub={() => {
+            setServiceBooking(prev => ({ ...prev, isOpen: false }));
+            handleNavigate('myhub', 'bookings');
+          }}
+        />
+      )}
+
+      {/* Wholesale Material Checkout Modal */}
+      {materialCheckout.isOpen && (
+        <MaterialCheckoutModal 
+          isOpen={materialCheckout.isOpen}
+          onClose={() => setMaterialCheckout(prev => ({ ...prev, isOpen: false }))}
+          items={materialCheckout.items}
+          totalAmount={materialCheckout.totalAmount}
+          user={user}
+          onOrderSuccess={() => {
+            setCart([]);
+          }}
+          onNavigateToHub={() => {
+            setMaterialCheckout(prev => ({ ...prev, isOpen: false }));
+            handleNavigate('myhub', 'bookings');
+          }}
         />
       )}
     </div>
