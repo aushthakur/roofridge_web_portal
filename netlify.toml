@@ -1,0 +1,11 @@
+# Netlify configuration for Roof Ridge Frontend
+[build]
+  base = "Frontend"
+  command = "npm run build"
+  publish = "dist"
+
+# SPA Fallback rule for React Router
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
