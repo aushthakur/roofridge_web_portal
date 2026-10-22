@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { OAuth2Client } = require('google-auth-library');
 const ApiResponse = require('../utils/apiResponse');
+const smsService = require('../services/smsService');
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -42,14 +43,25 @@ exports.sendOtp = async (req, res) => {
     user.otp = { code: otp, expiresAt };
     await user.save();
 
+    // Dispatch OTP via SMS service (Twilio, Fast2SMS, Textbelt, or Mock Staging Fallback)
+    const smsResult = await smsService.sendOtpSms(formattedPhone, otp);
+
+    const shouldReturnDevOtp =
+      smsResult.isMock ||
+      process.env.ALLOW_DEV_OTP === 'true' ||
+      process.env.NODE_ENV !== 'production';
+
     return ApiResponse.success(
       res,
       {
         phone: formattedPhone,
         expiresInSeconds: 600,
-        devOtp: process.env.NODE_ENV !== 'production' ? otp : undefined,
+        devOtp: shouldReturnDevOtp ? otp : undefined,
+        provider: smsResult.provider,
       },
-      'OTP sent successfully to registered mobile number'
+      smsResult.isMock
+        ? 'OTP generated (Free staging OTP mode active)'
+        : 'OTP sent successfully to registered mobile number'
     );
   } catch (error) {
     return ApiResponse.error(res, 'Failed to send OTP: ' + error.message, 500);
@@ -70,9 +82,11 @@ exports.verifyOtp = async (req, res) => {
     const formattedPhone = phone.trim();
     let user = await User.findOne({ phone: formattedPhone }).select('+otp.code +otp.expiresAt');
 
-    const isDevEnv = process.env.NODE_ENV !== 'production';
-    const isStoredOtpValid = user && user.otp && user.otp.code === otp && user.otp.expiresAt > new Date();
-    const isDevBypass = isDevEnv && (otp === '1234' || otp === '123456');
+    const isDevOrStaging =
+      process.env.NODE_ENV !== 'production' || process.env.ALLOW_DEV_OTP === 'true';
+    const isStoredOtpValid =
+      user && user.otp && user.otp.code === otp && user.otp.expiresAt > new Date();
+    const isDevBypass = isDevOrStaging && (otp === '1234' || otp === '123456');
 
     const isValidOtp = isStoredOtpValid || isDevBypass;
 
@@ -80,7 +94,8 @@ exports.verifyOtp = async (req, res) => {
       return ApiResponse.error(res, 'Invalid or expired OTP. Please try again.', 400);
     }
 
-    const isDemoAdminPhone = isDevEnv && (formattedPhone === '9999999999' || formattedPhone.endsWith('99999'));
+    const isDemoAdminPhone =
+      isDevOrStaging && (formattedPhone === '9999999999' || formattedPhone.endsWith('99999'));
 
     if (!user) {
       user = await User.create({
