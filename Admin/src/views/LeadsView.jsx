@@ -170,24 +170,28 @@ export default function LeadsView() {
                       <div className="font-bold text-slate-900">{lead.fullName}</div>
                       <div className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
                         <Phone size={10} className="text-slate-400" />
-                        <span className="font-mono">{lead.phone}</span>
-                        <a
-                          href={`tel:${lead.phone}`}
-                          title="Call Client"
-                          className="text-[#0866F5] hover:underline font-bold"
-                        >
-                          Call
-                        </a>
-                        <span className="text-slate-300">•</span>
-                        <a
-                          href={`https://wa.me/91${lead.phone.replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(lead.fullName)}%2C%20we%20received%20your%20VIP%20inquiry%20on%20Roof%20Ridge.`}
-                          target="_blank"
-                          rel="noreferrer"
-                          title="WhatsApp Client"
-                          className="text-emerald-600 hover:underline font-bold"
-                        >
-                          WA
-                        </a>
+                        <span className="font-mono">{lead.phone || 'N/A'}</span>
+                        {lead.phone && (
+                          <>
+                            <a
+                              href={`tel:${lead.phone}`}
+                              title="Call Client"
+                              className="text-[#0866F5] hover:underline font-bold"
+                            >
+                              Call
+                            </a>
+                            <span className="text-slate-300">•</span>
+                            <a
+                              href={`https://wa.me/91${lead.phone.replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(lead.fullName || 'Valued Client')}%2C%20we%20received%20your%20VIP%20inquiry%20on%20Roof%20Ridge.`}
+                              target="_blank"
+                              rel="noreferrer"
+                              title="WhatsApp Client"
+                              className="text-emerald-600 hover:underline font-bold"
+                            >
+                              WA
+                            </a>
+                          </>
+                        )}
                       </div>
                     </td>
                     <td className="px-4 py-3">

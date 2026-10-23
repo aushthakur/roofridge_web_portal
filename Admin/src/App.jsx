@@ -39,6 +39,13 @@ export default function App() {
   };
 
   useEffect(() => {
+    const handleAuthExpired = () => {
+      setToken('');
+      setAdminUser(null);
+      setLoginError('Your session has expired. Please log in again.');
+    };
+    window.addEventListener('admin_auth_expired', handleAuthExpired);
+
     if (token) {
       // Validate session and fetch overview
       fetchOverview();
@@ -49,6 +56,10 @@ export default function App() {
         } catch (e) {}
       }
     }
+
+    return () => {
+      window.removeEventListener('admin_auth_expired', handleAuthExpired);
+    };
   }, [token]);
 
   const handleLogin = async (e) => {

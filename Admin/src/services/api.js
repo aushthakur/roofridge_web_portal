@@ -26,6 +26,11 @@ adminApi.interceptors.request.use(
 adminApi.interceptors.response.use(
   (response) => response.data,
   (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('rr_admin_token');
+      localStorage.removeItem('rr_admin_user');
+      window.dispatchEvent(new Event('admin_auth_expired'));
+    }
     const message =
       error.response?.data?.message ||
       error.response?.data?.error ||

@@ -12,6 +12,7 @@ const { protect, authorize } = require('../middlewares/authMiddleware');
 
 // Public lead capture
 router.post('/capture', captureLead);
+router.post('/', captureLead);
 
 // Protected CRM routes
 router.get('/', protect, authorize('admin', 'superadmin', 'crm_executive', 'agent'), getLeads);
