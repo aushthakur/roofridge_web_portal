@@ -412,6 +412,8 @@ export default function App() {
         onOpenWishlist={() => setShowWishlistDrawer(true)}
         wishlistCount={wishlist.length}
         inquiryCount={cart.length}
+        user={user}
+        onLogout={handleLogout}
       />
 
       {/* WhatsApp FAB — above bottom nav on mobile */}

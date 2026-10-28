@@ -1,75 +1,200 @@
 import React from 'react';
 import {
-  Home, Building2, Sofa, Hammer, Package, Users, Wrench, CreditCard,
-  X, MapPin, Phone, Award, Smartphone, Briefcase, Eye, Navigation,
-  Heart, ShoppingBag, User, PlusCircle, ArrowRight, ChevronRight
+  Home,
+  Building2,
+  Sofa,
+  Hammer,
+  Package,
+  Users,
+  Wrench,
+  CreditCard,
+  X,
+  MapPin,
+  Phone,
+  Award,
+  Briefcase,
+  Eye,
+  Navigation,
+  Heart,
+  ShoppingBag,
+  User,
+  PlusCircle,
+  ChevronRight,
+  ShieldCheck,
+  LogOut,
+  ChevronDown,
+  Sparkles,
+  CheckCircle2,
 } from 'lucide-react';
 
 /* ─── Bottom Nav items (5 max — thumb-reach zone) ─────────── */
 const BOTTOM_NAV = [
-  { id: 'home',        label: 'Home',      icon: Home },
-  { id: 'buy',         label: 'Buy',       icon: Building2 },
-  { id: 'interiors',   label: 'Interiors', icon: Sofa },
-  { id: 'materials',   label: 'Materials', icon: Package },
-  { id: '_menu',       label: 'More',      icon: Users },   // triggers hamburger
+  { id: 'home', label: 'Home', icon: Home },
+  { id: 'buy', label: 'Buy', icon: Building2 },
+  { id: 'interiors', label: 'Interiors', icon: Sofa },
+  { id: 'materials', label: 'Materials', icon: Package },
+  { id: '_menu', label: 'More', icon: Users }, // triggers hamburger
 ];
 
-/* ─── Hamburger drawer — grouped sections ──────────────────── */
+/* ─── Hamburger drawer — categorized luxury menu ─────────── */
 const MENU_SECTIONS = [
   {
-    heading: 'Properties',
+    heading: 'Properties & Rentals',
     items: [
-      { id: 'buy',         label: 'Buy Property',        icon: Building2, sub: 'RERA verified listings' },
-      { id: 'rent',        label: 'Rent & Manage',        icon: Home,      sub: '0% brokerage homes' },
-      { id: 'luxury',      label: 'Luxury Collection',    icon: Award,     sub: 'Premium villas & penthouses' },
+      {
+        id: 'buy',
+        label: 'Buy Property',
+        icon: Building2,
+        sub: 'RERA verified villas & flats',
+        iconBg: '#EFF6FF',
+        iconColor: '#0866F5',
+      },
+      {
+        id: 'rent',
+        label: 'Rent & Manage',
+        icon: Home,
+        sub: '0% brokerage verified homes',
+        iconBg: '#F0F9FF',
+        iconColor: '#0284C7',
+      },
+      {
+        id: 'luxury',
+        label: 'Luxury Collection',
+        icon: Award,
+        sub: 'Curated penthouses & estates',
+        iconBg: '#FFFBEB',
+        iconColor: '#D97706',
+        badge: 'VIP',
+      },
     ],
   },
   {
-    heading: 'Build & Design',
+    heading: 'Build, Design & Materials',
     items: [
-      { id: 'interiors',     label: 'Modular Interiors',    icon: Sofa,     sub: '45-day delivery, 10yr warranty' },
-      { id: 'construction',  label: 'Turnkey Construction',  icon: Hammer,   sub: 'Verified civil contractors' },
-      { id: 'materials',     label: 'Building Materials',    icon: Package,  sub: 'Factory-direct wholesale' },
+      {
+        id: 'interiors',
+        label: 'Modular Interiors',
+        icon: Sofa,
+        sub: '45-day handover, 10yr warranty',
+        iconBg: '#EEF2FF',
+        iconColor: '#6366F1',
+      },
+      {
+        id: 'construction',
+        label: 'Turnkey Construction',
+        icon: Hammer,
+        sub: 'Verified civil contractors & architects',
+        iconBg: '#FFF7ED',
+        iconColor: '#EA580C',
+      },
+      {
+        id: 'materials',
+        label: 'Building Materials Store',
+        icon: Package,
+        sub: 'Cement, steel & tiles at wholesale rate',
+        iconBg: '#ECFDF5',
+        iconColor: '#059669',
+      },
     ],
   },
   {
-    heading: 'Services',
+    heading: 'Services & Advisory',
     items: [
-      { id: 'professionals', label: 'Skilled Workforce',  icon: Users,     sub: 'GPS-tracked mistri & labour' },
-      { id: 'maintenance',   label: 'Home Care & AMC',    icon: Wrench,    sub: '30-min emergency response' },
-      { id: 'loans',         label: 'Loans & Legal',      icon: CreditCard, sub: 'EMI calculator, RERA desk' },
+      {
+        id: 'professionals',
+        label: 'Skilled Workforce',
+        icon: Users,
+        sub: 'GPS on-demand mistri & labour',
+        iconBg: '#F0FDFA',
+        iconColor: '#0D9488',
+      },
+      {
+        id: 'maintenance',
+        label: 'Home Care & AMC',
+        icon: Wrench,
+        sub: '30-min emergency repair response',
+        iconBg: '#EFF6FF',
+        iconColor: '#2563EB',
+      },
+      {
+        id: 'loans',
+        label: 'Home Loans & Legal Desk',
+        icon: CreditCard,
+        sub: 'Instant approval, UP RERA verify',
+        iconBg: '#F5F3FF',
+        iconColor: '#7C3AED',
+      },
     ],
   },
   {
-    heading: 'Account & More',
+    heading: 'Account & Operations',
     items: [
-      { id: 'myhub',      label: 'My Property Hub',   icon: Briefcase, sub: 'Track your portfolio' },
-      { id: 'experience', label: 'Experience Hubs',   icon: Eye,       sub: 'Visit showrooms & VR demos' },
-      { id: 'track',      label: 'Track Project',     icon: Navigation, sub: 'Live CCTV milestone updates' },
-      { id: 'b2b',        label: 'B2B Partner Portal',icon: Award,     sub: 'Builders, suppliers & agents' },
+      {
+        id: 'myhub',
+        label: 'My Property Hub',
+        icon: Briefcase,
+        sub: 'Manage portfolio, leads & docs',
+        iconBg: '#F1F5F9',
+        iconColor: '#334155',
+      },
+      {
+        id: 'experience',
+        label: 'Experience Hubs & VR',
+        icon: Eye,
+        sub: 'Walkthrough physical showrooms',
+        iconBg: '#EEF2FF',
+        iconColor: '#4F46E5',
+      },
+      {
+        id: 'track',
+        label: 'Track Project Progress',
+        icon: Navigation,
+        sub: 'Live CCTV & milestone updates',
+        iconBg: '#F0FDF4',
+        iconColor: '#16A34A',
+      },
+      {
+        id: 'b2b',
+        label: 'B2B Partner Portal',
+        icon: ShieldCheck,
+        sub: 'For builders, dealers & contractors',
+        iconBg: '#FEF3C7',
+        iconColor: '#B45309',
+        badge: 'Partner',
+      },
     ],
   },
 ];
 
 /* ─── Mobile Bottom Navigation Bar ──────────────────────────── */
-export function MobileBottomNav({ activePage, onNavigate, onOpenHamburger, wishlistCount, inquiryCount }) {
+export function MobileBottomNav({
+  activePage,
+  onNavigate,
+  onOpenHamburger,
+  wishlistCount = 0,
+  inquiryCount = 0,
+}) {
   return (
-    <nav className="mobile-bottom-nav" style={{
-      fontFamily: 'Inter, sans-serif',
-      background: 'rgba(255, 255, 255, 0.96)',
-      backdropFilter: 'blur(16px)',
-      borderTop: '1px solid #E2E8F0',
-      boxShadow: '0 -4px 20px rgba(11, 31, 68, 0.08)',
-    }}>
+    <nav
+      className="mobile-bottom-nav"
+      style={{
+        fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+        background: 'rgba(255, 255, 255, 0.98)',
+        backdropFilter: 'blur(20px)',
+        borderTop: '1px solid #E2E8F0',
+        boxShadow: '0 -4px 24px rgba(15, 23, 42, 0.08)',
+      }}
+    >
       {BOTTOM_NAV.map(({ id, label, icon: Icon }) => {
         const isMenu = id === '_menu';
-        const isActive = !isMenu && (activePage === id || (id === 'home' && activePage === 'home'));
+        const isActive =
+          !isMenu && (activePage === id || (id === 'home' && activePage === 'home'));
         const totalBadge = wishlistCount + inquiryCount;
 
         return (
           <button
             key={id}
-            onClick={() => isMenu ? onOpenHamburger() : onNavigate(id)}
+            onClick={() => (isMenu ? onOpenHamburger() : onNavigate(id))}
             className={`mob-nav-item${isActive ? ' mob-nav-active' : ''}`}
             aria-label={label}
             style={{
@@ -78,34 +203,42 @@ export function MobileBottomNav({ activePage, onNavigate, onOpenHamburger, wishl
             }}
           >
             <div style={{ position: 'relative', display: 'inline-flex' }}>
-              <Icon size={20} strokeWidth={isActive ? 2.5 : 2} color={isActive ? '#0866F5' : '#64748B'} />
+              <Icon
+                size={21}
+                strokeWidth={isActive ? 2.5 : 1.9}
+                color={isActive ? '#0866F5' : '#64748B'}
+              />
               {isMenu && totalBadge > 0 && (
-                <span style={{
-                  position: 'absolute',
-                  top: '-4px',
-                  right: '-7px',
-                  width: '16px',
-                  height: '16px',
-                  borderRadius: '50%',
-                  background: '#EF4444',
-                  color: 'white',
-                  fontSize: '0.6rem',
-                  fontWeight: 800,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 2px 6px rgba(239, 68, 68, 0.4)',
-                }}>
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: '-4px',
+                    right: '-8px',
+                    width: '16px',
+                    height: '16px',
+                    borderRadius: '50%',
+                    background: '#EF4444',
+                    color: 'white',
+                    fontSize: '10px',
+                    fontWeight: 800,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 2px 6px rgba(239, 68, 68, 0.4)',
+                  }}
+                >
                   {totalBadge}
                 </span>
               )}
             </div>
-            <span style={{
-              fontSize: '11px',
-              fontWeight: isActive ? 700 : 500,
-              marginTop: '3px',
-              letterSpacing: '-0.01em',
-            }}>
+            <span
+              style={{
+                fontSize: '11px',
+                fontWeight: isActive ? 700 : 600,
+                marginTop: '3px',
+                letterSpacing: '-0.01em',
+              }}
+            >
               {label}
             </span>
           </button>
@@ -115,7 +248,7 @@ export function MobileBottomNav({ activePage, onNavigate, onOpenHamburger, wishl
   );
 }
 
-/* ─── Hamburger Side Drawer ──────────────────────────────────── */
+/* ─── Premium Redesigned Hamburger Side Drawer ─────────────────── */
 export function HamburgerDrawer({
   isOpen,
   onClose,
@@ -126,8 +259,10 @@ export function HamburgerDrawer({
   onOpenAuth,
   onOpenPostProperty,
   onOpenWishlist,
-  wishlistCount,
-  inquiryCount,
+  wishlistCount = 0,
+  inquiryCount = 0,
+  user = null,
+  onLogout = null,
 }) {
   if (!isOpen) return null;
 
@@ -138,310 +273,663 @@ export function HamburgerDrawer({
 
   return (
     <>
-      {/* Backdrop */}
+      {/* Soft Blurred Backdrop */}
       <div
         onClick={onClose}
         style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(7, 15, 27, 0.65)',
+          background: 'rgba(15, 23, 42, 0.55)',
           zIndex: 900,
-          backdropFilter: 'blur(6px)',
-          animation: 'fadeIn 0.2s ease',
+          backdropFilter: 'blur(8px)',
+          animation: 'rrFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       />
 
-      {/* Drawer panel */}
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        width: 'min(360px, 92vw)',
-        background: 'linear-gradient(180deg, #0866F5 0%, #0645B8 100%)',
-        zIndex: 901,
-        display: 'flex',
-        flexDirection: 'column',
-        overflowY: 'auto',
-        fontFamily: 'Inter, sans-serif',
-        boxShadow: '-8px 0 32px rgba(8, 102, 245, 0.4)',
-        animation: 'drawerSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-      }}>
-
-        {/* Drawer header */}
-        <div style={{
-          padding: '24px 22px 18px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+      {/* Modern White Architecture Drawer Container */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: 'min(380px, 92vw)',
+          background: '#FFFFFF',
+          zIndex: 901,
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexShrink: 0,
-        }}>
+          flexDirection: 'column',
+          overflowY: 'auto',
+          fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+          boxShadow: '-12px 0 48px rgba(15, 23, 42, 0.16)',
+          animation: 'rrDrawerSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
+      >
+        {/* ── Top Header: Crisp Logo, RERA Verified Pill & Circular Close ── */}
+        <div
+          style={{
+            padding: '18px 20px',
+            borderBottom: '1px solid #F1F5F9',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexShrink: 0,
+            background: '#FFFFFF',
+            position: 'sticky',
+            top: 0,
+            zIndex: 10,
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <img src="/RRlogo_white.png" alt="Roof Ridge" style={{ height: '30px', objectFit: 'contain' }} />
+            <img
+              src="/RRlogo_transparent.png"
+              alt="Roof Ridge"
+              style={{ height: '34px', width: 'auto', objectFit: 'contain', display: 'block' }}
+            />
+            <span
+              style={{
+                fontSize: '10px',
+                fontWeight: 700,
+                color: '#059669',
+                background: '#ECFDF5',
+                border: '1px solid #A7F3D0',
+                borderRadius: '20px',
+                padding: '2px 8px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '3px',
+              }}
+            >
+              <CheckCircle2 size={11} color="#059669" /> RERA Verified
+            </span>
           </div>
+
           <button
             onClick={onClose}
             style={{
               width: '36px',
               height: '36px',
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
+              background: '#F8FAFC',
+              border: '1px solid #E2E8F0',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'rgba(255, 255, 255, 0.8)',
+              color: '#475569',
               cursor: 'pointer',
-              transition: 'background 0.15s ease',
+              transition: 'all 0.15s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#F1F5F9';
+              e.currentTarget.style.color = '#0F172A';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = '#F8FAFC';
+              e.currentTarget.style.color = '#475569';
             }}
             title="Close Menu"
           >
-            <X size={18} />
+            <X size={18} strokeWidth={2.2} />
           </button>
         </div>
 
-        {/* City selector + concierge phone */}
-        <div style={{
-          padding: '14px 22px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          background: 'rgba(255, 255, 255, 0.03)',
-        }}>
+        {/* ── User Status & Action Card ── */}
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid #F1F5F9' }}>
+          {user ? (
+            /* Logged in state */
+            <div
+              style={{
+                background: 'linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%)',
+                border: '1px solid #DBEAFE',
+                borderRadius: '16px',
+                padding: '14px 16px',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: '10px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div
+                    style={{
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #0866F5 0%, #0645B8 100%)',
+                      color: '#FFFFFF',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 800,
+                      fontSize: '16px',
+                      boxShadow: '0 4px 12px rgba(8, 102, 245, 0.25)',
+                    }}
+                  >
+                    {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                  </div>
+                  <div>
+                    <h4
+                      style={{
+                        margin: 0,
+                        fontSize: '14px',
+                        fontWeight: 800,
+                        color: '#0F172A',
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {user.name || 'Member'}
+                    </h4>
+                    <p
+                      style={{
+                        margin: '2px 0 0',
+                        fontSize: '11px',
+                        fontWeight: 500,
+                        color: '#64748B',
+                      }}
+                    >
+                      {user.phone ? `+91 ${user.phone}` : user.email || 'Registered User'}
+                    </p>
+                  </div>
+                </div>
+
+                <span
+                  style={{
+                    fontSize: '10px',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.04em',
+                    background: '#DBEAFE',
+                    color: '#1D4ED8',
+                    padding: '3px 8px',
+                    borderRadius: '8px',
+                  }}
+                >
+                  {user.role || 'Member'}
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                <button
+                  onClick={() => handleNav('myhub')}
+                  style={{
+                    flex: 1,
+                    padding: '8px 12px',
+                    background: '#0866F5',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    borderRadius: '10px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  <Briefcase size={13} /> My Property Hub
+                </button>
+                {onLogout && (
+                  <button
+                    onClick={() => {
+                      onLogout();
+                      onClose();
+                    }}
+                    style={{
+                      padding: '8px 12px',
+                      background: '#FFFFFF',
+                      color: '#EF4444',
+                      border: '1px solid #FCA5A5',
+                      borderRadius: '10px',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                    }}
+                  >
+                    <LogOut size={13} /> Logout
+                  </button>
+                )}
+              </div>
+            </div>
+          ) : (
+            /* Guest / Unauthenticated State */
+            <div
+              style={{
+                background: 'linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%)',
+                border: '1px solid #E2E8F0',
+                borderRadius: '16px',
+                padding: '16px',
+              }}
+            >
+              <div style={{ marginBottom: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Sparkles size={14} color="#0866F5" />
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      fontWeight: 800,
+                      color: '#0866F5',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.04em',
+                    }}
+                  >
+                    Roof Ridge Access
+                  </span>
+                </div>
+                <h4
+                  style={{
+                    margin: '3px 0 0',
+                    fontSize: '15px',
+                    fontWeight: 800,
+                    color: '#0F172A',
+                    lineHeight: 1.25,
+                  }}
+                >
+                  Sign in for VIP Services
+                </h4>
+                <p style={{ margin: '3px 0 0', fontSize: '11px', color: '#64748B' }}>
+                  Saved homes, direct broker chats &amp; real-time milestone tracking
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  onClick={() => {
+                    onOpenAuth();
+                    onClose();
+                  }}
+                  style={{
+                    flex: 1.2,
+                    padding: '10px 14px',
+                    background: 'linear-gradient(135deg, #0866F5 0%, #0645B8 100%)',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    borderRadius: '12px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    boxShadow: '0 4px 14px rgba(8, 102, 245, 0.28)',
+                  }}
+                >
+                  <User size={14} /> Sign In / Register
+                </button>
+
+                <button
+                  onClick={() => {
+                    onOpenPostProperty();
+                    onClose();
+                  }}
+                  style={{
+                    flex: 1,
+                    padding: '10px 12px',
+                    background: '#FFFFFF',
+                    border: '1.5px solid #059669',
+                    borderRadius: '12px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    color: '#059669',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '5px',
+                  }}
+                >
+                  <PlusCircle size={14} /> Post Property
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ── City Selector & 24/7 Helpline Strip ── */}
+        <div
+          style={{
+            padding: '12px 20px',
+            borderBottom: '1px solid #F1F5F9',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: '#FAFAFA',
+          }}
+        >
+          {/* City selector */}
           <button
-            onClick={() => { onOpenCity(); onClose(); }}
+            onClick={() => {
+              onOpenCity();
+              onClose();
+            }}
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '7px',
-              background: 'rgba(8, 102, 245, 0.15)',
-              border: '1px solid rgba(8, 102, 245, 0.3)',
+              gap: '6px',
+              background: '#FFFFFF',
+              border: '1px solid #E2E8F0',
               borderRadius: '20px',
-              padding: '6px 14px',
-              color: '#93C5FD',
+              padding: '6px 12px',
+              color: '#334155',
               fontSize: '12px',
               cursor: 'pointer',
-              fontWeight: 600,
+              fontWeight: 700,
+              boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
             }}
           >
-            <MapPin size={13} color="#60A5FA" />
-            <span style={{ fontWeight: 700, color: '#FFFFFF' }}>{selectedCity?.name || 'Select City'}</span>
+            <MapPin size={13} color="#0866F5" />
+            <span style={{ color: '#0F172A' }}>{selectedCity?.name || 'Select City'}</span>
+            <ChevronDown size={12} color="#94A3B8" />
           </button>
 
+          {/* 24x7 Helpline */}
           <a
             href="tel:18001239999"
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              color: 'rgba(255, 255, 255, 0.65)',
+              color: '#475569',
               fontSize: '12px',
-              fontWeight: 600,
+              fontWeight: 700,
+              textDecoration: 'none',
             }}
           >
-            <Phone size={13} color="#94A3B8" /> 1800-123-9999
+            <span
+              style={{
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                background: '#10B981',
+                display: 'inline-block',
+                boxShadow: '0 0 0 2px rgba(16, 185, 129, 0.2)',
+              }}
+            />
+            <Phone size={13} color="#0866F5" />
+            <span>1800-123-9999</span>
           </a>
         </div>
 
-        {/* Quick user actions */}
-        <div style={{
-          padding: '16px 22px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-          display: 'flex',
-          gap: '10px',
-        }}>
+        {/* ── Quick Stats Bar (Wishlist & Cart) ── */}
+        <div
+          style={{
+            padding: '10px 20px',
+            borderBottom: '1px solid #F1F5F9',
+            display: 'flex',
+            gap: '10px',
+          }}
+        >
           <button
-            onClick={() => { onOpenAuth(); onClose(); }}
+            onClick={() => {
+              onOpenWishlist();
+              onClose();
+            }}
             style={{
               flex: 1,
-              padding: '11px',
-              background: '#0866F5',
-              color: '#FFFFFF',
-              border: 'none',
+              padding: '9px 12px',
+              background: '#FFF1F2',
+              border: '1px solid #FFE4E6',
               borderRadius: '12px',
-              fontSize: '12px',
-              fontWeight: 700,
-              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-              boxShadow: '0 4px 14px rgba(8, 102, 245, 0.3)',
-            }}
-          >
-            <User size={14} /> Sign In
-          </button>
-
-          <button
-            onClick={() => { onOpenWishlist(); onClose(); }}
-            style={{
-              position: 'relative',
-              padding: '11px 16px',
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.14)',
-              borderRadius: '12px',
-              color: 'rgba(255, 255, 255, 0.85)',
+              justifyContent: 'space-between',
               cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
             }}
-            title="Wishlist & Inquiries"
           >
-            <Heart size={16} />
-            {wishlistCount > 0 && (
-              <span style={{
-                fontSize: '10px',
-                fontWeight: 800,
-                background: '#EF4444',
-                color: 'white',
-                borderRadius: '50%',
-                width: '16px',
-                height: '16px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-                {wishlistCount}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Heart size={15} color="#E11D48" fill="#FFE4E6" />
+              <span style={{ fontSize: '12px', fontWeight: 700, color: '#9F1239' }}>
+                Saved Homes
               </span>
-            )}
+            </div>
+            <span
+              style={{
+                fontSize: '11px',
+                fontWeight: 800,
+                color: '#E11D48',
+                background: '#FFFFFF',
+                borderRadius: '12px',
+                padding: '1px 7px',
+                border: '1px solid #FECDD3',
+              }}
+            >
+              {wishlistCount}
+            </span>
           </button>
 
           <button
-            onClick={() => { onOpenPostProperty(); onClose(); }}
+            onClick={() => handleNav('materials')}
             style={{
-              flex: 1.2,
-              padding: '11px',
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
+              flex: 1,
+              padding: '9px 12px',
+              background: '#F0FDF4',
+              border: '1px solid #DCFCE7',
               borderRadius: '12px',
-              fontSize: '12px',
-              fontWeight: 700,
-              color: '#FFFFFF',
-              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
+              justifyContent: 'space-between',
+              cursor: 'pointer',
             }}
           >
-            <PlusCircle size={14} color="#60A5FA" /> Post Property
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <ShoppingBag size={15} color="#059669" />
+              <span style={{ fontSize: '12px', fontWeight: 700, color: '#166534' }}>Orders</span>
+            </div>
+            <span
+              style={{
+                fontSize: '11px',
+                fontWeight: 800,
+                color: '#059669',
+                background: '#FFFFFF',
+                borderRadius: '12px',
+                padding: '1px 7px',
+                border: '1px solid #BBF7D0',
+              }}
+            >
+              {inquiryCount}
+            </span>
           </button>
         </div>
 
-        {/* Grouped Navigation Sections */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '10px 12px 24px' }}>
+        {/* ── Categorized Menu Items ── */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '12px 14px 28px' }}>
           {MENU_SECTIONS.map((section, si) => (
-            <div key={si} style={{ marginBottom: '14px' }}>
-              <p style={{
-                padding: '10px 14px 6px',
-                fontSize: '10.5px',
-                fontWeight: 800,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                color: 'rgba(255, 255, 255, 0.35)',
-              }}>
+            <div key={si} style={{ marginBottom: '18px' }}>
+              <p
+                style={{
+                  padding: '6px 10px',
+                  margin: 0,
+                  fontSize: '10px',
+                  fontWeight: 800,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: '#94A3B8',
+                }}
+              >
                 {section.heading}
               </p>
-              {section.items.map(item => {
-                const isActive = activePage === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => handleNav(item.id)}
-                    style={{
-                      width: '100%',
-                      padding: '10px 14px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      background: isActive ? 'rgba(8, 102, 245, 0.18)' : 'transparent',
-                      border: 'none',
-                      borderRadius: '12px',
-                      borderLeft: isActive ? '3px solid #0866F5' : '3px solid transparent',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s ease',
-                      textAlign: 'left',
-                      marginBottom: '2px',
-                    }}
-                    onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'; }}
-                    onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
-                  >
-                    <div style={{
-                      width: '34px',
-                      height: '34px',
-                      background: isActive ? '#0866F5' : 'rgba(255, 255, 255, 0.07)',
-                      borderRadius: '10px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                      color: '#FFFFFF',
-                    }}>
-                      <item.icon size={16} />
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{
-                        fontSize: '13px',
-                        fontWeight: isActive ? 700 : 600,
-                        color: isActive ? '#FFFFFF' : 'rgba(255, 255, 255, 0.85)',
-                        lineHeight: 1.25,
-                      }}>
-                        {item.label}
-                      </p>
-                      <p style={{
-                        fontSize: '11px',
-                        color: 'rgba(255, 255, 255, 0.4)',
-                        marginTop: '2px',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                      }}>
-                        {item.sub}
-                      </p>
-                    </div>
-                    <ChevronRight size={14} style={{ color: isActive ? '#60A5FA' : 'rgba(255, 255, 255, 0.25)', flexShrink: 0 }} />
-                  </button>
-                );
-              })}
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '4px' }}>
+                {section.items.map((item) => {
+                  const isActive = activePage === item.id;
+                  const Icon = item.icon;
+
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => handleNav(item.id)}
+                      style={{
+                        width: '100%',
+                        padding: '10px 12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        background: isActive ? '#EFF6FF' : 'transparent',
+                        border: 'none',
+                        borderRadius: '14px',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
+                        textAlign: 'left',
+                        position: 'relative',
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isActive) e.currentTarget.style.background = '#F8FAFC';
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isActive) e.currentTarget.style.background = 'transparent';
+                      }}
+                    >
+                      {/* Curated Pastel Icon Box */}
+                      <div
+                        style={{
+                          width: '38px',
+                          height: '38px',
+                          borderRadius: '11px',
+                          background: item.iconBg,
+                          color: item.iconColor,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0,
+                          transition: 'transform 0.15s ease',
+                        }}
+                      >
+                        <Icon size={18} strokeWidth={2.2} />
+                      </div>
+
+                      {/* Text details */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <p
+                            style={{
+                              margin: 0,
+                              fontSize: '13.5px',
+                              fontWeight: isActive ? 800 : 700,
+                              color: isActive ? '#0866F5' : '#0F172A',
+                              lineHeight: 1.25,
+                            }}
+                          >
+                            {item.label}
+                          </p>
+                          {item.badge && (
+                            <span
+                              style={{
+                                fontSize: '9px',
+                                fontWeight: 800,
+                                textTransform: 'uppercase',
+                                background: '#FEF3C7',
+                                color: '#92400E',
+                                padding: '1px 6px',
+                                borderRadius: '6px',
+                                letterSpacing: '0.03em',
+                              }}
+                            >
+                              {item.badge}
+                            </span>
+                          )}
+                        </div>
+
+                        <p
+                          style={{
+                            margin: '3px 0 0',
+                            fontSize: '11px',
+                            fontWeight: 500,
+                            color: '#64748B',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {item.sub}
+                        </p>
+                      </div>
+
+                      <ChevronRight
+                        size={15}
+                        style={{
+                          color: isActive ? '#0866F5' : '#CBD5E1',
+                          flexShrink: 0,
+                          transition: 'transform 0.15s ease',
+                        }}
+                      />
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Footer links */}
-        <div style={{
-          padding: '16px 22px',
-          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-          display: 'flex',
-          gap: '16px',
-          flexWrap: 'wrap',
-          background: 'rgba(255, 255, 255, 0.02)',
-        }}>
-          {['Privacy Policy', 'Terms of Use', 'Support Desk'].map(l => (
-            <button
-              key={l}
-              type="button"
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'rgba(255, 255, 255, 0.45)',
-                fontSize: '11px',
-                cursor: 'pointer',
-              }}
-            >
-              {l}
-            </button>
-          ))}
+        {/* ── Drawer Footer with Trust Guarantee & Legal ── */}
+        <div
+          style={{
+            padding: '16px 20px',
+            borderTop: '1px solid #F1F5F9',
+            background: '#F8FAFC',
+            flexShrink: 0,
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '10px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <ShieldCheck size={14} color="#059669" />
+              <span style={{ fontSize: '11px', fontWeight: 700, color: '#334155' }}>
+                100% Escrow Protected
+              </span>
+            </div>
+            <span style={{ fontSize: '10px', color: '#94A3B8', fontWeight: 600 }}>
+              UP RERA Verified
+            </span>
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              fontSize: '11px',
+              color: '#64748B',
+            }}
+          >
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <span style={{ cursor: 'pointer' }} onClick={() => handleNav('legal')}>
+                Privacy
+              </span>
+              <span>•</span>
+              <span style={{ cursor: 'pointer' }} onClick={() => handleNav('legal')}>
+                Terms
+              </span>
+              <span>•</span>
+              <span style={{ cursor: 'pointer' }} onClick={() => handleNav('advice')}>
+                Help Desk
+              </span>
+            </div>
+            <span style={{ fontSize: '10px', color: '#94A3B8' }}>© 2026 Roof Ridge</span>
+          </div>
         </div>
       </div>
 
       <style>{`
-        @keyframes drawerSlideIn {
-          from { transform: translateX(100%); opacity: 0; }
-          to   { transform: translateX(0); opacity: 1; }
+        @keyframes rrFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @keyframes rrDrawerSlideIn {
+          from { transform: translateX(100%); }
+          to   { transform: translateX(0); }
         }
       `}</style>
     </>
