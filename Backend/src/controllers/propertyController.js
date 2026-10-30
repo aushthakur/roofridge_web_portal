@@ -184,6 +184,24 @@ exports.createProperty = async (req, res) => {
 
     propertyData.owner = ownerId;
 
+    // Normalize type ('sale' -> 'buy')
+    if (propertyData.type === 'sale' || propertyData.type === 'sell') {
+      propertyData.type = 'buy';
+    }
+
+    // Normalize propertyType and subType
+    const validPropertyTypes = ['residential', 'commercial', 'plots', 'agricultural'];
+    const validSubTypes = ['apartment', 'villa', 'independent_house', 'penthouse', 'studio', 'office', 'shop', 'plot', 'warehouse'];
+    if (propertyData.propertyType && !validPropertyTypes.includes(propertyData.propertyType.toLowerCase())) {
+      const lower = propertyData.propertyType.toLowerCase();
+      if (validSubTypes.includes(lower)) {
+        propertyData.subType = lower;
+        propertyData.propertyType = ['office', 'shop', 'warehouse'].includes(lower) ? 'commercial' : 'residential';
+      } else {
+        propertyData.propertyType = 'residential';
+      }
+    }
+
     // Default images if none provided
     if (!propertyData.images || !propertyData.images.length) {
       propertyData.images = [

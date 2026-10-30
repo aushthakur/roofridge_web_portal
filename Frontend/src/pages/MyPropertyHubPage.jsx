@@ -3,7 +3,7 @@ import {
   ShieldCheck, FileText, Download, Upload, Bell, Calendar, Lock,
   CheckCircle2, Clock, AlertCircle, Building2, Package, PlusCircle,
   Trash2, ExternalLink, UserCheck, Phone, MapPin, Tag, Wrench, RefreshCw,
-  ShoppingBag, Check, ChevronRight
+  ShoppingBag, Check, ChevronRight, Eye, Sparkles, Filter
 } from 'lucide-react';
 import api from '../services/api';
 
@@ -15,6 +15,7 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedBookingFilter, setSelectedBookingFilter] = useState('all');
+  const [listingFilter, setListingFilter] = useState('all'); // 'all', 'approved', 'pending'
 
   const user = (() => {
     try {
@@ -72,6 +73,14 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
     try {
       await api.deleteProperty(propertyId);
       setMyListings(prev => prev.filter(p => p._id !== propertyId && p.id !== propertyId));
+      // Also update localStorage cache if present
+      try {
+        const cached = localStorage.getItem('rr_user_listings');
+        if (cached) {
+          const list = JSON.parse(cached).filter(p => p._id !== propertyId && p.id !== propertyId);
+          localStorage.setItem('rr_user_listings', JSON.stringify(list));
+        }
+      } catch (err) {}
       alert('Listing removed successfully.');
     } catch (err) {
       alert('Failed to remove property: ' + err.message);
@@ -94,80 +103,46 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
   const pendingCount = myListings.filter(p => p.approvalStatus === 'pending' || !p.approvalStatus).length;
   const approvedCount = myListings.filter(p => p.approvalStatus === 'approved').length;
 
+  const filteredListings = myListings.filter(p => {
+    if (listingFilter === 'approved') return p.approvalStatus === 'approved';
+    if (listingFilter === 'pending') return p.approvalStatus === 'pending' || !p.approvalStatus;
+    return true;
+  });
+
   return (
-    <div className="max-w-[1380px] mx-auto px-4 sm:px-8 py-5 animate-fade font-sans">
+    <div className="w-full max-w-[1380px] mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 animate-fade font-sans">
       {/* ── Executive User Header Banner ── */}
-      <div 
-        style={{
-          background: 'linear-gradient(135deg, #0866F5 0%, #0645B8 50%, #05338E 100%)',
-          borderRadius: '20px',
-          padding: '20px 24px',
-          color: '#FFFFFF',
-          marginBottom: '20px',
-          boxShadow: '0 10px 28px rgba(8, 102, 245, 0.2)',
-          position: 'relative',
-          overflow: 'hidden',
-          border: '1px solid rgba(255, 255, 255, 0.2)'
-        }}
-      >
-        <div style={{ position: 'relative', zIndex: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <span style={{
-                background: 'rgba(255, 87, 34, 0.2)',
-                color: '#FF8A65',
-                border: '1px solid rgba(255, 87, 34, 0.4)',
-                fontSize: '10.5px',
-                fontWeight: 800,
-                padding: '3px 10px',
-                borderRadius: '16px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em'
-              }}>
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#0866F5] via-[#0645B8] to-[#05338E] text-white p-5 sm:p-7 lg:p-8 mb-5 sm:mb-7 shadow-xl shadow-blue-900/15 border border-white/15">
+        {/* Subtle decorative circles */}
+        <div className="absolute -top-12 -right-12 w-48 h-48 sm:w-64 sm:h-64 rounded-full bg-white/5 pointer-events-none blur-2xl" />
+        <div className="absolute -bottom-12 -left-12 w-48 h-48 sm:w-64 sm:h-64 rounded-full bg-blue-400/10 pointer-events-none blur-2xl" />
+
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10.5px] sm:text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-200 border border-amber-400/30">
+                <Sparkles size={11} className="text-amber-300" />
                 Verified Resident &amp; Owner Desk
               </span>
-              <span style={{
-                background: 'rgba(8, 102, 245, 0.2)',
-                color: '#60A5FA',
-                border: '1px solid rgba(8, 102, 245, 0.3)',
-                fontSize: '10.5px',
-                fontWeight: 700,
-                padding: '3px 8px',
-                borderRadius: '16px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px'
-              }}>
-                <ShieldCheck size={12} /> KYC Active
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10.5px] sm:text-xs font-semibold bg-white/10 text-blue-100 border border-white/15">
+                <ShieldCheck size={12} className="text-emerald-300" />
+                KYC Active
               </span>
             </div>
-            
-            <h1 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em', margin: '0 0 4px 0', fontFamily: 'Inter, sans-serif' }}>
+
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-white leading-tight">
               Welcome Back, {user?.name || 'Valued Member'}
             </h1>
-            <p style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.82)', margin: 0, maxWidth: '650px', lineHeight: 1.45 }}>
-              Central control center for your property listings, active service appointments, materials deliveries, and 256-bit bank-grade digital document vault.
+            <p className="text-xs sm:text-sm text-blue-100/90 leading-relaxed max-w-xl">
+              Central control desk for your property listings, active service appointments, materials deliveries, and 256-bit bank-grade digital document vault.
             </p>
           </div>
 
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 shrink-0">
             <button
               onClick={loadUserData}
               disabled={refreshing}
-              style={{
-                background: 'rgba(255, 255, 255, 0.12)',
-                color: '#FFFFFF',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '12px',
-                padding: '10px 16px',
-                fontSize: '13px',
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
-              }}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/20 active:bg-white/25 text-white border border-white/20 transition-all duration-150 backdrop-blur-xs cursor-pointer shadow-xs"
             >
               <RefreshCw size={14} className={refreshing ? 'animate-spin' : ''} />
               <span>Sync Dashboard</span>
@@ -175,375 +150,344 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
 
             <button
               onClick={onOpenPostProperty}
-              style={{
-                background: 'linear-gradient(135deg, #0866F5 0%, #0653CA 100%)',
-                color: '#FFFFFF',
-                border: 'none',
-                borderRadius: '30px',
-                padding: '11px 22px',
-                fontSize: '13px',
-                fontWeight: 700,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-                boxShadow: '0 6px 20px rgba(8, 102, 245, 0.35)',
-                transition: 'all 0.15s ease'
-              }}
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-white text-[#0866F5] hover:bg-blue-50 active:bg-blue-100 transition-all duration-150 shadow-lg shadow-black/10 cursor-pointer"
             >
-              <PlusCircle size={16} />
+              <PlusCircle size={16} className="text-[#0866F5]" />
               <span>Post New Property</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* ── KPI Quick Metric Cards ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '28px' }}>
-        <div style={metricCardStyle}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={metricLabelStyle}>My Listings</span>
-            <Building2 size={18} color="#0866F5" />
+      {/* ── Quick Metric KPI Cards (2x2 on mobile, 4-col on desktop) ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+        {/* Metric 1 */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-xs hover:border-blue-400 hover:shadow-md transition-all duration-200">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">
+              My Listings
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#0866F5] flex items-center justify-center">
+              <Building2 size={16} />
+            </div>
           </div>
-          <p style={metricValueStyle}>{myListings.length}</p>
-          <p style={metricSubStyle}>
-            <span style={{ color: '#059669', fontWeight: 700 }}>{approvedCount} Live</span> • <span style={{ color: '#D97706', fontWeight: 700 }}>{pendingCount} Moderation</span>
-          </p>
+          <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-none">
+            {myListings.length}
+          </div>
+          <div className="mt-2 text-[11px] sm:text-xs text-slate-500 flex items-center gap-1.5 flex-wrap">
+            <span className="font-bold text-emerald-600">{approvedCount} Live</span>
+            <span className="text-slate-300">•</span>
+            <span className="font-bold text-amber-600">{pendingCount} Review</span>
+          </div>
         </div>
 
-        <div style={metricCardStyle}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={metricLabelStyle}>Booked Services</span>
-            <Wrench size={18} color="#0866F5" />
+        {/* Metric 2 */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-xs hover:border-blue-400 hover:shadow-md transition-all duration-200">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">
+              Booked Services
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center">
+              <Wrench size={16} />
+            </div>
           </div>
-          <p style={metricValueStyle}>{myBookings.length}</p>
-          <p style={metricSubStyle}>Interiors, Cleaning &amp; AMC</p>
+          <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-none">
+            {myBookings.length}
+          </div>
+          <div className="mt-2 text-[11px] sm:text-xs text-slate-400 truncate">
+            Interiors, AMC &amp; Care
+          </div>
         </div>
 
-        <div style={metricCardStyle}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={metricLabelStyle}>Material Orders</span>
-            <Package size={18} color="#7C3AED" />
+        {/* Metric 3 */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-xs hover:border-blue-400 hover:shadow-md transition-all duration-200">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">
+              Material Orders
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+              <Package size={16} />
+            </div>
           </div>
-          <p style={metricValueStyle}>{myOrders.length}</p>
-          <p style={metricSubStyle}>Wholesale Supplies &amp; Deliveries</p>
+          <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-none">
+            {myOrders.length}
+          </div>
+          <div className="mt-2 text-[11px] sm:text-xs text-slate-400 truncate">
+            Wholesale Supplies
+          </div>
         </div>
 
-        <div style={metricCardStyle}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={metricLabelStyle}>Vault Documents</span>
-            <Lock size={18} color="#059669" />
+        {/* Metric 4 */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-xs hover:border-blue-400 hover:shadow-md transition-all duration-200">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">
+              Vault Locker
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <Lock size={16} />
+            </div>
           </div>
-          <p style={metricValueStyle}>4</p>
-          <p style={metricSubStyle}>256-bit Encrypted Titles</p>
+          <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-none">
+            4
+          </div>
+          <div className="mt-2 text-[11px] sm:text-xs text-slate-400 truncate">
+            256-bit Encrypted Titles
+          </div>
         </div>
       </div>
 
-      {/* ── Navigation Tabs ── */}
-      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid #E2E8F0', paddingBottom: '12px', marginBottom: '28px', overflowX: 'auto' }}>
-        {[
-          { key: 'listings', label: 'My Property Listings', icon: Building2, count: myListings.length },
-          { key: 'bookings', label: 'My Bookings & Orders', icon: Package, count: myBookings.length + myOrders.length },
-          { key: 'locker', label: 'Document Vault Locker', icon: Lock, count: 4 },
-          { key: 'reminders', label: 'Tax & AMC Reminders', icon: Bell, count: 3 },
-          { key: 'profile', label: 'Profile & KYC Details', icon: UserCheck },
-        ].map(tab => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.key;
-          return (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '10px 18px',
-                borderRadius: '12px',
-                border: 'none',
-                background: isActive ? '#0866F5' : '#F1F5F9',
-                color: isActive ? '#FFFFFF' : '#475569',
-                fontSize: '13px',
-                fontWeight: isActive ? 700 : 600,
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-                whiteSpace: 'nowrap',
-                fontFamily: 'Inter, sans-serif'
-              }}
-            >
-              <Icon size={15} color={isActive ? '#FFFFFF' : '#64748B'} />
-              <span>{tab.label}</span>
-              {tab.count !== undefined && (
-                <span style={{
-                  padding: '2px 7px',
-                  borderRadius: '10px',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  background: isActive ? 'rgba(255, 255, 255, 0.2)' : '#CBD5E1',
-                  color: isActive ? '#FFFFFF' : '#334155'
-                }}>
-                  {tab.count}
-                </span>
-              )}
-            </button>
-          );
-        })}
+      {/* ── Modern Navigation Tabs Bar (Scrollable on small mobile) ── */}
+      <div className="overflow-x-auto pb-2 mb-6 sm:mb-8 -mx-3 px-3 sm:mx-0 sm:px-0">
+        <div className="flex items-center gap-2 min-w-max border-b border-slate-200 pb-3">
+          {[
+            { key: 'listings', label: 'My Property Listings', icon: Building2, count: myListings.length },
+            { key: 'bookings', label: 'My Bookings & Orders', icon: Package, count: myBookings.length + myOrders.length },
+            { key: 'locker', label: 'Document Vault Locker', icon: Lock, count: 4 },
+            { key: 'reminders', label: 'Tax & AMC Reminders', icon: Bell, count: 3 },
+            { key: 'profile', label: 'Profile & KYC Details', icon: UserCheck },
+          ].map(tab => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.key;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-150 cursor-pointer ${
+                  isActive
+                    ? 'bg-[#0866F5] text-white shadow-md shadow-blue-500/25'
+                    : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
+                }`}
+              >
+                <Icon size={15} className={isActive ? 'text-white' : 'text-slate-500'} />
+                <span>{tab.label}</span>
+                {tab.count !== undefined && (
+                  <span
+                    className={`ml-0.5 px-2 py-0.5 rounded-full text-[11px] font-bold ${
+                      isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                    }`}
+                  >
+                    {tab.count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* ═══════════════════════════════════════════════
           TAB 1: MY PROPERTY LISTINGS
           ═══════════════════════════════════════════════ */}
       {activeTab === 'listings' && (
-        <div className="space-y-6">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+        <div className="space-y-5 sm:space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
             <div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', margin: '0 0 4px 0' }}>
+              <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">
                 Your Real Estate Listings
               </h2>
-              <p style={{ fontSize: '13px', color: '#64748B', margin: 0 }}>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
                 Properties posted by you. Newly submitted listings undergo title deed and RERA verification by the admin desk before going live.
               </p>
             </div>
 
-            <button
-              onClick={onOpenPostProperty}
-              style={{
-                background: '#0866F5',
-                color: '#FFFFFF',
-                border: 'none',
-                borderRadius: '10px',
-                padding: '10px 18px',
-                fontSize: '13px',
-                fontWeight: 700,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                cursor: 'pointer'
-              }}
-            >
-              <PlusCircle size={15} />
-              <span>Post Another Property</span>
-            </button>
+            <div className="flex items-center gap-2 shrink-0">
+              {/* Filter chips */}
+              <div className="inline-flex rounded-lg bg-slate-100 p-0.5 border border-slate-200 text-xs font-semibold">
+                <button
+                  onClick={() => setListingFilter('all')}
+                  className={`px-2.5 py-1 rounded-md transition-all ${listingFilter === 'all' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
+                >
+                  All ({myListings.length})
+                </button>
+                <button
+                  onClick={() => setListingFilter('approved')}
+                  className={`px-2.5 py-1 rounded-md transition-all ${listingFilter === 'approved' ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
+                >
+                  Live ({approvedCount})
+                </button>
+                <button
+                  onClick={() => setListingFilter('pending')}
+                  className={`px-2.5 py-1 rounded-md transition-all ${listingFilter === 'pending' ? 'bg-white text-amber-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
+                >
+                  Under Review ({pendingCount})
+                </button>
+              </div>
+
+              <button
+                onClick={onOpenPostProperty}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#0866F5] hover:bg-[#0653CA] text-white transition-all shadow-sm cursor-pointer"
+              >
+                <PlusCircle size={14} />
+                <span className="hidden sm:inline">Post Another Property</span>
+                <span className="sm:hidden">Post</span>
+              </button>
+            </div>
           </div>
 
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748B' }}>
+            <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 text-slate-500">
               <RefreshCw size={28} className="animate-spin mx-auto mb-3 text-[#0866F5]" />
-              <p style={{ fontSize: '14px', fontWeight: 600 }}>Loading your listings...</p>
+              <p className="text-sm font-semibold">Loading your property portfolio...</p>
             </div>
-          ) : myListings.length === 0 ? (
+          ) : filteredListings.length === 0 ? (
             /* Empty State */
-            <div 
-              style={{
-                background: '#FFFFFF',
-                border: '2px dashed #CBD5E1',
-                borderRadius: '20px',
-                padding: '60px 24px',
-                textAlign: 'center',
-                maxWidth: '650px',
-                margin: '20px auto'
-              }}
-            >
-              <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px auto' }}>
-                <Building2 size={32} color="#0866F5" />
+            <div className="bg-white border-2 border-dashed border-slate-300 rounded-3xl p-8 sm:p-12 text-center max-w-xl mx-auto my-6 shadow-xs">
+              <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#0866F5] flex items-center justify-center mx-auto mb-4">
+                <Building2 size={32} />
               </div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
-                No Properties Listed Under Your Account
+              <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 mb-2">
+                {myListings.length === 0 ? 'No Properties Listed Under Your Account' : 'No Properties Found in Selected Filter'}
               </h3>
-              <p style={{ fontSize: '13px', color: '#64748B', lineHeight: 1.6, marginBottom: '24px' }}>
-                Looking to sell or rent out your flat, villa, commercial office, or land? Post your listing for free on Roof Ridge and reach thousands of verified buyers with zero brokerage.
+              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed mb-6 max-w-md mx-auto">
+                {myListings.length === 0
+                  ? 'Looking to sell or rent out your flat, villa, commercial office, or land? Post your listing for free on Roof Ridge and reach thousands of verified buyers with zero brokerage.'
+                  : 'Try selecting a different filter above to view all submitted property listings.'}
               </p>
               <button
                 onClick={onOpenPostProperty}
-                style={{
-                  background: 'linear-gradient(135deg, #0866F5 0%, #0653CA 100%)',
-                  color: '#FFFFFF',
-                  border: 'none',
-                  borderRadius: '30px',
-                  padding: '12px 28px',
-                  fontSize: '14px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  boxShadow: '0 6px 20px rgba(8, 102, 245, 0.3)'
-                }}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold bg-gradient-to-r from-[#0866F5] to-[#0653CA] hover:from-[#0653CA] hover:to-[#0543A8] text-white shadow-lg shadow-blue-500/25 transition-all cursor-pointer"
               >
-                Post Free Property Now
+                <PlusCircle size={16} />
+                <span>Post Free Property Now</span>
               </button>
             </div>
           ) : (
-            /* Property Cards Grid */
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '20px' }}>
-              {myListings.map((prop) => {
+            /* Property Cards Grid: 1 col on mobile, 2 col on tablet, 3 col on desktop */
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6">
+              {filteredListings.map((prop) => {
                 const status = prop.approvalStatus || 'pending';
                 const isApproved = status === 'approved';
-                const isRejected = status === 'rejected';
+                const isRejected = status === 'rejected' || status === 'changes_requested';
                 const isPending = status === 'pending';
+
+                const displayImage = prop.images?.[0] || prop.image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80';
 
                 return (
                   <div
                     key={prop._id || prop.id}
-                    style={{
-                      background: '#FFFFFF',
-                      borderRadius: '18px',
-                      border: '1px solid #E2E8F0',
-                      overflow: 'hidden',
-                      boxShadow: '0 4px 16px rgba(11, 31, 68, 0.05)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      transition: 'transform 0.15s ease, box-shadow 0.15s ease'
-                    }}
+                    className="group bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-lg hover:border-slate-300 transition-all duration-200 flex flex-col"
                   >
-                    {/* Image & Moderation Badge */}
-                    <div style={{ position: 'relative', height: '190px', background: '#F1F5F9' }}>
+                    {/* Image & Moderation Badge Container */}
+                    <div className="relative h-48 sm:h-52 w-full bg-slate-100 overflow-hidden">
                       <img
-                        src={prop.image || prop.images?.[0] || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80'}
+                        src={displayImage}
                         alt={prop.title}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.target.src = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80';
+                        }}
                       />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
 
                       {/* Status Tag */}
-                      <div style={{ position: 'absolute', top: '12px', left: '12px' }}>
+                      <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start">
                         {isApproved && (
-                          <span style={{
-                            background: '#059669',
-                            color: '#FFFFFF',
-                            fontSize: '11px',
-                            fontWeight: 800,
-                            padding: '4px 10px',
-                            borderRadius: '8px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '5px',
-                            boxShadow: '0 4px 12px rgba(5, 150, 105, 0.35)'
-                          }}>
-                            <CheckCircle2 size={13} /> Live on Marketplace
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-extrabold bg-emerald-600 text-white shadow-md shadow-emerald-900/20 backdrop-blur-xs">
+                            <CheckCircle2 size={13} />
+                            Live on Marketplace
                           </span>
                         )}
                         {isPending && (
-                          <span style={{
-                            background: '#D97706',
-                            color: '#FFFFFF',
-                            fontSize: '11px',
-                            fontWeight: 800,
-                            padding: '4px 10px',
-                            borderRadius: '8px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '5px',
-                            boxShadow: '0 4px 12px rgba(217, 119, 6, 0.35)'
-                          }}>
-                            <Clock size={13} /> Under Moderation Desk
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-extrabold bg-amber-500 text-white shadow-md shadow-amber-900/20 backdrop-blur-xs">
+                            <Clock size={13} />
+                            Under Moderation Desk
                           </span>
                         )}
                         {isRejected && (
-                          <span style={{
-                            background: '#DC2626',
-                            color: '#FFFFFF',
-                            fontSize: '11px',
-                            fontWeight: 800,
-                            padding: '4px 10px',
-                            borderRadius: '8px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '5px',
-                            boxShadow: '0 4px 12px rgba(220, 38, 38, 0.35)'
-                          }}>
-                            <AlertCircle size={13} /> Modification Required
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-extrabold bg-rose-600 text-white shadow-md shadow-rose-900/20 backdrop-blur-xs">
+                            <AlertCircle size={13} />
+                            Modification Required
                           </span>
                         )}
                       </div>
 
-                      <div style={{ position: 'absolute', top: '12px', right: '12px' }}>
-                        <span style={{
-                          background: 'rgba(11, 31, 68, 0.85)',
-                          backdropFilter: 'blur(4px)',
-                          color: '#FFFFFF',
-                          fontSize: '11px',
-                          fontWeight: 700,
-                          padding: '4px 10px',
-                          borderRadius: '8px',
-                          textTransform: 'uppercase'
-                        }}>
+                      {/* Property Type Badge */}
+                      <div className="absolute top-3 right-3">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-[10.5px] font-bold uppercase tracking-wider bg-slate-900/80 text-white backdrop-blur-xs">
                           {prop.type === 'rent' ? 'For Rent' : 'For Sale'}
                         </span>
                       </div>
+
+                      {/* Photo count indicator */}
+                      {prop.images?.length > 1 && (
+                        <div className="absolute bottom-3 right-3">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10.5px] font-bold bg-black/60 text-white backdrop-blur-xs">
+                            📷 {prop.images.length} Photos
+                          </span>
+                        </div>
+                      )}
                     </div>
 
-                    {/* Card Content */}
-                    <div style={{ padding: '18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
-                        <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A' }}>
-                          {prop.priceDisplay || (prop.price ? `₹ ${Number(prop.price).toLocaleString('en-IN')}` : 'Price on Call')}
-                        </span>
-                        <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>
-                          {prop.bhk ? `${prop.bhk} BHK` : ''} {prop.propertyType || 'Residential'}
-                        </span>
+                    {/* Card Body */}
+                    <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
+                      <div>
+                        {/* Price and BHK */}
+                        <div className="flex items-baseline justify-between gap-2 mb-1.5">
+                          <div className="text-lg sm:text-xl font-extrabold text-slate-900">
+                            {prop.priceDisplay || (prop.price ? `₹ ${Number(prop.price).toLocaleString('en-IN')}` : 'Price on Call')}
+                          </div>
+                          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                            {prop.bhk ? `${prop.bhk} BHK ` : ''}{prop.propertyType || 'Residential'}
+                          </div>
+                        </div>
+
+                        {/* Title */}
+                        <h4 className="text-sm font-bold text-slate-800 line-clamp-1 mb-1.5 group-hover:text-[#0866F5] transition-colors">
+                          {prop.title}
+                        </h4>
+
+                        {/* Location */}
+                        <p className="text-xs text-slate-500 flex items-center gap-1 mb-3 truncate">
+                          <MapPin size={13} className="text-slate-400 shrink-0" />
+                          <span className="truncate">
+                            {prop.location?.locality || prop.locality || 'Prime Locality'}, {prop.location?.city || prop.city || 'City'}
+                          </span>
+                        </p>
+
+                        {/* Moderation Callout Box */}
+                        {isPending && (
+                          <div className="p-3 rounded-xl bg-amber-50/90 border border-amber-200 text-[11.5px] text-amber-900 leading-relaxed mb-3">
+                            <strong className="font-bold block mb-0.5 flex items-center gap-1 text-amber-950">
+                              <Clock size={12} className="text-amber-600" />
+                              Review in Progress:
+                            </strong>
+                            Our admin verification desk is checking documents &amp; location details. Once approved, it will be published across search filters.
+                          </div>
+                        )}
+
+                        {isApproved && (
+                          <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-center justify-between mb-3">
+                            <span className="flex items-center gap-1.5 font-medium">
+                              <Eye size={13} className="text-emerald-600" /> Public Views: <strong>{prop.viewsCount || 18}</strong>
+                            </span>
+                            <span className="font-semibold text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-md">
+                              Live &amp; Verified
+                            </span>
+                          </div>
+                        )}
+
+                        {isRejected && (
+                          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-[11.5px] text-rose-900 leading-relaxed mb-3">
+                            <strong className="font-bold block mb-0.5 text-rose-950">
+                              Feedback from Moderator:
+                            </strong>
+                            {prop.rejectionReason || prop.moderationNotes || 'Please update accurate pricing and high-resolution photos.'}
+                          </div>
+                        )}
                       </div>
 
-                      <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#1E293B', margin: '0 0 6px 0', lineHeight: 1.3 }}>
-                        {prop.title}
-                      </h4>
-
-                      <p style={{ fontSize: '12px', color: '#64748B', display: 'flex', alignItems: 'center', gap: '4px', margin: '0 0 12px 0' }}>
-                        <MapPin size={13} color="#94A3B8" />
-                        <span>{prop.location?.locality || 'Prime Locality'}, {prop.location?.city || 'City'}</span>
-                      </p>
-
-                      {/* Moderation Explanation Note */}
-                      {isPending && (
-                        <div style={{
-                          background: '#FFFBEB',
-                          border: '1px solid #FDE68A',
-                          borderRadius: '10px',
-                          padding: '8px 12px',
-                          fontSize: '11px',
-                          color: '#92400E',
-                          lineHeight: 1.4,
-                          marginBottom: '14px'
-                        }}>
-                          <strong>Moderation in Progress:</strong> Our verification desk is reviewing your property documents &amp; location details. Once approved, it will be published across search filters.
-                        </div>
-                      )}
-
-                      {isApproved && (
-                        <div style={{
-                          background: '#F0FDF4',
-                          border: '1px solid #BBF7D0',
-                          borderRadius: '10px',
-                          padding: '8px 12px',
-                          fontSize: '11px',
-                          color: '#166534',
-                          lineHeight: 1.4,
-                          marginBottom: '14px',
-                          display: 'flex',
-                          justifyContent: 'space-between'
-                        }}>
-                          <span>Public Views: <strong>{prop.viewsCount || 14}</strong></span>
-                          <span>Inquiries: <strong>{prop.inquiriesCount || 2}</strong></span>
-                        </div>
-                      )}
-
-                      <div style={{ marginTop: 'auto', paddingTop: '12px', borderTop: '1px solid #F1F5F9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ fontSize: '11px', color: '#94A3B8' }}>
-                          Posted: {prop.createdAt ? new Date(prop.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Recently'}
+                      {/* Card Footer */}
+                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-xs">
+                        <span className="text-slate-400 text-[11px]">
+                          {prop.createdAt
+                            ? new Date(prop.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+                            : 'Submitted recently'}
                         </span>
 
-                        <div style={{ display: 'flex', gap: '8px' }}>
+                        <div className="flex items-center gap-2">
                           <button
                             onClick={(e) => handleDeleteListing(prop._id || prop.id, e)}
-                            style={{
-                              background: '#FEE2E2',
-                              color: '#DC2626',
-                              border: 'none',
-                              borderRadius: '8px',
-                              padding: '6px 10px',
-                              fontSize: '12px',
-                              fontWeight: 600,
-                              cursor: 'pointer',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '4px'
-                            }}
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-rose-600 hover:bg-rose-50 border border-rose-200/80 font-semibold text-xs transition-colors cursor-pointer"
                             title="Delete Listing"
                           >
                             <Trash2 size={13} />
@@ -565,33 +509,27 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
           ═══════════════════════════════════════════════ */}
       {activeTab === 'bookings' && (
         <div className="space-y-6">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
             <div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', margin: '0 0 4px 0' }}>
+              <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">
                 Service Appointments &amp; Material Orders
               </h2>
-              <p style={{ fontSize: '13px', color: '#64748B', margin: 0 }}>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
                 Real-time tracking for Interior Consultations, Home Care Services, AMC Subscriptions and Wholesale Materials.
               </p>
             </div>
 
             {/* Filter buttons */}
-            <div style={{ display: 'flex', gap: '6px' }}>
+            <div className="flex items-center gap-1.5 shrink-0 bg-slate-100 p-1 rounded-xl border border-slate-200">
               {['all', 'services', 'materials'].map(f => (
                 <button
                   key={f}
                   onClick={() => setSelectedBookingFilter(f)}
-                  style={{
-                    padding: '6px 14px',
-                    borderRadius: '8px',
-                    border: '1px solid #E2E8F0',
-                    background: selectedBookingFilter === f ? '#0866F5' : '#FFFFFF',
-                    color: selectedBookingFilter === f ? '#FFFFFF' : '#475569',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                    textTransform: 'capitalize',
-                    cursor: 'pointer'
-                  }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize transition-all cursor-pointer ${
+                    selectedBookingFilter === f
+                      ? 'bg-[#0866F5] text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
                 >
                   {f}
                 </button>
@@ -600,82 +538,78 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
           </div>
 
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748B' }}>
+            <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 text-slate-500">
               <RefreshCw size={28} className="animate-spin mx-auto mb-3 text-[#0866F5]" />
-              <p style={{ fontSize: '14px', fontWeight: 600 }}>Loading orders &amp; appointments...</p>
+              <p className="text-sm font-semibold">Loading orders &amp; appointments...</p>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-8">
               {/* Service Appointments Section */}
               {(selectedBookingFilter === 'all' || selectedBookingFilter === 'services') && (
                 <div>
-                  <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0F172A', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Wrench size={16} color="#0866F5" />
-                    <span>Service Bookings ({myBookings.length})</span>
-                  </h3>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg bg-blue-50 text-[#0866F5] flex items-center justify-center">
+                        <Wrench size={15} />
+                      </div>
+                      <span>Service Bookings ({myBookings.length})</span>
+                    </h3>
+                  </div>
 
                   {myBookings.length === 0 ? (
-                    <div style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '16px', padding: '36px', textAlign: 'center' }}>
-                      <p style={{ fontSize: '13px', color: '#64748B', margin: '0 0 12px 0' }}>No service appointments scheduled yet.</p>
+                    <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center max-w-lg mx-auto">
+                      <p className="text-xs sm:text-sm text-slate-500 mb-4">No service appointments scheduled yet.</p>
                       <button
                         onClick={() => onNavigate && onNavigate('interiors')}
-                        style={{ background: '#0866F5', color: '#FFFFFF', border: 'none', borderRadius: '8px', padding: '8px 16px', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-[#0866F5] hover:bg-[#0653CA] text-white transition-all cursor-pointer shadow-xs"
                       >
                         Explore Interior &amp; Maintenance Services
                       </button>
                     </div>
                   ) : (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '16px' }}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
                       {myBookings.map((bkg) => (
                         <div
                           key={bkg._id || bkg.id}
-                          style={{
-                            background: '#FFFFFF',
-                            border: '1px solid #E2E8F0',
-                            borderRadius: '16px',
-                            padding: '20px',
-                            boxShadow: '0 2px 10px rgba(11, 31, 68, 0.04)'
-                          }}
+                          className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs hover:border-blue-400 hover:shadow-md transition-all flex flex-col justify-between"
                         >
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
-                            <div>
-                              <span style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#0866F5' }}>
-                                {bkg.serviceCategory || 'Service'}
+                          <div>
+                            <div className="flex items-start justify-between gap-2 mb-2">
+                              <div>
+                                <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#0866F5]">
+                                  {bkg.serviceCategory || 'Service'}
+                                </span>
+                                <h4 className="text-sm font-bold text-slate-900 mt-0.5">
+                                  {bkg.serviceName}
+                                </h4>
+                              </div>
+
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold capitalize bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                {bkg.status || 'Confirmed'}
                               </span>
-                              <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#0F172A', margin: '2px 0 0 0' }}>
-                                {bkg.serviceName}
-                              </h4>
                             </div>
 
-                            <span style={{
-                              background: '#DEF7EC',
-                              color: '#03543F',
-                              fontSize: '11px',
-                              fontWeight: 700,
-                              padding: '3px 8px',
-                              borderRadius: '6px',
-                              textTransform: 'capitalize'
-                            }}>
-                              {bkg.status || 'Confirmed'}
+                            <div className="bg-slate-50 rounded-xl p-3 text-xs text-slate-600 mb-4 space-y-1.5">
+                              <div className="flex items-center gap-2">
+                                <Calendar size={13} className="text-slate-400 shrink-0" />
+                                <span className="truncate">
+                                  {new Date(bkg.scheduledDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })} • {bkg.timeSlot || 'Standard Slot'}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <MapPin size={13} className="text-slate-400 shrink-0" />
+                                <span className="truncate">
+                                  {bkg.address?.line1 ? `${bkg.address.line1}, ${bkg.address.city || ''}` : 'Customer Address on Record'}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                            <span className="text-slate-400">
+                              ID: <strong className="text-slate-700">{bkg.bookingNumber || `RR-BKG-${(bkg._id || '').substring(0, 6)}`}</strong>
                             </span>
-                          </div>
-
-                          <div style={{ background: '#F8FAFC', borderRadius: '10px', padding: '10px 12px', fontSize: '12px', color: '#475569', marginBottom: '12px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                              <Calendar size={13} color="#64748B" />
-                              <span>{new Date(bkg.scheduledDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })} • {bkg.timeSlot || 'Standard Slot'}</span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <MapPin size={13} color="#64748B" />
-                              <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                                {bkg.address?.line1 ? `${bkg.address.line1}, ${bkg.address.city || ''}` : 'Customer Address on Record'}
-                              </span>
-                            </div>
-                          </div>
-
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
-                            <span style={{ color: '#64748B' }}>Booking ID: <strong>{bkg.bookingNumber || `RR-BKG-${(bkg._id || '').substring(0, 6)}`}</strong></span>
-                            <span style={{ fontWeight: 800, color: '#0F172A', fontSize: '13px' }}>
+                            <span className="text-sm font-extrabold text-slate-900">
                               {bkg.totalAmount ? `₹ ${Number(bkg.totalAmount).toLocaleString('en-IN')}` : 'Consultation'}
                             </span>
                           </div>
@@ -689,73 +623,65 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
               {/* Wholesale Materials Orders Section */}
               {(selectedBookingFilter === 'all' || selectedBookingFilter === 'materials') && (
                 <div>
-                  <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0F172A', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Package size={16} color="#0866F5" />
-                    <span>Materials Store Orders ({myOrders.length})</span>
-                  </h3>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
+                        <Package size={15} />
+                      </div>
+                      <span>Materials Store Orders ({myOrders.length})</span>
+                    </h3>
+                  </div>
 
                   {myOrders.length === 0 ? (
-                    <div style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '16px', padding: '36px', textAlign: 'center' }}>
-                      <p style={{ fontSize: '13px', color: '#64748B', margin: '0 0 12px 0' }}>No wholesale materials ordered yet.</p>
+                    <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center max-w-lg mx-auto">
+                      <p className="text-xs sm:text-sm text-slate-500 mb-4">No wholesale materials ordered yet.</p>
                       <button
                         onClick={() => onNavigate && onNavigate('materials')}
-                        style={{ background: 'linear-gradient(135deg, #0866F5 0%, #0653CA 100%)', color: '#FFFFFF', border: 'none', borderRadius: '20px', padding: '9px 20px', fontSize: '12px', fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 12px rgba(8, 102, 245, 0.25)' }}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold bg-gradient-to-r from-[#0866F5] to-[#0653CA] text-white transition-all cursor-pointer shadow-md shadow-blue-500/20"
                       >
                         Browse Wholesale Cement, Steel &amp; Tiles
                       </button>
                     </div>
                   ) : (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '16px' }}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
                       {myOrders.map((ord) => (
                         <div
                           key={ord._id || ord.id}
-                          style={{
-                            background: '#FFFFFF',
-                            border: '1px solid #E2E8F0',
-                            borderRadius: '16px',
-                            padding: '20px',
-                            boxShadow: '0 2px 10px rgba(11, 31, 68, 0.04)'
-                          }}
+                          className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs hover:border-purple-300 hover:shadow-md transition-all flex flex-col justify-between"
                         >
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                            <div>
-                              <span style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#0866F5' }}>
-                                Order {ord.orderNumber || `ORD-${(ord._id || '').substring(0, 6)}`}
+                          <div>
+                            <div className="flex items-start justify-between gap-2 mb-2">
+                              <div>
+                                <span className="text-[10px] font-extrabold uppercase tracking-wider text-purple-600">
+                                  Order {ord.orderNumber || `ORD-${(ord._id || '').substring(0, 6)}`}
+                                </span>
+                                <h4 className="text-sm font-bold text-slate-900 mt-0.5 line-clamp-1">
+                                  {ord.items?.[0]?.name || 'Construction Materials'} {ord.items?.length > 1 ? `+ ${ord.items.length - 1} more` : ''}
+                                </h4>
+                              </div>
+
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold capitalize bg-amber-50 text-amber-800 border border-amber-200">
+                                {ord.status || 'Placed'}
                               </span>
-                              <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#0F172A', margin: '2px 0 0 0' }}>
-                                {ord.items?.[0]?.name || 'Construction Materials'} {ord.items?.length > 1 ? `+ ${ord.items.length - 1} more` : ''}
-                              </h4>
                             </div>
 
-                            <span style={{
-                              background: '#FEF3C7',
-                              color: '#92400E',
-                              fontSize: '11px',
-                              fontWeight: 700,
-                              padding: '3px 8px',
-                              borderRadius: '6px',
-                              textTransform: 'capitalize'
-                            }}>
-                              {ord.status || 'Placed'}
-                            </span>
-                          </div>
-
-                          <div style={{ background: '#F8FAFC', borderRadius: '10px', padding: '10px 12px', fontSize: '12px', color: '#475569', marginBottom: '12px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                              <span>Payment Method:</span>
-                              <strong style={{ textTransform: 'uppercase' }}>{ord.paymentMethod || 'Online'}</strong>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                              <span>Shipment Destination:</span>
-                              <strong>{ord.shippingAddress?.city || 'Local Depot'}</strong>
+                            <div className="bg-slate-50 rounded-xl p-3 text-xs text-slate-600 mb-4 space-y-1">
+                              <div className="flex items-center justify-between">
+                                <span className="text-slate-400">Payment:</span>
+                                <strong className="text-slate-700 uppercase">{ord.paymentMethod || 'Online'}</strong>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-slate-400">Destination:</span>
+                                <strong className="text-slate-700">{ord.shippingAddress?.city || 'Local Depot'}</strong>
+                              </div>
                             </div>
                           </div>
 
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
-                            <span style={{ color: '#64748B' }}>
+                          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                            <span className="text-slate-400">
                               {new Date(ord.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                             </span>
-                            <span style={{ fontWeight: 800, color: '#0F172A', fontSize: '14px' }}>
+                            <span className="text-sm font-extrabold text-slate-900">
                               ₹ {Number(ord.totalAmount || 0).toLocaleString('en-IN')}
                             </span>
                           </div>
@@ -774,16 +700,20 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
           TAB 3: DOCUMENT VAULT LOCKER
           ═══════════════════════════════════════════════ */}
       {activeTab === 'locker' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
               <div>
-                <h3 className="font-bold text-[#0F172A] text-base font-heading">Encrypted Property Title Documents</h3>
-                <p className="text-xs text-slate-500">Immutable cloud locker with multi-factor biometric authorization.</p>
+                <h3 className="font-extrabold text-slate-900 text-base sm:text-lg">
+                  Encrypted Property Title Documents
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Immutable cloud locker with multi-factor biometric authorization.
+                </p>
               </div>
               <button 
                 onClick={() => alert("Upload dialog initialized. Select PDF/Image from local device.")}
-                className="bg-[#0866F5] hover:bg-[#0653CA] text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer"
+                className="inline-flex items-center justify-center gap-1.5 bg-[#0866F5] hover:bg-[#0653CA] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all cursor-pointer shadow-xs shrink-0"
               >
                 <Upload size={14} />
                 <span>Upload New Document</span>
@@ -792,27 +722,29 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
 
             <div className="space-y-3">
               {documents.map((doc, idx) => (
-                <div key={idx} className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center justify-between shadow-xs hover:border-[#0866F5] transition-all">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-slate-100 text-[#0866F5] flex items-center justify-center font-bold">
+                <div key={idx} className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center justify-between gap-3 shadow-xs hover:border-[#0866F5] transition-all">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#0866F5] flex items-center justify-center shrink-0">
                       <FileText size={20} />
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-bold text-[#0F172A] text-xs font-heading">{doc.title}</h4>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h4 className="font-bold text-slate-900 text-xs sm:text-sm truncate">{doc.title}</h4>
                         {doc.verified && (
-                          <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-0.5">
+                          <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-md inline-flex items-center gap-0.5">
                             <CheckCircle2 size={10} /> Verified
                           </span>
                         )}
                       </div>
-                      <span className="text-[11px] text-slate-400 block mt-0.5">{doc.type} • {doc.date} • {doc.size}</span>
+                      <span className="text-[11px] text-slate-400 block mt-0.5 truncate">
+                        {doc.type} • {doc.date} • {doc.size}
+                      </span>
                     </div>
                   </div>
 
                   <button 
                     onClick={() => alert(`Downloading verified copy of ${doc.title}...`)}
-                    className="p-2 text-slate-500 hover:text-[#0866F5] transition-colors cursor-pointer"
+                    className="p-2 text-slate-400 hover:text-[#0866F5] transition-colors cursor-pointer shrink-0"
                     title="Download Document"
                   >
                     <Download size={18} />
@@ -822,14 +754,23 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-[#0866F5] to-[#0645B8] text-white p-6 rounded-2xl border border-blue-500 shadow-xs h-fit space-y-4">
+          {/* Security Badge Sidebar Card */}
+          <div className="bg-gradient-to-br from-[#0866F5] to-[#0645B8] text-white p-6 rounded-3xl border border-blue-500 shadow-xl shadow-blue-900/15 h-fit space-y-4">
             <div className="flex items-center gap-2">
-              <Lock size={20} className="text-white" />
-              <h4 className="font-bold text-white text-sm font-heading">256-Bit Bank-Grade Security</h4>
+              <div className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">
+                <Lock size={18} className="text-white" />
+              </div>
+              <h4 className="font-extrabold text-white text-sm sm:text-base">
+                256-Bit Bank-Grade Security
+              </h4>
             </div>
-            <p className="text-xs text-white opacity-95 leading-relaxed">
+            <p className="text-xs text-blue-100 leading-relaxed">
               Your property documents are stored in encrypted cloud vaults with biometric &amp; OTP authorization access only. Compliant with Indian IT Act 2000 &amp; RERA digital standards.
             </p>
+            <div className="pt-2 border-t border-white/15 text-[11px] text-blue-200 flex items-center gap-2">
+              <ShieldCheck size={14} className="text-emerald-300" />
+              <span>Zero-knowledge client-side encryption</span>
+            </div>
           </div>
         </div>
       )}
@@ -838,24 +779,30 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
           TAB 4: TAX & AMC REMINDERS
           ═══════════════════════════════════════════════ */}
       {activeTab === 'reminders' && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs max-w-2xl">
-          <h3 className="font-bold text-[#0F172A] text-base font-heading mb-1">Upcoming Dues &amp; Maintenance Reminders</h3>
-          <p className="text-xs text-slate-500 mb-6">Automated SMS and email notifications 7 days prior to expiry.</p>
+        <div className="bg-white p-5 sm:p-7 rounded-3xl border border-slate-200 shadow-xs max-w-2xl">
+          <h3 className="font-extrabold text-slate-900 text-base sm:text-lg mb-1">
+            Upcoming Dues &amp; Maintenance Reminders
+          </h3>
+          <p className="text-xs text-slate-500 mb-6">
+            Automated SMS and email notifications 7 days prior to expiry.
+          </p>
 
           <div className="space-y-3">
             {reminders.map((rem, idx) => (
-              <div key={idx} className="p-4 rounded-xl border border-slate-200 flex items-center justify-between hover:border-[#0866F5] transition-all">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#0866F5] flex items-center justify-center">
+              <div key={idx} className="p-4 rounded-2xl border border-slate-200 flex items-center justify-between gap-3 hover:border-[#0866F5] transition-all">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#0866F5] flex items-center justify-center shrink-0">
                     <Bell size={18} />
                   </div>
-                  <div>
-                    <h4 className="font-bold text-xs text-[#0F172A]">{rem.title}</h4>
-                    <span className="text-[11px] text-slate-500">Due: {rem.date} • {rem.amount}</span>
+                  <div className="min-w-0">
+                    <h4 className="font-bold text-xs sm:text-sm text-slate-900 truncate">{rem.title}</h4>
+                    <span className="text-[11px] text-slate-500 block mt-0.5 truncate">
+                      Due: {rem.date} • <strong>{rem.amount}</strong>
+                    </span>
                   </div>
                 </div>
 
-                <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${
+                <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full shrink-0 ${
                   rem.status === 'Pending' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'
                 }`}>
                   {rem.status}
@@ -870,19 +817,23 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
           TAB 5: PROFILE & KYC DETAILS
           ═══════════════════════════════════════════════ */}
       {activeTab === 'profile' && (
-        <div className="max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
+        <div className="max-w-2xl bg-white border border-slate-200 rounded-3xl p-5 sm:p-7 shadow-xs">
           <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-200">
-            <div className="w-16 h-16 rounded-full bg-[#0866F5] text-white flex items-center justify-center font-extrabold text-2xl">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0866F5] to-[#05338E] text-white flex items-center justify-center font-extrabold text-2xl shadow-md shadow-blue-500/20 shrink-0">
               {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
             </div>
-            <div>
-              <h3 className="text-lg font-bold text-[#0F172A]">{user?.name || 'Roof Ridge Member'}</h3>
-              <p className="text-xs text-slate-500">{user?.phone ? `+91 ${user.phone}` : 'No phone attached'}</p>
-              <div className="flex gap-2 mt-2">
-                <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded">
-                  Aadhaar e-KYC Verified
+            <div className="min-w-0">
+              <h3 className="text-base sm:text-lg font-extrabold text-slate-900 truncate">
+                {user?.name || 'Roof Ridge Member'}
+              </h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                {user?.phone ? `+91 ${user.phone}` : 'No phone attached'}
+              </p>
+              <div className="flex flex-wrap gap-2 mt-2">
+                <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-md inline-flex items-center gap-1">
+                  <ShieldCheck size={11} /> Aadhaar e-KYC Verified
                 </span>
-                <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">
+                <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-md capitalize">
                   {user?.role || 'User'}
                 </span>
               </div>
@@ -890,20 +841,22 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
           </div>
 
           <div className="space-y-4 text-xs">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-3 bg-slate-50 rounded-xl">
-                <span className="text-slate-500 block mb-1">Account Role</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
+                <span className="text-slate-400 block mb-1 text-[11px] uppercase tracking-wider font-bold">Account Role</span>
                 <strong className="text-slate-800 text-sm capitalize">{user?.role || 'Property Owner / Buyer'}</strong>
               </div>
-              <div className="p-3 bg-slate-50 rounded-xl">
-                <span className="text-slate-500 block mb-1">Preferred City</span>
-                <strong className="text-slate-800 text-sm">Mumbai</strong>
+              <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
+                <span className="text-slate-400 block mb-1 text-[11px] uppercase tracking-wider font-bold">Preferred City</span>
+                <strong className="text-slate-800 text-sm">Noida / NCR</strong>
               </div>
             </div>
 
-            <div className="p-3 bg-slate-50 rounded-xl">
-              <span className="text-slate-500 block mb-1">Verification Status</span>
-              <strong className="text-emerald-700 text-sm">100% Complete — Authorized for direct listings &amp; bookings</strong>
+            <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
+              <span className="text-slate-400 block mb-1 text-[11px] uppercase tracking-wider font-bold">Verification Status</span>
+              <strong className="text-emerald-700 text-sm flex items-center gap-1.5">
+                <CheckCircle2 size={15} /> 100% Complete — Authorized for direct listings &amp; bookings
+              </strong>
             </div>
           </div>
         </div>
@@ -911,34 +864,3 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
     </div>
   );
 }
-
-const metricCardStyle = {
-  background: '#FFFFFF',
-  borderRadius: '16px',
-  border: '1px solid #E2E8F0',
-  padding: '18px 20px',
-  boxShadow: '0 2px 10px rgba(11, 31, 68, 0.04)',
-};
-
-const metricLabelStyle = {
-  fontSize: '12px',
-  fontWeight: 700,
-  color: '#64748B',
-  textTransform: 'uppercase',
-  letterSpacing: '0.04em',
-};
-
-const metricValueStyle = {
-  fontSize: '1.8rem',
-  fontWeight: 800,
-  color: '#0F172A',
-  margin: '8px 0 2px 0',
-  lineHeight: 1,
-  fontFamily: 'Inter, sans-serif'
-};
-
-const metricSubStyle = {
-  fontSize: '11px',
-  color: '#94A3B8',
-  margin: 0,
-};

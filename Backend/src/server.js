@@ -75,6 +75,8 @@ const routes = [
   { path: 'auth', router: authRoutes },
   { path: 'properties', router: propertyRoutes },
   { path: 'leads', router: leadRoutes },
+  { path: 'admin/leads', router: leadRoutes },
+  { path: 'admin/crm/leads', router: leadRoutes },
   { path: 'bookings', router: bookingRoutes },
   { path: 'materials', router: materialRoutes },
   { path: 'finance', router: financeRoutes },
