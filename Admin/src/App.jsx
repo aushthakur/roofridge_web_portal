@@ -101,33 +101,42 @@ export default function App() {
   // If unauthenticated, show modern Admin Login Screen
   if (!token) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0866F5] via-[#0645B8] to-[#04338A] flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl border border-blue-100 space-y-6">
+      <div className="min-h-screen bg-[#091122] flex items-center justify-center p-4 relative overflow-hidden font-sans">
+        {/* Subtle executive background accents */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-b from-blue-600/15 via-indigo-600/10 to-transparent blur-3xl pointer-events-none" />
+
+        <div className="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl border border-slate-200/80 relative z-10 space-y-6">
           <div className="text-center space-y-2">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#0866F5] to-blue-400 text-white flex items-center justify-center font-black text-xl mx-auto shadow-lg shadow-blue-500/25">
-              RR
+            <img
+              src="/RRlogo_transparent.png"
+              alt="RoofRidge"
+              className="h-10 w-auto mx-auto object-contain"
+            />
+            <div className="pt-2">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-blue-50 text-[#0866F5] border border-blue-100">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0866F5] animate-pulse"></span>
+                Executive Admin Portal
+              </div>
+              <p className="text-xs text-slate-500 mt-1.5 font-medium">
+                Operations, Moderation &amp; Platform Control Center
+              </p>
             </div>
-            <h1 className="text-xl font-black text-slate-900 tracking-tight">
-              ROOF RIDGE ADMIN PORTAL
-            </h1>
-            <p className="text-xs text-slate-500">
-              Platform Administration &amp; Moderation Control Room
-            </p>
           </div>
 
           {loginError && (
-            <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
-              {loginError}
+            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>
+              <span>{loginError}</span>
             </div>
           )}
 
           <form onSubmit={handleLogin} className="space-y-4 text-xs">
             <div>
-              <label className="block text-slate-600 font-bold mb-1">
+              <label className="block text-slate-700 font-semibold mb-1.5">
                 Admin Mobile Number
               </label>
-              <div className="flex border border-slate-200 rounded-lg overflow-hidden focus-within:border-[#0866F5]">
-                <span className="px-3 py-2 bg-slate-50 text-slate-500 font-bold border-r border-slate-200">
+              <div className="flex border border-slate-200 rounded-xl overflow-hidden focus-within:border-[#0866F5] focus-within:ring-2 focus-within:ring-blue-500/20 transition">
+                <span className="px-3.5 py-2.5 bg-slate-50 text-slate-500 font-bold border-r border-slate-200 flex items-center">
                   +91
                 </span>
                 <input
@@ -135,31 +144,33 @@ export default function App() {
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-3 py-2 outline-none text-slate-800 font-semibold"
+                  className="w-full px-3.5 py-2.5 outline-none text-slate-800 font-semibold"
+                  placeholder="Enter 10-digit mobile number"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-slate-600 font-bold mb-1">
-                Security OTP
+              <label className="block text-slate-700 font-semibold mb-1.5">
+                Security Passkey / OTP
               </label>
               <input
                 type="password"
                 required
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none font-mono text-center text-sm font-bold tracking-widest focus:border-[#0866F5]"
+                className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl outline-none font-mono text-center text-sm font-bold tracking-widest focus:border-[#0866F5] focus:ring-2 focus:ring-blue-500/20 transition"
               />
-              <p className="text-[10px] text-slate-400 mt-1">
-                Development master passkey: <span className="font-bold text-slate-700">1234</span>
+              <p className="text-[11px] text-slate-400 mt-1.5 flex items-center justify-between">
+                <span>Development passkey: <span className="font-bold text-slate-700">1234</span></span>
+                <span className="text-emerald-600 font-medium">Ready</span>
               </p>
             </div>
 
             <button
               type="submit"
               disabled={loginLoading}
-              className="w-full py-2.5 bg-[#0866F5] hover:bg-[#0653CA] text-white rounded-lg font-bold flex items-center justify-center gap-2 shadow-md shadow-blue-500/25 transition cursor-pointer disabled:opacity-50"
+              className="w-full py-2.5 bg-[#0866F5] hover:bg-[#0653CA] text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition cursor-pointer disabled:opacity-50"
             >
               {loginLoading ? 'Authenticating...' : 'Sign In to Control Center'}{' '}
               <ArrowRight size={14} />
@@ -167,7 +178,7 @@ export default function App() {
           </form>
 
           <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-            <span className="flex items-center gap-1 text-emerald-600 font-semibold">
+            <span className="flex items-center gap-1.5 text-emerald-600 font-semibold">
               <ShieldCheck size={14} /> 256-Bit SSL Encrypted
             </span>
             <button
