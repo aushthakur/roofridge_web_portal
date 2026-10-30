@@ -70,7 +70,7 @@ const adminRoutes = require('./routes/adminRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const cmsRoutes = require('./routes/cmsRoutes');
 
-// Mount Routers (Supporting both /api/v1/* and legacy /api/* paths)
+// Mount Routers (Supporting /api/v1/*, legacy /api/*, and direct /* paths)
 const routes = [
   { path: 'auth', router: authRoutes },
   { path: 'properties', router: propertyRoutes },
@@ -87,6 +87,7 @@ const routes = [
 routes.forEach(({ path, router }) => {
   app.use(`/api/v1/${path}`, router);
   app.use(`/api/${path}`, router);
+  app.use(`/${path}`, router);
 });
 
 // 404 Route Handler

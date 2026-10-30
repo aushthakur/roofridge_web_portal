@@ -1,6 +1,16 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/v1';
+const getBaseUrl = () => {
+  const envUrl = (import.meta.env.VITE_API_BASE_URL || '').trim();
+  if (!envUrl) return 'http://localhost:5000/api/v1';
+  let clean = envUrl.replace(/\/+$/, '');
+  if (!clean.endsWith('/api/v1') && !clean.endsWith('/api')) {
+    clean += '/api/v1';
+  }
+  return clean;
+};
+
+const API_BASE_URL = getBaseUrl();
 
 const adminApi = axios.create({
   baseURL: API_BASE_URL,
