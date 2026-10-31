@@ -26,23 +26,24 @@ const BENEFITS = [
 ];
 
 export default function ValuePropsStrip() {
-  const { isMobile } = useResponsive();
+  const { isMobile, isTablet } = useResponsive();
+  const isSmall = isMobile || isTablet;
 
   return (
     <section style={{
       background: '#FFFFFF',
       borderTop: '1px solid #EEF2F6',
-      paddingTop: '36px',
-      paddingBottom: '54px',
+      paddingTop: isMobile ? '28px' : '36px',
+      paddingBottom: isMobile ? '36px' : '54px',
     }}>
       <div className="rr-container">
         {/* Section Heading */}
         <h2 style={{
-          fontSize: '22px',
+          fontSize: isMobile ? '18px' : '22px',
           fontWeight: 700,
           color: '#0F172A',
           fontFamily: 'Inter, sans-serif',
-          marginBottom: '28px',
+          marginBottom: isMobile ? '20px' : '28px',
           letterSpacing: '-0.02em',
         }}>
           Why Choose RoofRidge?
@@ -51,16 +52,17 @@ export default function ValuePropsStrip() {
         {/* Benefits Row + Divider + Right Slogan */}
         <div style={{
           display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          alignItems: isMobile ? 'flex-start' : 'center',
+          flexDirection: isSmall ? 'column' : 'row',
+          alignItems: isSmall ? 'flex-start' : 'center',
           justifyContent: 'space-between',
-          gap: isMobile ? '32px' : '40px',
+          gap: isSmall ? '24px' : '40px',
         }}>
           {/* ── 5 Horizontal Benefits ── */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
-            gap: isMobile ? '20px' : '24px',
+            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : (isTablet ? 'repeat(3, 1fr)' : 'repeat(5, 1fr)'),
+            gap: isMobile ? '16px' : '24px',
+            width: isSmall ? '100%' : 'auto',
             flex: 1,
             alignItems: 'flex-start',
           }}>

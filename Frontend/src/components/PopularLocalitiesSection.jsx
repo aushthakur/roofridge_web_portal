@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRight, TrendingUp, MapPin, Building2, Compass, ShieldCheck, Sparkles } from 'lucide-react';
+import { useResponsive } from '../hooks/useResponsive';
 
 const TABS = [
   { id: 'all', label: 'All Localities' },
@@ -102,6 +103,7 @@ const LOCALITIES = [
 ];
 
 export default function PopularLocalitiesSection({ onSelectLocality }) {
+  const { isMobile, isTablet } = useResponsive();
   const [activeTab, setActiveTab] = useState('all');
 
   const filtered = activeTab === 'all' 
@@ -110,20 +112,20 @@ export default function PopularLocalitiesSection({ onSelectLocality }) {
 
   return (
     <section style={{
-      padding: '84px 0 72px 0',
+      padding: isMobile ? '40px 0 36px 0' : '72px 0 64px 0',
       background: 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFD 50%, #FFFFFF 100%)',
       position: 'relative',
     }}>
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 28px' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: isMobile ? '0 16px' : '0 28px' }}>
         
         {/* Section Header */}
         <div style={{
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'space-between',
-          marginBottom: '36px',
+          marginBottom: isMobile ? '24px' : '36px',
           flexWrap: 'wrap',
-          gap: '24px',
+          gap: '20px',
         }}>
           <div>
             <div style={{
@@ -140,7 +142,7 @@ export default function PopularLocalitiesSection({ onSelectLocality }) {
               <Compass size={15} /> PRIME MUMBAI MICRO-MARKETS
             </div>
             <h2 style={{
-              fontSize: 'clamp(1.8rem, 2.8vw, 2.4rem)',
+              fontSize: 'clamp(1.5rem, 2.8vw, 2.4rem)',
               fontWeight: 800,
               color: '#0F172A',
               letterSpacing: '-0.025em',
@@ -168,7 +170,9 @@ export default function PopularLocalitiesSection({ onSelectLocality }) {
             background: '#EEF5FF',
             padding: '4px',
             borderRadius: '30px',
-            flexWrap: 'wrap',
+            overflowX: 'auto',
+            maxWidth: '100%',
+            WebkitOverflowScrolling: 'touch',
           }}>
             {TABS.map((tab) => {
               const isActive = activeTab === tab.id;
@@ -187,6 +191,7 @@ export default function PopularLocalitiesSection({ onSelectLocality }) {
                     cursor: 'pointer',
                     transition: 'all 0.18s ease',
                     boxShadow: isActive ? '0 2px 8px rgba(8, 102, 245, 0.28)' : 'none',
+                    whiteSpace: 'nowrap',
                   }}
                 >
                   {tab.label}
@@ -200,12 +205,17 @@ export default function PopularLocalitiesSection({ onSelectLocality }) {
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(12, 1fr)',
-          gap: '24px',
+          gap: isMobile ? '16px' : '24px',
         }}>
           {filtered.map((loc, idx) => {
-            // First item gets 8 cols in 'all' view for dramatic Bento effect
+            // First item gets 8 cols in 'all' view for dramatic Bento effect on desktop
             const isWide = activeTab === 'all' && idx === 0;
-            const colSpan = isWide ? 8 : (activeTab === 'all' && idx === 1 ? 4 : 4);
+            const colSpan = isMobile 
+              ? 12 
+              : (isTablet 
+                  ? (isWide ? 12 : 6) 
+                  : (isWide ? 8 : (activeTab === 'all' && idx === 1 ? 4 : 4))
+                );
 
             return (
               <div
@@ -214,7 +224,7 @@ export default function PopularLocalitiesSection({ onSelectLocality }) {
                 style={{
                   gridColumn: `span ${colSpan}`,
                   position: 'relative',
-                  height: isWide ? '420px' : '380px',
+                  height: isMobile ? '290px' : (isWide ? '420px' : '380px'),
                   borderRadius: '20px',
                   overflow: 'hidden',
                   cursor: 'pointer',

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRight, Package, Truck, ShieldCheck, Zap, Plus, Minus, Check, Building, FileCheck } from 'lucide-react';
+import { useResponsive } from '../hooks/useResponsive';
 
 const PRODUCTS = [
   {
@@ -61,6 +62,7 @@ const PRODUCTS = [
 ];
 
 export default function BuildingMaterialsGrid({ onAddToCart }) {
+  const { isMobile, isTablet } = useResponsive();
   const [quantities, setQuantities] = useState({
     'mat-1': 50,
     'mat-2': 2,
@@ -88,20 +90,20 @@ export default function BuildingMaterialsGrid({ onAddToCart }) {
 
   return (
     <section style={{
-      padding: '84px 0',
+      padding: isMobile ? '40px 0' : '72px 0',
       background: '#FFFFFF',
       position: 'relative',
     }}>
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 28px' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: isMobile ? '0 16px' : '0 28px' }}>
         
         {/* Section Header */}
         <div style={{
           display: 'flex',
-          alignItems: 'flex-end',
+          alignItems: isMobile ? 'flex-start' : 'flex-end',
           justifyContent: 'space-between',
-          marginBottom: '36px',
-          flexWrap: 'wrap',
-          gap: '24px',
+          marginBottom: isMobile ? '24px' : '36px',
+          flexDirection: isMobile ? 'column' : 'row',
+          gap: isMobile ? '16px' : '24px',
         }}>
           <div>
             <div style={{
@@ -118,7 +120,7 @@ export default function BuildingMaterialsGrid({ onAddToCart }) {
               <Building size={15} /> B2B WHOLESALE PROCUREMENT
             </div>
             <h2 style={{
-              fontSize: 'clamp(1.8rem, 2.8vw, 2.4rem)',
+              fontSize: 'clamp(1.5rem, 2.8vw, 2.4rem)',
               fontWeight: 800,
               color: '#0F172A',
               letterSpacing: '-0.025em',
@@ -147,6 +149,9 @@ export default function BuildingMaterialsGrid({ onAddToCart }) {
             border: '1px solid #E5EBF4',
             borderRadius: '16px',
             padding: '10px 18px',
+            width: isMobile ? '100%' : 'auto',
+            justifyContent: isMobile ? 'space-around' : 'flex-start',
+            boxSizing: 'border-box',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', fontWeight: 700, color: '#0F172A' }}>
               <Truck size={15} color="#0866F5" /> 35+ Cities 24h Delivery
@@ -161,8 +166,10 @@ export default function BuildingMaterialsGrid({ onAddToCart }) {
         {/* 4 Product Cards Grid */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '24px',
+          gridTemplateColumns: isMobile 
+            ? '1fr' 
+            : (isTablet ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(280px, 1fr))'),
+          gap: isMobile ? '16px' : '24px',
         }}>
           {PRODUCTS.map((item) => {
             const qty = quantities[item.id] || item.minQty;

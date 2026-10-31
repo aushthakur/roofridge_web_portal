@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRight, Sparkles, Calculator, ShieldCheck, Clock, Check, Eye, HelpCircle } from 'lucide-react';
+import { useResponsive } from '../hooks/useResponsive';
 
 const STYLES = [
   {
@@ -35,6 +36,9 @@ const SCOPES = [
 ];
 
 export default function InteriorEstimatorWidget({ onBookConsultation }) {
+  const { isMobile, isTablet } = useResponsive();
+  const isStack = isMobile || isTablet;
+
   const [activeStyle, setActiveStyle] = useState('scandi');
   const [area, setArea] = useState(1400);
   const [quality, setQuality] = useState('Premium');
@@ -49,11 +53,11 @@ export default function InteriorEstimatorWidget({ onBookConsultation }) {
 
   return (
     <section style={{
-      padding: '84px 0',
+      padding: isMobile ? '40px 0' : '72px 0',
       background: 'linear-gradient(180deg, #F8FAFD 0%, #EEF5FF 50%, #FFFFFF 100%)',
       position: 'relative',
     }}>
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 28px' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: isMobile ? '0 16px' : '0 28px' }}>
         
         {/* Section Header */}
         <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 48px auto' }}>
@@ -98,14 +102,15 @@ export default function InteriorEstimatorWidget({ onBookConsultation }) {
           boxShadow: '0 20px 48px rgba(11, 31, 68, 0.08)',
           overflow: 'hidden',
           display: 'grid',
-          gridTemplateColumns: 'repeat(12, 1fr)',
+          gridTemplateColumns: isStack ? '1fr' : 'repeat(12, 1fr)',
         }}>
 
-          {/* Left Column: Visual Style Preview (7 cols) */}
+          {/* Left Column: Visual Style Preview */}
           <div style={{
-            gridColumn: 'span 7',
-            padding: '36px',
-            borderRight: '1px solid #F1F5F9',
+            gridColumn: isStack ? 'auto' : 'span 7',
+            padding: isMobile ? '20px 16px' : '36px',
+            borderRight: isStack ? 'none' : '1px solid #F1F5F9',
+            borderBottom: isStack ? '1px solid #F1F5F9' : 'none',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
@@ -309,7 +314,11 @@ export default function InteriorEstimatorWidget({ onBookConsultation }) {
                 <label style={{ display: 'block', fontSize: '0.88rem', fontWeight: 700, color: '#0F172A', marginBottom: '10px' }}>
                   Project Scope
                 </label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: isMobile ? 'repeat(auto-fit, minmax(130px, 1fr))' : 'repeat(3, 1fr)', 
+                  gap: '10px' 
+                }}>
                   {SCOPES.map((sItem) => {
                     const isSelected = scope === sItem.id;
                     return (
@@ -340,12 +349,12 @@ export default function InteriorEstimatorWidget({ onBookConsultation }) {
             </div>
           </div>
 
-          {/* Right Column: Executive Quote Summary (5 cols) */}
+          {/* Right Column: Executive Quote Summary */}
           <div style={{
-            gridColumn: 'span 5',
+            gridColumn: isStack ? 'auto' : 'span 5',
             background: 'linear-gradient(135deg, #0866F5 0%, #0645B8 60%, #04338A 100%)',
             color: '#FFFFFF',
-            padding: '40px 36px',
+            padding: isMobile ? '28px 20px' : '40px 36px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',

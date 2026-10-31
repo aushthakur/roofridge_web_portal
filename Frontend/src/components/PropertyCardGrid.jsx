@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heart, ArrowRight, Bed, Bath, Car, Maximize2 } from 'lucide-react';
+import { useResponsive } from '../hooks/useResponsive';
 
 const FEATURED_PROPERTIES = [
   {
@@ -48,11 +49,13 @@ const FEATURED_PROPERTIES = [
 ];
 
 export default function PropertyCardGrid({ onSelectProperty, wishlist = [], onToggleWishlist, onSeeAll }) {
+  const { isMobile, isTablet } = useResponsive();
+
   return (
     <section style={{
       background: '#FFFFFF',
-      paddingTop: '20px',
-      paddingBottom: '54px',
+      paddingTop: isMobile ? '16px' : '20px',
+      paddingBottom: isMobile ? '36px' : '54px',
     }}>
       <div className="rr-container">
         {/* Section Header */}
@@ -63,7 +66,7 @@ export default function PropertyCardGrid({ onSelectProperty, wishlist = [], onTo
           marginBottom: '20px',
         }}>
           <h2 style={{
-            fontSize: '22px',
+            fontSize: isMobile ? '18px' : '22px',
             fontWeight: 700,
             color: '#0F172A',
             margin: 0,
@@ -97,8 +100,10 @@ export default function PropertyCardGrid({ onSelectProperty, wishlist = [], onTo
         {/* 4-Column Property Grid */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: '20px',
+          gridTemplateColumns: isMobile 
+            ? '1fr' 
+            : (isTablet ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(260px, 1fr))'),
+          gap: isMobile ? '16px' : '20px',
         }}>
           {FEATURED_PROPERTIES.map((prop) => {
             const isSaved = wishlist.includes(prop.id);

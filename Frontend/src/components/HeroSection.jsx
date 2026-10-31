@@ -3,7 +3,8 @@ import { ArrowRight } from 'lucide-react';
 import { useResponsive } from '../hooks/useResponsive';
 
 export default function HeroSection({ children, onExploreCategory }) {
-  const { isMobile } = useResponsive();
+  const { isMobile, isTablet } = useResponsive();
+  const isSmall = isMobile || isTablet;
 
   return (
     <section style={{
@@ -13,28 +14,28 @@ export default function HeroSection({ children, onExploreCategory }) {
       backgroundSize: 'cover',
       backgroundPosition: 'center right',
       backgroundRepeat: 'no-repeat',
-      minHeight: isMobile ? '560px' : '520px',
-      paddingBottom: isMobile ? '80px' : '86px',
+      minHeight: isSmall ? 'auto' : '520px',
+      paddingBottom: isSmall ? '36px' : '86px',
       overflow: 'visible',
     }}>
       {/* Container for Hero Content */}
       <div className="rr-container" style={{
         position: 'relative',
-        paddingTop: isMobile ? '36px' : '48px',
+        paddingTop: isMobile ? '28px' : '44px',
         height: '100%',
-        minHeight: isMobile ? '460px' : '440px',
+        minHeight: isSmall ? 'auto' : '440px',
       }}>
         {/* Upper Hero Row: Left Content + Floating Project Card on Right */}
         <div style={{
           display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
+          flexDirection: isSmall ? 'column' : 'row',
           justifyContent: 'space-between',
-          alignItems: 'flex-start',
+          alignItems: isSmall ? 'stretch' : 'flex-start',
           position: 'relative',
           gap: '24px',
         }}>
           {/* ── Left Content: Eyebrow + Headline + Description ── */}
-          <div style={{ maxWidth: '500px', zIndex: 10 }}>
+          <div style={{ maxWidth: isSmall ? '100%' : '500px', zIndex: 10 }}>
             {/* Small uppercase eyebrow */}
             <p style={{
               fontSize: '11px',
@@ -51,7 +52,7 @@ export default function HeroSection({ children, onExploreCategory }) {
             {/* Main Headline */}
             <h1 style={{
               fontFamily: 'Inter, sans-serif',
-              fontSize: 'clamp(2.4rem, 4.4vw, 3.4rem)',
+              fontSize: 'clamp(2.1rem, 4.4vw, 3.4rem)',
               fontWeight: 700,
               color: '#0F172A',
               lineHeight: 1.08,
@@ -74,8 +75,8 @@ export default function HeroSection({ children, onExploreCategory }) {
             </p>
           </div>
 
-          {/* ── Handwritten Decorative Text Element in Open Sky/Valley ── */}
-          {!isMobile && (
+          {/* ── Handwritten Decorative Text Element in Open Sky/Valley (Desktop only) ── */}
+          {!isSmall && (
             <div style={{
               position: 'absolute',
               top: '40px',
@@ -117,11 +118,12 @@ export default function HeroSection({ children, onExploreCategory }) {
               display: 'flex',
               alignItems: 'center',
               gap: '14px',
-              width: isMobile ? '100%' : '255px',
+              width: isSmall ? '100%' : '255px',
+              boxSizing: 'border-box',
               cursor: 'pointer',
               transition: 'transform 0.2s ease, box-shadow 0.2s ease',
               zIndex: 10,
-              marginTop: isMobile ? '16px' : '0',
+              marginTop: isSmall ? '12px' : '0',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px)';
@@ -193,17 +195,21 @@ export default function HeroSection({ children, onExploreCategory }) {
           </div>
         </div>
 
-        {/* ── Overlapping Floating Search Panel ── */}
+        {/* ── Search Panel (Responsive: in-flow on mobile/tablet, floating absolute on desktop) ── */}
         <div style={{
-          position: 'absolute',
-          bottom: isMobile ? '-50px' : '-44px',
-          left: '40px',
-          right: isMobile ? '40px' : 'auto',
+          position: isSmall ? 'relative' : 'absolute',
+          bottom: isSmall ? 'auto' : '-44px',
+          left: isSmall ? '0' : '40px',
+          right: isSmall ? '0' : 'auto',
+          marginTop: isSmall ? '24px' : '0',
+          width: isSmall ? '100%' : 'auto',
           zIndex: 20,
         }}>
           {children}
         </div>
       </div>
     </section>
+  );
+}
   );
 }

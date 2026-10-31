@@ -138,10 +138,11 @@ export default function MainHeader({
 
         {/* Right Actions: Location Selector | Wishlist | Profile Menu */}
         <div
+          className="header-right-actions"
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '20px',
+            gap: '12px',
           }}
         >
           {/* Location Selector */}
@@ -153,17 +154,20 @@ export default function MainHeader({
               display: 'flex',
               alignItems: 'center',
               gap: '4px',
-              fontSize: '14px',
+              fontSize: '13px',
               fontWeight: 500,
               color: '#1E293B',
               cursor: 'pointer',
               fontFamily: 'Inter, sans-serif',
               padding: '6px 4px',
+              maxWidth: '120px',
             }}
             title="Select Location"
           >
-            <span>{selectedCity?.name || 'Mumbai'}</span>
-            <ChevronDown size={14} color="#1E293B" strokeWidth={2} />
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {selectedCity?.name || 'Mumbai'}
+            </span>
+            <ChevronDown size={14} color="#1E293B" strokeWidth={2} style={{ flexShrink: 0 }} />
           </button>
 
           {/* Wishlist Heart Icon */}
@@ -207,14 +211,14 @@ export default function MainHeader({
             )}
           </button>
 
-          {/* Post Property Quick Action */}
+          {/* Post Property Quick Action (Compact on mobile) */}
           <button
             onClick={onOpenPostProperty}
+            className="hidden sm:flex"
             style={{
-              display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '6px 14px',
+              padding: '6px 12px',
               borderRadius: '8px',
               background: '#EEF5FF',
               color: '#0866F5',
@@ -248,6 +252,10 @@ export default function MainHeader({
                 color: '#FFFFFF',
                 letterSpacing: '0.04em',
               }}
+            >
+              FREE
+            </span>
+          </button>
             >
               FREE
             </span>

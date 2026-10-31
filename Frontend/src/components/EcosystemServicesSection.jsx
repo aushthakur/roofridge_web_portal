@@ -1,5 +1,6 @@
 import React from 'react';
 import { Palette, Landmark, HardHat, PackageCheck, ArrowRight, ShieldCheck, Sparkles, CheckCircle2 } from 'lucide-react';
+import { useResponsive } from '../hooks/useResponsive';
 
 const SERVICES = [
   {
@@ -57,17 +58,19 @@ const SERVICES = [
 ];
 
 export default function EcosystemServicesSection({ onNavigate }) {
+  const { isMobile, isTablet } = useResponsive();
+
   return (
     <section style={{
-      padding: '84px 0',
+      padding: isMobile ? '44px 0' : '72px 0',
       background: '#FFFFFF',
       borderTop: '1px solid #F1F5F9',
       borderBottom: '1px solid #F1F5F9',
     }}>
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 28px' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: isMobile ? '0 16px' : '0 28px' }}>
         
         {/* Section Header */}
-        <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 48px auto' }}>
+        <div style={{ textAlign: 'center', maxWidth: '780px', margin: isMobile ? '0 auto 32px auto' : '0 auto 48px auto' }}>
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -82,7 +85,7 @@ export default function EcosystemServicesSection({ onNavigate }) {
             <Sparkles size={15} /> ALL-IN-ONE LIVING ECOSYSTEM
           </div>
           <h2 style={{
-            fontSize: 'clamp(1.9rem, 3vw, 2.5rem)',
+            fontSize: 'clamp(1.5rem, 3vw, 2.5rem)',
             fontWeight: 800,
             color: '#0F172A',
             letterSpacing: '-0.025em',
@@ -104,8 +107,10 @@ export default function EcosystemServicesSection({ onNavigate }) {
         {/* 4 Cards with Imagery & Depth */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '24px',
+          gridTemplateColumns: isMobile 
+            ? '1fr' 
+            : (isTablet ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(280px, 1fr))'),
+          gap: isMobile ? '16px' : '24px',
         }}>
           {SERVICES.map((s) => {
             const IconComponent = s.icon;

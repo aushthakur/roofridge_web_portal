@@ -1,4 +1,5 @@
 import React from 'react';
+import { useResponsive } from '../hooks/useResponsive';
 
 const CATEGORIES = [
   {
@@ -60,17 +61,21 @@ const CATEGORIES = [
 ];
 
 export default function CategoryCarouselStrip({ onExploreCategory }) {
+  const { isMobile, isTablet } = useResponsive();
+
   return (
     <section style={{
       background: '#FFFFFF',
-      paddingTop: '68px',
-      paddingBottom: '36px',
+      paddingTop: isMobile ? '28px' : '52px',
+      paddingBottom: isMobile ? '24px' : '36px',
     }}>
       <div className="rr-container">
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(118px, 1fr))',
-          gap: '12px',
+          gridTemplateColumns: isMobile 
+            ? 'repeat(auto-fill, minmax(95px, 1fr))' 
+            : (isTablet ? 'repeat(4, 1fr)' : 'repeat(auto-fit, minmax(118px, 1fr))'),
+          gap: isMobile ? '8px' : '12px',
           alignItems: 'stretch',
         }}>
           {CATEGORIES.map((cat) => (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, MapPin, ChevronDown, X, Check, Compass, SlidersHorizontal, Sparkles } from 'lucide-react';
 import { CITIES, CITY_LOCALITIES } from '../data/mockData';
+import { useResponsive } from '../hooks/useResponsive';
 
 const TABS = [
   { id: 'buy',          label: 'Buy',          sub: 'Verified Homes' },
@@ -265,6 +266,7 @@ const TAB_SCHEMAS = {
 };
 
 export default function QuickFinderWidget({ onFilterSubmit, selectedCity, onCityChange }) {
+  const { isMobile, isTablet } = useResponsive();
   const [activeTab, setActiveTab] = useState('buy');
   const [locality, setLocality] = useState('');
   const [localitySearch, setLocalitySearch] = useState('');
@@ -367,7 +369,7 @@ export default function QuickFinderWidget({ onFilterSubmit, selectedCity, onCity
       borderRadius: '22px',
       boxShadow: '0 20px 48px rgba(11, 31, 68, 0.12)',
       border: '1px solid rgba(226, 232, 240, 0.95)',
-      padding: '16px 22px 18px',
+      padding: isMobile ? '14px 14px 16px' : '16px 22px 18px',
       fontFamily: 'Inter, sans-serif',
       boxSizing: 'border-box',
       position: 'relative',
@@ -438,7 +440,7 @@ export default function QuickFinderWidget({ onFilterSubmit, selectedCity, onCity
           display: 'flex',
           alignItems: 'center',
           flex: 1,
-          minWidth: '290px',
+          minWidth: isMobile ? '100%' : '240px',
           background: '#F8FAFC',
           borderRadius: '14px',
           border: '1.5px solid #E2E8F0',
@@ -540,8 +542,9 @@ export default function QuickFinderWidget({ onFilterSubmit, selectedCity, onCity
               <div style={{
                 position: 'absolute',
                 top: 'calc(100% + 12px)',
-                left: '-12px',
-                width: '340px',
+                left: isMobile ? '0' : '-12px',
+                width: 'min(340px, calc(100vw - 32px))',
+                maxWidth: 'calc(100vw - 32px)',
                 background: '#FFFFFF',
                 borderRadius: '16px',
                 boxShadow: '0 20px 45px rgba(11, 31, 68, 0.22)',
@@ -550,6 +553,7 @@ export default function QuickFinderWidget({ onFilterSubmit, selectedCity, onCity
                 zIndex: 100,
                 fontFamily: 'Inter, sans-serif',
                 animation: 'fadeIn 0.15s ease',
+                boxSizing: 'border-box',
               }}>
                 {/* Header: Switch Metro City */}
                 <div style={{ marginBottom: '12px' }}>
@@ -836,7 +840,9 @@ export default function QuickFinderWidget({ onFilterSubmit, selectedCity, onCity
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'center',
             gap: '8px',
+            width: isMobile ? '100%' : 'auto',
             flexShrink: 0,
             boxShadow: '0 4px 14px rgba(8, 102, 245, 0.3)',
             transition: 'background 0.15s ease, transform 0.15s ease',
