@@ -11,6 +11,7 @@ import {
   ExternalLink,
   ShieldCheck,
 } from 'lucide-react';
+import { useResponsive } from '../hooks/useResponsive';
 
 const NAV_ITEMS = [
   { label: 'Buy', key: 'buy' },
@@ -38,12 +39,13 @@ export default function MainHeader({
   activePage = 'home',
 }) {
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const { isMobile } = useResponsive();
 
   return (
     <header
       style={{
         width: '100%',
-        height: '72px',
+        height: isMobile ? '58px' : '72px',
         background: '#FFFFFF',
         borderBottom: '1px solid rgba(231, 236, 243, 0.7)',
         position: 'sticky',
@@ -60,27 +62,61 @@ export default function MainHeader({
           alignItems: 'center',
           justifyContent: 'space-between',
           width: '100%',
+          paddingLeft: isMobile ? '12px' : undefined,
+          paddingRight: isMobile ? '12px' : undefined,
         }}
       >
-        {/* Left: RoofRidge Brand Logo */}
-        <button
-          onClick={onNavigateHome}
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            padding: 0,
-            display: 'flex',
-            alignItems: 'center',
-          }}
-          aria-label="RoofRidge Home"
-        >
-          <img
-            src="/RRlogo_transparent.png"
-            alt="RoofRidge"
-            style={{ height: '34px', width: 'auto', display: 'block' }}
-          />
-        </button>
+        {/* Left: RoofRidge Brand Logo + Mobile City Selector */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '6px' : '16px', flexShrink: 0 }}>
+          <button
+            onClick={onNavigateHome}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 0,
+              display: 'flex',
+              alignItems: 'center',
+            }}
+            aria-label="RoofRidge Home"
+          >
+            <img
+              src="/RRlogo_transparent.png"
+              alt="RoofRidge"
+              style={{ height: isMobile ? '23px' : '34px', width: 'auto', display: 'block' }}
+            />
+          </button>
+
+          {/* Location Selector (Mobile: Crisp pill beside logo) */}
+          {isMobile && (
+            <button
+              onClick={onOpenCity}
+              style={{
+                background: '#F1F5F9',
+                border: '1px solid #E2E8F0',
+                borderRadius: '16px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '2px',
+                fontSize: '11px',
+                fontWeight: 600,
+                color: '#1E293B',
+                cursor: 'pointer',
+                fontFamily: 'Inter, sans-serif',
+                padding: '0 6px',
+                height: '26px',
+                maxWidth: '84px',
+                flexShrink: 0,
+              }}
+              title="Select Location"
+            >
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {selectedCity?.name || 'Mumbai'}
+              </span>
+              <ChevronDown size={11} color="#64748B" strokeWidth={2.2} style={{ flexShrink: 0 }} />
+            </button>
+          )}
+        </div>
 
         {/* Center: Clean Minimal Navigation Links (Desktop) */}
         <nav
@@ -136,39 +172,42 @@ export default function MainHeader({
           })}
         </nav>
 
-        {/* Right Actions: Location Selector | Wishlist | Profile Menu */}
+        {/* Right Actions: Location Selector (Desktop) | Wishlist | Profile Menu */}
         <div
           className="header-right-actions"
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
+            gap: isMobile ? '4px' : '12px',
+            flexShrink: 0,
           }}
         >
-          {/* Location Selector */}
-          <button
-            onClick={onOpenCity}
-            style={{
-              background: 'none',
-              border: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontSize: '13px',
-              fontWeight: 500,
-              color: '#1E293B',
-              cursor: 'pointer',
-              fontFamily: 'Inter, sans-serif',
-              padding: '6px 4px',
-              maxWidth: '120px',
-            }}
-            title="Select Location"
-          >
-            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {selectedCity?.name || 'Mumbai'}
-            </span>
-            <ChevronDown size={14} color="#1E293B" strokeWidth={2} style={{ flexShrink: 0 }} />
-          </button>
+          {/* Location Selector (Desktop/Tablet) */}
+          {!isMobile && (
+            <button
+              onClick={onOpenCity}
+              style={{
+                background: 'none',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                fontSize: '13px',
+                fontWeight: 500,
+                color: '#1E293B',
+                cursor: 'pointer',
+                fontFamily: 'Inter, sans-serif',
+                padding: '6px 4px',
+                maxWidth: '120px',
+              }}
+              title="Select Location"
+            >
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {selectedCity?.name || 'Mumbai'}
+              </span>
+              <ChevronDown size={14} color="#1E293B" strokeWidth={2} style={{ flexShrink: 0 }} />
+            </button>
+          )}
 
           {/* Wishlist Heart Icon */}
           <button
@@ -177,23 +216,27 @@ export default function MainHeader({
               background: 'none',
               border: 'none',
               cursor: 'pointer',
-              display: 'flex',
+              display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
               position: 'relative',
-              padding: '6px',
+              width: isMobile ? '30px' : 'auto',
+              height: isMobile ? '30px' : 'auto',
+              padding: isMobile ? '0' : '6px',
+              borderRadius: '8px',
               color: '#1E293B',
+              flexShrink: 0,
             }}
             title="Wishlist"
             aria-label="Wishlist"
           >
-            <Heart size={20} color="#1E293B" strokeWidth={1.8} />
+            <Heart size={isMobile ? 18 : 20} color="#1E293B" strokeWidth={1.8} />
             {wishlistCount > 0 && (
               <span
                 style={{
                   position: 'absolute',
-                  top: '2px',
-                  right: '2px',
+                  top: isMobile ? '1px' : '2px',
+                  right: isMobile ? '1px' : '2px',
                   background: '#0866F5',
                   color: '#FFFFFF',
                   fontSize: '9px',
@@ -211,7 +254,7 @@ export default function MainHeader({
             )}
           </button>
 
-          {/* Post Property Quick Action (Compact on mobile) */}
+          {/* Post Property Quick Action (Desktop/Tablet) */}
           <button
             onClick={onOpenPostProperty}
             className="hidden sm:flex"
@@ -229,6 +272,7 @@ export default function MainHeader({
               fontFamily: 'Inter, sans-serif',
               transition: 'all 0.15s ease',
               whiteSpace: 'nowrap',
+              flexShrink: 0,
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = '#0866F5';
@@ -259,47 +303,59 @@ export default function MainHeader({
 
           {/* Profile / Industry-Standard User Menu */}
           {user ? (
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative', flexShrink: 0 }}>
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 style={{
-                  display: 'flex',
+                  display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  padding: '6px 14px',
-                  borderRadius: '24px',
+                  gap: isMobile ? '4px' : '8px',
+                  height: isMobile ? '32px' : 'auto',
+                  padding: isMobile ? '0 6px 0 3px' : '6px 14px',
+                  borderRadius: isMobile ? '16px' : '24px',
                   background: '#F0F5FF',
                   border: '1.5px solid #D0E1FD',
                   cursor: 'pointer',
                   fontFamily: 'Inter, sans-serif',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
                 }}
                 aria-label="User Account Menu"
               >
                 <div
                   style={{
-                    width: '26px',
-                    height: '26px',
+                    width: isMobile ? '22px' : '26px',
+                    height: isMobile ? '22px' : '26px',
                     borderRadius: '50%',
                     background: '#0866F5',
                     color: '#FFFFFF',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '12px',
+                    fontSize: isMobile ? '11px' : '12px',
                     fontWeight: 700,
                   }}
                 >
                   {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                 </div>
-                <span style={{ fontSize: '13px', fontWeight: 600, color: '#1E293B' }}>
+                <span style={{ 
+                  fontSize: isMobile ? '11px' : '13px', 
+                  fontWeight: 600, 
+                  color: '#1E293B',
+                  maxWidth: isMobile ? '50px' : 'none',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}>
                   {user.name ? user.name.split(' ')[0] : 'Account'}
                 </span>
                 <ChevronDown
-                  size={14}
+                  size={12}
                   color="#0866F5"
                   style={{
                     transform: showUserMenu ? 'rotate(180deg)' : 'none',
                     transition: '0.2s',
+                    flexShrink: 0,
                   }}
                 />
               </button>
@@ -426,23 +482,28 @@ export default function MainHeader({
             <button
               onClick={onOpenAuth}
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
-                gap: '6px',
-                padding: '8px 16px',
+                justifyContent: 'center',
+                gap: '4px',
+                height: isMobile ? '30px' : '38px',
+                padding: isMobile ? '0 10px' : '8px 16px',
                 borderRadius: '8px',
                 background: '#0866F5',
                 color: '#FFFFFF',
                 border: 'none',
-                fontSize: '13px',
+                fontSize: isMobile ? '11.5px' : '13px',
                 fontWeight: 600,
                 cursor: 'pointer',
                 fontFamily: 'Inter, sans-serif',
                 boxShadow: '0 2px 8px rgba(8, 102, 245, 0.25)',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
+                boxSizing: 'border-box',
               }}
             >
-              <User size={15} strokeWidth={2.2} />
-              <span>Sign In</span>
+              <User size={isMobile ? 13 : 15} strokeWidth={2.2} style={{ flexShrink: 0 }} />
+              <span style={{ whiteSpace: 'nowrap', lineHeight: 1 }}>Sign In</span>
             </button>
           )}
 
@@ -454,12 +515,19 @@ export default function MainHeader({
               background: 'none',
               border: 'none',
               cursor: 'pointer',
-              padding: '6px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: isMobile ? '30px' : 'auto',
+              height: isMobile ? '30px' : 'auto',
+              padding: isMobile ? '0' : '6px',
               color: '#1E293B',
+              borderRadius: '8px',
+              flexShrink: 0,
             }}
             aria-label="Open Navigation Menu"
           >
-            <Menu size={22} />
+            <Menu size={isMobile ? 20 : 22} />
           </button>
         </div>
       </div>

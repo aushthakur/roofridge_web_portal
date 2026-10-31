@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, ShieldCheck, Mail, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Mail, CheckCircle2, Heart } from 'lucide-react';
 import { useResponsive } from '../hooks/useResponsive';
 
 export default function Footer({ onNavigate }) {

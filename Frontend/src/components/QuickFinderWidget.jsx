@@ -438,14 +438,16 @@ export default function QuickFinderWidget({ onFilterSubmit, selectedCity, onCity
       }}>
         <div style={{
           display: 'flex',
-          alignItems: 'center',
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: isMobile ? 'stretch' : 'center',
           flex: 1,
+          width: isMobile ? '100%' : 'auto',
           minWidth: isMobile ? '100%' : '240px',
           background: '#F8FAFC',
-          borderRadius: '14px',
+          borderRadius: isMobile ? '16px' : '14px',
           border: '1.5px solid #E2E8F0',
-          padding: '6px 12px',
-          gap: '10px',
+          padding: isMobile ? '10px 14px' : '6px 12px',
+          gap: isMobile ? '8px' : '10px',
           position: 'relative',
         }}>
           
@@ -454,8 +456,9 @@ export default function QuickFinderWidget({ onFilterSubmit, selectedCity, onCity
             ref={locationPickerRef}
             style={{
               position: 'relative',
-              flex: 1.3,
-              minWidth: '150px',
+              flex: isMobile ? 'none' : 1.3,
+              width: isMobile ? '100%' : 'auto',
+              minWidth: isMobile ? 'auto' : '150px',
             }}
           >
             <div 
@@ -776,54 +779,147 @@ export default function QuickFinderWidget({ onFilterSubmit, selectedCity, onCity
             )}
           </div>
 
-          <div style={{ width: '1px', height: '28px', background: '#E2E8F0', flexShrink: 0 }} />
+          <div style={{
+            width: isMobile ? '100%' : '1px',
+            height: isMobile ? '1px' : '28px',
+            background: '#E2E8F0',
+            flexShrink: 0,
+            margin: isMobile ? '2px 0' : 0,
+          }} />
 
           {/* ── Fields 2, 3, 4: DYNAMIC TAB-SPECIFIC FIELDS ── */}
-          {currentSchema.fields.map((field, idx) => {
-            const currentVal = getFieldValue(activeTab, field.id, field.defaultValue);
-            const isPlaceholder = currentVal === field.defaultValue || currentVal.startsWith('All') || currentVal.startsWith('Any');
+          {isMobile ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
+              {/* Row 1: Property Type / Main Category (Full Width) */}
+              {currentSchema.fields[0] && (() => {
+                const field = currentSchema.fields[0];
+                const currentVal = getFieldValue(activeTab, field.id, field.defaultValue);
+                const isPlaceholder = currentVal === field.defaultValue || currentVal.startsWith('All') || currentVal.startsWith('Any');
+                return (
+                  <div style={{ position: 'relative', width: '100%', display: 'flex', alignItems: 'center' }}>
+                    <select
+                      value={currentVal}
+                      onChange={(e) => handleFieldChange(activeTab, field.id, e.target.value)}
+                      style={{
+                        width: '100%',
+                        background: 'transparent',
+                        border: 'none',
+                        outline: 'none',
+                        fontSize: '13px',
+                        fontWeight: isPlaceholder ? 500 : 700,
+                        color: isPlaceholder ? '#64748B' : '#0F172A',
+                        cursor: 'pointer',
+                        appearance: 'none',
+                        padding: '4px 20px 4px 2px',
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis',
+                      }}
+                      title={field.label}
+                    >
+                      {field.options.map((opt) => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                    <ChevronDown size={14} color="#64748B" style={{ position: 'absolute', right: '0', pointerEvents: 'none' }} />
+                  </div>
+                );
+              })()}
 
-            return (
-              <React.Fragment key={field.id}>
+              {currentSchema.fields.length > 1 && (
+                <div style={{ width: '100%', height: '1px', background: '#E2E8F0' }} />
+              )}
+
+              {/* Row 2: Remaining Fields (BHK & Budget in balanced columns) */}
+              {currentSchema.fields.length > 1 && (
                 <div style={{
-                  position: 'relative',
-                  flex: 1,
-                  minWidth: '105px',
-                  display: 'flex',
+                  display: 'grid',
+                  gridTemplateColumns: `repeat(${Math.min(currentSchema.fields.length - 1, 2)}, 1fr)`,
+                  gap: '12px',
+                  width: '100%',
                   alignItems: 'center',
                 }}>
-                  <select
-                    value={currentVal}
-                    onChange={(e) => handleFieldChange(activeTab, field.id, e.target.value)}
-                    style={{
-                      width: '100%',
-                      background: 'transparent',
-                      border: 'none',
-                      outline: 'none',
-                      fontSize: '13px',
-                      fontWeight: isPlaceholder ? 500 : 700,
-                      color: isPlaceholder ? '#64748B' : '#0F172A',
-                      cursor: 'pointer',
-                      appearance: 'none',
-                      paddingRight: '18px',
-                      whiteSpace: 'nowrap',
-                      textOverflow: 'ellipsis',
-                    }}
-                    title={field.label}
-                  >
-                    {field.options.map((opt) => (
-                      <option key={opt} value={opt}>{opt}</option>
-                    ))}
-                  </select>
-                  <ChevronDown size={13} color="#64748B" style={{ position: 'absolute', right: '0', pointerEvents: 'none' }} />
+                  {currentSchema.fields.slice(1).map((field) => {
+                    const currentVal = getFieldValue(activeTab, field.id, field.defaultValue);
+                    const isPlaceholder = currentVal === field.defaultValue || currentVal.startsWith('All') || currentVal.startsWith('Any');
+                    return (
+                      <div key={field.id} style={{ position: 'relative', width: '100%', display: 'flex', alignItems: 'center' }}>
+                        <select
+                          value={currentVal}
+                          onChange={(e) => handleFieldChange(activeTab, field.id, e.target.value)}
+                          style={{
+                            width: '100%',
+                            background: 'transparent',
+                            border: 'none',
+                            outline: 'none',
+                            fontSize: '13px',
+                            fontWeight: isPlaceholder ? 500 : 700,
+                            color: isPlaceholder ? '#64748B' : '#0F172A',
+                            cursor: 'pointer',
+                            appearance: 'none',
+                            padding: '4px 18px 4px 2px',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                          }}
+                          title={field.label}
+                        >
+                          {field.options.map((opt) => (
+                            <option key={opt} value={opt}>{opt}</option>
+                          ))}
+                        </select>
+                        <ChevronDown size={13} color="#64748B" style={{ position: 'absolute', right: '0', pointerEvents: 'none' }} />
+                      </div>
+                    );
+                  })}
                 </div>
+              )}
+            </div>
+          ) : (
+            currentSchema.fields.map((field, idx) => {
+              const currentVal = getFieldValue(activeTab, field.id, field.defaultValue);
+              const isPlaceholder = currentVal === field.defaultValue || currentVal.startsWith('All') || currentVal.startsWith('Any');
 
-                {idx < currentSchema.fields.length - 1 && (
-                  <div style={{ width: '1px', height: '28px', background: '#E2E8F0', flexShrink: 0 }} />
-                )}
-              </React.Fragment>
-            );
-          })}
+              return (
+                <React.Fragment key={field.id}>
+                  <div style={{
+                    position: 'relative',
+                    flex: 1,
+                    minWidth: '105px',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}>
+                    <select
+                      value={currentVal}
+                      onChange={(e) => handleFieldChange(activeTab, field.id, e.target.value)}
+                      style={{
+                        width: '100%',
+                        background: 'transparent',
+                        border: 'none',
+                        outline: 'none',
+                        fontSize: '13px',
+                        fontWeight: isPlaceholder ? 500 : 700,
+                        color: isPlaceholder ? '#64748B' : '#0F172A',
+                        cursor: 'pointer',
+                        appearance: 'none',
+                        paddingRight: '18px',
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis',
+                      }}
+                      title={field.label}
+                    >
+                      {field.options.map((opt) => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                    <ChevronDown size={13} color="#64748B" style={{ position: 'absolute', right: '0', pointerEvents: 'none' }} />
+                  </div>
+
+                  {idx < currentSchema.fields.length - 1 && (
+                    <div style={{ width: '1px', height: '28px', background: '#E2E8F0', flexShrink: 0 }} />
+                  )}
+                </React.Fragment>
+              );
+            })
+          )}
         </div>
 
         {/* ── Field 5: Prominent Royal Blue Search Button ── */}

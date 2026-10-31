@@ -463,7 +463,7 @@ export default function InteriorsPage({ onBookConsultation }) {
 
               {/* Action Button */}
               <button
-                onClick={() => onBookConsultation && onBookConsultation(activeStyle.name, activeStyle.budget)}
+                onClick={() => onBookConsultation && onBookConsultation(selectedStyle.name, selectedStyle.budget)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -702,7 +702,7 @@ export default function InteriorsPage({ onBookConsultation }) {
               </div>
 
               <button
-                onClick={() => onBookConsultation && onBookConsultation(`Modular Kitchen (${selectedLayout}, ${selectedFinish})`, calculatedKitchenPrice)}
+                onClick={() => onBookConsultation && onBookConsultation(`Modular Kitchen (${selectedLayout}, ${selectedFinish})`, estimatedCost)}
                 style={{
                   width: '100%',
                   background: '#0866F5',
