@@ -11,9 +11,10 @@ import {
   Sliders,
   ExternalLink,
   LogOut,
+  X,
 } from 'lucide-react';
 
-export default function Sidebar({ activeTab, setActiveTab, counts = {}, onLogout }) {
+export default function Sidebar({ activeTab, setActiveTab, counts = {}, onLogout, isOpen = false, onClose }) {
   const menuItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     {
@@ -67,65 +68,88 @@ export default function Sidebar({ activeTab, setActiveTab, counts = {}, onLogout
   ];
 
   return (
-    <aside className="w-64 bg-[#0A1224] text-white flex flex-col shrink-0 min-h-screen border-r border-slate-800/80 select-none font-sans shadow-xl">
-      {/* Brand Header */}
-      <div className="px-5 py-4 border-b border-slate-800/80 bg-slate-900/40">
-        <div className="flex items-center justify-between gap-2">
-          <img
-            src="/RRlogo_white.png"
-            alt="RoofRidge"
-            className="h-7 w-auto object-contain max-w-[145px]"
-          />
-          <span className="shrink-0 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-500/15 text-blue-400 border border-blue-500/30">
-            Admin
-          </span>
+    <>
+      {/* Mobile Backdrop */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#0A1224] text-white flex flex-col shrink-0 min-h-screen border-r border-slate-800/80 select-none font-sans shadow-2xl transition-transform duration-200 lg:static lg:translate-x-0 ${
+        isOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        {/* Brand Header */}
+        <div className="px-5 py-4 border-b border-slate-800/80 bg-slate-900/40">
+          <div className="flex items-center justify-between gap-2">
+            <img
+              src="/RRlogo_white.png"
+              alt="RoofRidge"
+              className="h-7 w-auto object-contain max-w-[145px]"
+            />
+            <div className="flex items-center gap-1.5">
+              <span className="shrink-0 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-500/15 text-blue-400 border border-blue-500/30">
+                Admin
+              </span>
+              <button
+                onClick={onClose}
+                className="lg:hidden p-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
+                title="Close Sidebar"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          </div>
+          <div className="mt-2.5 flex items-center gap-2 text-[11px] font-medium text-slate-400">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="tracking-wide text-slate-300 font-medium">Ops Control Center</span>
+          </div>
         </div>
-        <div className="mt-2.5 flex items-center gap-2 text-[11px] font-medium text-slate-400">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          <span className="tracking-wide text-slate-300 font-medium">Ops Control Center</span>
-        </div>
-      </div>
 
-      {/* Nav Menu */}
-      <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-        <p className="px-3 pt-2 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-          Platform Operations
-        </p>
+        {/* Nav Menu */}
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+          <p className="px-3 pt-2 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            Platform Operations
+          </p>
 
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeTab === item.id;
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
 
-          return (
-            <button
-              key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer ${
-                isActive
-                  ? 'bg-[#0866F5] text-white shadow-md shadow-blue-600/30 font-bold'
-                  : 'text-slate-300 hover:bg-slate-800/70 hover:text-white'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Icon size={16} className={isActive ? 'text-white' : 'text-slate-400'} />
-                <span>{item.label}</span>
-              </div>
-              {item.badge !== undefined && item.badge > 0 && (
-                <span
-                  className={`text-[10px] px-2 py-0.5 rounded-full font-bold ml-auto ${
-                    isActive ? 'bg-white/20 text-white' : item.badgeColor || 'bg-slate-800 text-slate-300'
-                  }`}
-                >
-                  {item.badge}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </nav>
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  if (onClose) onClose();
+                }}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer ${
+                  isActive
+                    ? 'bg-[#0866F5] text-white shadow-md shadow-blue-600/30 font-bold'
+                    : 'text-slate-300 hover:bg-slate-800/70 hover:text-white'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <Icon size={16} className={isActive ? 'text-white' : 'text-slate-400'} />
+                  <span>{item.label}</span>
+                </div>
+                {item.badge !== undefined && item.badge > 0 && (
+                  <span
+                    className={`text-[10px] px-2 py-0.5 rounded-full font-bold ml-auto ${
+                      isActive ? 'bg-white/20 text-white' : item.badgeColor || 'bg-slate-800 text-slate-300'
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </nav>
 
       {/* Footer controls */}
       <div className="p-3 border-t border-slate-800/80 space-y-1.5 bg-slate-900/40">
@@ -154,5 +178,6 @@ export default function Sidebar({ activeTab, setActiveTab, counts = {}, onLogout
         </button>
       </div>
     </aside>
+    </>
   );
 }

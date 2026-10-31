@@ -211,5 +211,3 @@ export default function HeroSection({ children, onExploreCategory }) {
     </section>
   );
 }
-  );
-}

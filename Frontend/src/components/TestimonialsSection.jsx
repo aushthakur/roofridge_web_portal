@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star, ShieldCheck, Quote, CheckCircle2, Award, Heart, MapPin } from 'lucide-react';
+import { useResponsive } from '../hooks/useResponsive';
 
 const REVIEWS = [
   {
@@ -35,16 +36,18 @@ const REVIEWS = [
 ];
 
 export default function TestimonialsSection() {
+  const { isMobile, isTablet } = useResponsive();
+
   return (
     <section style={{
-      padding: '84px 0',
+      padding: isMobile ? '40px 0' : '72px 0',
       background: 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFD 100%)',
       position: 'relative',
     }}>
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 28px' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: isMobile ? '0 16px' : '0 28px' }}>
         
         {/* Section Header */}
-        <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 48px auto' }}>
+        <div style={{ textAlign: 'center', maxWidth: '780px', margin: isMobile ? '0 auto 32px auto' : '0 auto 48px auto' }}>
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -59,14 +62,14 @@ export default function TestimonialsSection() {
             <Award size={15} /> VERIFIED CLIENT TESTIMONIALS
           </div>
           <h2 style={{
-            fontSize: 'clamp(1.9rem, 3vw, 2.5rem)',
+            fontSize: 'clamp(1.5rem, 3vw, 2.5rem)',
             fontWeight: 800,
             color: '#0F172A',
             letterSpacing: '-0.025em',
             lineHeight: 1.2,
             margin: '0 0 12px 0',
           }}>
-            Trusted by 250,000+ Homeowners & Builders
+            Trusted by 250,000+ Homeowners &amp; Builders
           </h2>
           <p style={{
             fontSize: '0.96rem',
@@ -81,11 +84,11 @@ export default function TestimonialsSection() {
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '24px',
+            gap: isMobile ? '12px' : '24px',
             background: '#FFFFFF',
             border: '1px solid #E5EBF4',
             borderRadius: '30px',
-            padding: '10px 24px',
+            padding: isMobile ? '10px 16px' : '10px 24px',
             boxShadow: '0 4px 16px rgba(11, 31, 68, 0.04)',
             flexWrap: 'wrap',
             justifyContent: 'center',
@@ -100,13 +103,13 @@ export default function TestimonialsSection() {
               <span style={{ fontSize: '0.74rem', color: '#64748B' }}>(18k+ reviews)</span>
             </div>
 
-            <div style={{ width: '1px', height: '16px', background: '#E2E8F0' }} />
+            <div style={{ width: '1px', height: '16px', background: '#E2E8F0', display: isMobile ? 'none' : 'block' }} />
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#059669' }}>
               <ShieldCheck size={16} /> 100% RERA Verified Listings
             </div>
 
-            <div style={{ width: '1px', height: '16px', background: '#E2E8F0' }} />
+            <div style={{ width: '1px', height: '16px', background: '#E2E8F0', display: isMobile ? 'none' : 'block' }} />
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#0866F5' }}>
               <CheckCircle2 size={16} /> Zero Brokerage Direct
@@ -117,8 +120,10 @@ export default function TestimonialsSection() {
         {/* 3 Editorial Review Cards */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '28px',
+          gridTemplateColumns: isMobile 
+            ? '1fr' 
+            : (isTablet ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))'),
+          gap: isMobile ? '16px' : '28px',
         }}>
           {REVIEWS.map((rev) => (
             <div
@@ -127,7 +132,7 @@ export default function TestimonialsSection() {
                 background: '#FFFFFF',
                 borderRadius: '24px',
                 border: '1px solid #E5EBF4',
-                padding: '36px 32px',
+                padding: isMobile ? '24px 20px' : '36px 32px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Package, Truck, ShieldCheck, Zap, Plus, Minus, Check, Building, FileCheck } from 'lucide-react';
+import { Truck, Plus, Minus, Check, Building, FileCheck } from 'lucide-react';
 import { useResponsive } from '../hooks/useResponsive';
 
 const PRODUCTS = [

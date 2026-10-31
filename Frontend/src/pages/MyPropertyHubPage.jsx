@@ -236,7 +236,7 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
       {/* ── 2. QUICK KPI METRIC CARDS (4-COL SYMMETRIC) ── */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))',
         gap: '20px',
         marginBottom: '32px'
       }}>
@@ -309,6 +309,8 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
         borderRadius: '16px',
         border: '1px solid #E2E8F0',
         overflowX: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        scrollbarWidth: 'none',
         marginBottom: '32px'
       }}>
         {[
@@ -527,7 +529,7 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
             /* Symmetrical Property Grid */
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
               gap: '24px'
             }}>
               {filteredListings.map((prop) => {
@@ -853,7 +855,7 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
                       </button>
                     </div>
                   ) : (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '20px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 290px), 1fr))', gap: '20px' }}>
                       {myBookings.map((bkg) => (
                         <div
                           key={bkg._id || bkg.id}
@@ -943,7 +945,7 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
                       </button>
                     </div>
                   ) : (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '20px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 290px), 1fr))', gap: '20px' }}>
                       {myOrders.map((ord) => (
                         <div
                           key={ord._id || ord.id}
@@ -1012,7 +1014,7 @@ export default function MyPropertyHubPage({ onOpenPostProperty, onOpenAuth, onNa
           TAB 3: DOCUMENT VAULT LOCKER
           ═══════════════════════════════════════════════ */}
       {activeTab === 'locker' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '32px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '32px' }}>
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <div>

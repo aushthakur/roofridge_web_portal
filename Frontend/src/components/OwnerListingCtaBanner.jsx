@@ -1,19 +1,23 @@
 import React from 'react';
 import { ArrowRight, CheckCircle2, ShieldCheck, Sparkles, Building2, Zap, Clock } from 'lucide-react';
+import { useResponsive } from '../hooks/useResponsive';
 
 export default function OwnerListingCtaBanner({ onOpenPostProperty, onNavigate }) {
+  const { isMobile, isTablet } = useResponsive();
+  const isStack = isMobile || isTablet;
+
   return (
     <section style={{
-      padding: '48px 0 84px 0',
+      padding: isMobile ? '36px 0 48px 0' : '48px 0 84px 0',
       background: '#FFFFFF',
     }}>
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 28px' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: isMobile ? '0 16px' : '0 28px' }}>
         
         {/* Curved Floating Card Container */}
         <div style={{
           background: 'linear-gradient(135deg, #0866F5 0%, #0645B8 60%, #04338A 100%)',
-          borderRadius: '28px',
-          padding: '56px 48px',
+          borderRadius: isMobile ? '20px' : '28px',
+          padding: isMobile ? '32px 20px' : '56px 48px',
           color: '#FFFFFF',
           position: 'relative',
           overflow: 'hidden',
@@ -48,13 +52,13 @@ export default function OwnerListingCtaBanner({ onOpenPostProperty, onNavigate }
             position: 'relative',
             zIndex: 2,
             display: 'grid',
-            gridTemplateColumns: 'repeat(12, 1fr)',
-            gap: '40px',
+            gridTemplateColumns: isStack ? '1fr' : 'repeat(12, 1fr)',
+            gap: isMobile ? '28px' : '40px',
             alignItems: 'center',
           }}>
             
-            {/* Left Content (7 cols) */}
-            <div style={{ gridColumn: 'span 7' }}>
+            {/* Left Content */}
+            <div style={{ gridColumn: isStack ? 'auto' : 'span 7' }}>
               <div style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -76,7 +80,7 @@ export default function OwnerListingCtaBanner({ onOpenPostProperty, onNavigate }
 
               <h2 style={{
                 color: '#FFFFFF',
-                fontSize: 'clamp(2rem, 3.4vw, 2.8rem)',
+                fontSize: 'clamp(1.6rem, 3.4vw, 2.8rem)',
                 fontWeight: 800,
                 lineHeight: 1.18,
                 letterSpacing: '-0.025em',
@@ -86,10 +90,10 @@ export default function OwnerListingCtaBanner({ onOpenPostProperty, onNavigate }
               </h2>
 
               <p style={{
-                fontSize: '1rem',
+                fontSize: isMobile ? '0.9rem' : '1rem',
                 color: 'rgba(255, 255, 255, 0.85)',
                 lineHeight: 1.6,
-                margin: '0 0 28px 0',
+                margin: '0 0 24px 0',
                 maxWidth: '560px',
               }}>
                 List your residential flat, independent villa, or commercial office floor. Receive instant verified buyer inquiries straight to your phone with zero middleman fees.
@@ -99,8 +103,8 @@ export default function OwnerListingCtaBanner({ onOpenPostProperty, onNavigate }
               <div style={{
                 display: 'flex',
                 flexWrap: 'wrap',
-                gap: '20px',
-                fontSize: '0.88rem',
+                gap: isMobile ? '12px' : '20px',
+                fontSize: isMobile ? '0.8rem' : '0.88rem',
                 fontWeight: 600,
                 color: 'rgba(255, 255, 255, 0.95)',
               }}>
@@ -116,9 +120,9 @@ export default function OwnerListingCtaBanner({ onOpenPostProperty, onNavigate }
               </div>
             </div>
 
-            {/* Right Actions & Glass Metric Chips (5 cols) */}
+            {/* Right Actions & Glass Metric Chips */}
             <div style={{
-              gridColumn: 'span 5',
+              gridColumn: isStack ? 'auto' : 'span 5',
               display: 'flex',
               flexDirection: 'column',
               gap: '20px',

@@ -1,25 +1,29 @@
 import React from 'react';
 import { Smartphone, CheckCircle2, Star, QrCode, Bell, MessageSquare, Camera, Search } from 'lucide-react';
+import { useResponsive } from '../hooks/useResponsive';
 
 export default function MobileAppPromoSection() {
+  const { isMobile, isTablet } = useResponsive();
+  const isStack = isMobile || isTablet;
+
   return (
     <section style={{
-      padding: '84px 0',
+      padding: isMobile ? '40px 0' : '72px 0',
       background: 'linear-gradient(180deg, #F8FAFD 0%, #EEF5FF 50%, #E6F0FA 100%)',
       position: 'relative',
       overflow: 'hidden',
     }}>
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 28px' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: isMobile ? '0 16px' : '0 28px' }}>
         
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(12, 1fr)',
-          gap: '48px',
+          gridTemplateColumns: isStack ? '1fr' : 'repeat(12, 1fr)',
+          gap: isMobile ? '32px' : '48px',
           alignItems: 'center',
         }}>
           
-          {/* Left Text & Interactive Features (7 cols) */}
-          <div style={{ gridColumn: 'span 7' }}>
+          {/* Left Text & Interactive Features */}
+          <div style={{ gridColumn: isStack ? 'auto' : 'span 7' }}>
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -232,12 +236,13 @@ export default function MobileAppPromoSection() {
 
           </div>
 
-          {/* Right Phone Mockup Presentation (5 cols) */}
+          {/* Right Phone Mockup Presentation */}
           <div style={{
-            gridColumn: 'span 5',
+            gridColumn: isStack ? 'auto' : 'span 5',
             display: 'flex',
             justifyContent: 'center',
             position: 'relative',
+            marginTop: isStack ? '16px' : '0',
           }}>
             {/* Ambient Shadow Glow behind phone */}
             <div style={{
@@ -245,8 +250,8 @@ export default function MobileAppPromoSection() {
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              width: '320px',
-              height: '520px',
+              width: isMobile ? '260px' : '320px',
+              height: isMobile ? '440px' : '520px',
               borderRadius: '60px',
               background: 'rgba(8, 102, 245, 0.18)',
               filter: 'blur(50px)',
@@ -257,8 +262,9 @@ export default function MobileAppPromoSection() {
             <div style={{
               position: 'relative',
               zIndex: 2,
-              width: '310px',
-              height: '590px',
+              width: isMobile ? '290px' : '310px',
+              maxWidth: '100%',
+              height: isMobile ? '550px' : '590px',
               background: '#0F172A',
               borderRadius: '48px',
               padding: '12px',

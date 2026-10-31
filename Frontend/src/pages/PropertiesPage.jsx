@@ -495,36 +495,44 @@ export default function PropertiesPage({
             )}
           </div>
 
-          {/* Quick Type Pills (Desktop) */}
-          {!isMobile && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-              {types.map((t) => {
-                const isActive = typeFilter === t;
-                return (
-                  <button
-                    key={t}
-                    onClick={() => setTypeFilter(t)}
-                    style={{
-                      padding: '7px 14px',
-                      borderRadius: '20px',
-                      fontSize: '12px',
-                      fontWeight: isActive ? 600 : 500,
-                      background: isActive ? '#0866F5' : '#F8FAFD',
-                      color: isActive ? '#FFFFFF' : '#475569',
-                      border: isActive ? '1px solid #0866F5' : '1px solid #E5EBF4',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s ease',
-                    }}
-                  >
-                    {t}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          {/* Quick Type Pills (Scrollable on all devices) */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            overflowX: 'auto',
+            maxWidth: '100%',
+            WebkitOverflowScrolling: 'touch',
+            paddingBottom: '2px',
+          }}>
+            {types.map((t) => {
+              const isActive = typeFilter === t;
+              return (
+                <button
+                  key={t}
+                  onClick={() => setTypeFilter(t)}
+                  style={{
+                    padding: '7px 14px',
+                    borderRadius: '20px',
+                    fontSize: '12px',
+                    fontWeight: isActive ? 600 : 500,
+                    background: isActive ? '#0866F5' : '#F8FAFD',
+                    color: isActive ? '#FFFFFF' : '#475569',
+                    border: isActive ? '1px solid #0866F5' : '1px solid #E5EBF4',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
+                  }}
+                >
+                  {t}
+                </button>
+              );
+            })}
+          </div>
 
           {/* Right Actions: RERA toggle + Sort + View */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
             {/* RERA Toggle */}
             <button
               onClick={() => setReraOnly(!reraOnly)}
@@ -546,9 +554,9 @@ export default function PropertiesPage({
               <span>RERA Only</span>
             </button>
 
-            {/* View Mode Toggle */}
+            {/* View Mode Toggle (Hidden on small mobile) */}
             <div style={{
-              display: 'flex',
+              display: isMobile ? 'none' : 'flex',
               background: '#F1F5F9',
               borderRadius: '8px',
               padding: '3px',
@@ -590,8 +598,8 @@ export default function PropertiesPage({
               </button>
             </div>
 
-            {/* Mobile Filter Trigger */}
-            {isMobile && (
+            {/* Mobile & Tablet Filter Trigger */}
+            {(isMobile || isTablet) && (
               <button
                 onClick={() => setShowMobileFilters(true)}
                 style={{
@@ -617,16 +625,16 @@ export default function PropertiesPage({
       </div>
 
       {/* ── 3. MAIN CONTENT: SIDEBAR + PROPERTY GRID ── */}
-      <div className="rr-container" style={{ padding: '36px 0 80px' }}>
+      <div className="rr-container" style={{ padding: isMobile ? '20px 0 60px' : '36px 0 80px' }}>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : '260px 1fr',
+          gridTemplateColumns: (isMobile || isTablet) ? '1fr' : '260px 1fr',
           gap: '28px',
           alignItems: 'start',
         }}>
 
           {/* ── DESKTOP FILTER SIDEBAR ── */}
-          {!isMobile && (
+          {!isMobile && !isTablet && (
             <div style={{
               position: 'sticky',
               top: '144px',
@@ -1134,8 +1142,8 @@ export default function PropertiesPage({
         </div>
       </div>
 
-      {/* ── MOBILE FILTER DRAWER ── */}
-      {isMobile && showMobileFilters && (
+      {/* ── MOBILE & TABLET FILTER DRAWER ── */}
+      {(isMobile || isTablet) && showMobileFilters && (
         <div
           style={{
             position: 'fixed',

@@ -194,7 +194,7 @@ export default function MaterialsPage({ onAddToCart }) {
 
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
+                gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
                 gap: '8px',
               }}>
                 {DISCOUNT_TIERS.map(t => {

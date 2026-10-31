@@ -1,20 +1,31 @@
 import React from 'react';
-import { Bell, ShieldCheck, RefreshCw, UserCheck } from 'lucide-react';
+import { Bell, ShieldCheck, RefreshCw, UserCheck, Menu } from 'lucide-react';
 
-export default function Header({ title, onRefresh, isRefreshing, adminUser }) {
+export default function Header({ title, onRefresh, isRefreshing, adminUser, onToggleSidebar }) {
   return (
-    <header className="h-16 bg-white border-b border-slate-200/90 px-6 flex items-center justify-between sticky top-0 z-20 shadow-xs">
-      <div className="flex flex-col justify-center">
-        <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-snug">
-          {title}
-        </h2>
-        <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-0.5">
-          <span className="flex items-center gap-1.5 font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            Engine Active :5000
-          </span>
-          <span className="text-slate-300">•</span>
-          <span className="text-slate-400 font-medium">Production Ops Desk</span>
+    <header className="h-16 bg-white border-b border-slate-200/90 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-20 shadow-xs">
+      <div className="flex items-center gap-3">
+        {onToggleSidebar && (
+          <button
+            onClick={onToggleSidebar}
+            className="lg:hidden p-2 -ml-1 rounded-lg text-slate-600 hover:bg-slate-100 cursor-pointer"
+            aria-label="Open sidebar"
+          >
+            <Menu size={20} />
+          </button>
+        )}
+        <div className="flex flex-col justify-center">
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-snug">
+            {title}
+          </h2>
+          <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-0.5">
+            <span className="flex items-center gap-1.5 font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Engine Active :5000
+            </span>
+            <span className="text-slate-300 hidden sm:inline">•</span>
+            <span className="text-slate-400 font-medium hidden sm:inline">Production Ops Desk</span>
+          </div>
         </div>
       </div>
 

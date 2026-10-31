@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { ArrowRight, ShieldCheck, Heart, Mail, Phone, MapPin, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Mail, CheckCircle2 } from 'lucide-react';
+import { useResponsive } from '../hooks/useResponsive';
 
 export default function Footer({ onNavigate }) {
+  const { isMobile, isTablet } = useResponsive();
   const [email, setEmail] = useState('');
   const [done, setDone] = useState(false);
 
@@ -11,21 +13,26 @@ export default function Footer({ onNavigate }) {
   };
 
   return (
-    <footer style={{ background: 'linear-gradient(135deg, #0866F5 0%, #0645B8 100%)', color: '#FFFFFF', fontFamily: 'Inter, sans-serif' }}>
+    <footer style={{ 
+      background: 'linear-gradient(135deg, #0866F5 0%, #0645B8 100%)', 
+      color: '#FFFFFF', 
+      fontFamily: 'Inter, sans-serif',
+      paddingBottom: isMobile ? '76px' : '0',
+    }}>
 
       {/* ── Newsletter Strip ── */}
       <div style={{
         background: 'rgba(0, 0, 0, 0.14)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
-        padding: '44px 0',
+        padding: isMobile ? '32px 0' : '44px 0',
       }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 28px' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: isMobile ? '0 16px' : '0 28px' }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
-            gap: '24px',
+            gap: isMobile ? '20px' : '24px',
           }}>
             <div>
               <span style={{
@@ -40,7 +47,7 @@ export default function Footer({ onNavigate }) {
                 RoofRidge Privilege Club
               </span>
               <h3 style={{
-                fontSize: '1.45rem',
+                fontSize: isMobile ? '1.2rem' : '1.45rem',
                 fontWeight: 700,
                 color: '#FFFFFF',
                 letterSpacing: '-0.02em',
@@ -69,6 +76,8 @@ export default function Footer({ onNavigate }) {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
+                width: isMobile ? '100%' : 'auto',
+                boxSizing: 'border-box',
               }}>
                 <CheckCircle2 size={18} /> Thank you! You’re subscribed to RoofRidge Privilege Club.
               </div>
@@ -78,12 +87,13 @@ export default function Footer({ onNavigate }) {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
+                  flexDirection: isMobile ? 'column' : 'row',
                   gap: '8px',
-                  maxWidth: '440px',
+                  maxWidth: isMobile ? '100%' : '440px',
                   width: '100%',
                 }}
               >
-                <div style={{ position: 'relative', flex: 1 }}>
+                <div style={{ position: 'relative', width: '100%', flex: 1 }}>
                   <Mail
                     size={18}
                     style={{
@@ -102,6 +112,7 @@ export default function Footer({ onNavigate }) {
                     onChange={(e) => setEmail(e.target.value)}
                     style={{
                       width: '100%',
+                      boxSizing: 'border-box',
                       padding: '13px 14px 13px 42px',
                       background: 'rgba(255, 255, 255, 0.08)',
                       border: '1px solid rgba(255, 255, 255, 0.16)',
@@ -125,7 +136,9 @@ export default function Footer({ onNavigate }) {
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
+                    justifyContent: 'center',
                     gap: '6px',
+                    width: isMobile ? '100%' : 'auto',
                     flexShrink: 0,
                     transition: 'background 0.15s ease',
                   }}
@@ -141,17 +154,19 @@ export default function Footer({ onNavigate }) {
       </div>
 
       {/* ── Main Footer Columns ── */}
-      <div style={{ padding: '64px 0 40px 0' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 28px' }}>
+      <div style={{ padding: isMobile ? '36px 0 24px 0' : '64px 0 40px 0' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: isMobile ? '0 16px' : '0 28px' }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '40px',
-            marginBottom: '48px',
+            gridTemplateColumns: isMobile 
+              ? 'repeat(2, 1fr)' 
+              : (isTablet ? 'repeat(3, 1fr)' : 'repeat(auto-fit, minmax(200px, 1fr))'),
+            gap: isMobile ? '24px' : '40px',
+            marginBottom: '40px',
           }}>
             
             {/* Brand Column */}
-            <div style={{ gridColumn: 'span 1' }}>
+            <div style={{ gridColumn: isMobile ? 'span 2' : 'span 1' }}>
               <img
                 src="/RRlogo_white.png"
                 alt="RoofRidge"

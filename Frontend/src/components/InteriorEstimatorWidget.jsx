@@ -58,7 +58,7 @@ export default function InteriorEstimatorWidget({ onBookConsultation }) {
       position: 'relative',
     }}>
       <div style={{ maxWidth: '1280px', margin: '0 auto', padding: isMobile ? '0 16px' : '0 28px' }}>
-        
+
         {/* Section Header */}
         <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 48px auto' }}>
           <div style={{
@@ -314,10 +314,10 @@ export default function InteriorEstimatorWidget({ onBookConsultation }) {
                 <label style={{ display: 'block', fontSize: '0.88rem', fontWeight: 700, color: '#0F172A', marginBottom: '10px' }}>
                   Project Scope
                 </label>
-                <div style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: isMobile ? 'repeat(auto-fit, minmax(130px, 1fr))' : 'repeat(3, 1fr)', 
-                  gap: '10px' 
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: isMobile ? 'repeat(auto-fit, minmax(130px, 1fr))' : 'repeat(3, 1fr)',
+                  gap: '10px'
                 }}>
                   {SCOPES.map((sItem) => {
                     const isSelected = scope === sItem.id;
@@ -375,7 +375,7 @@ export default function InteriorEstimatorWidget({ onBookConsultation }) {
             }} />
 
             <div style={{ position: 'relative', zIndex: 2 }}>
-              
+
               {/* Badge */}
               <div style={{
                 display: 'inline-flex',

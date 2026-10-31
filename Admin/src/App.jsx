@@ -19,6 +19,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('overview');
   const [overviewData, setOverviewData] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   // Login form state
   const [phone, setPhone] = useState('9999999999');
@@ -226,6 +227,8 @@ export default function App() {
         setActiveTab={setActiveTab}
         counts={counts}
         onLogout={handleLogout}
+        isOpen={isMobileSidebarOpen}
+        onClose={() => setIsMobileSidebarOpen(false)}
       />
 
       {/* Main Content Area */}
@@ -235,9 +238,10 @@ export default function App() {
           onRefresh={fetchOverview}
           isRefreshing={isRefreshing}
           adminUser={adminUser}
+          onToggleSidebar={() => setIsMobileSidebarOpen(prev => !prev)}
         />
 
-        <main className="flex-1 p-6 overflow-y-auto">
+        <main className="flex-1 p-3 sm:p-6 overflow-y-auto min-w-0">
           {activeTab === 'overview' && (
             <OverviewView
               data={overviewData}

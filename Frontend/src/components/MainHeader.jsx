@@ -256,10 +256,6 @@ export default function MainHeader({
               FREE
             </span>
           </button>
-            >
-              FREE
-            </span>
-          </button>
 
           {/* Profile / Industry-Standard User Menu */}
           {user ? (
